@@ -1,0 +1,41 @@
+.cardImageContainer {
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  margin-right: 10px;
+  padding: 12px;
+}
+
+.contentWrapper {
+  display: flex;
+  /* align-items: center;
+    justify-content: space-evenly; */
+}
+
+.totalValue {
+  font-weight: 600;
+  color: #7f56d9;
+  font-size: 28px;
+}
+
+.healthImage {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  font-size: 16px !important;
+  color: #475467;
+  font-weight: 600;
+}
+
+.cardColor {
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  border-radius: 10px !important;
+  border: unset !important;
+  background: #fff;
+}
+
+.cardColor-008080 {
+  background: #008080;
+}

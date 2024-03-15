@@ -1,0 +1,42 @@
+.health-dashboard-container {
+    padding: 20px;
+    height: 100%;
+    background-color: #f2f3f4;
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto; */
+  }
+  
+  
+  .health-title {
+    font-weight: 600;
+    font-size: 16px;
+    align-self: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Custom styles for table headers */
+  .custom-table .ant-table-thead th {
+    font-weight: 600;
+  }
+  
+  /* Custom styles for odd rows */
+  .custom-table .ant-table-tbody tr:nth-child(odd) {
+    font-weight: 700;
+    background-color: #e6f7ff; /* Odd row background color */
+  }
+  
+  /* Custom styles for even rows */
+  .custom-table .ant-table-tbody tr:nth-child(even) {
+    font-weight: 700;
+    background-color: #fff; /* Even row background color */
+  }
+  
+  /* Hover effect on rows */
+  .custom-table .ant-table-tbody tr:hover {
+    background-color: #cce5ff; /* Hovered row background color */
+  }
+  

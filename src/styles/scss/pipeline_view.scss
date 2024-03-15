@@ -1,0 +1,129 @@
+.pipeline-view-container {
+  padding: 30px;
+  background-color: #f6f8f9;
+  width: 100%;
+  min-height: 100vh;
+
+  .card-item-content {
+    padding: 10px;
+  }
+
+  .pipeline-header-title {
+    color: hsl(240, 3.8%, 46.1%);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .title-div {
+    display: flex;
+
+    &.value-section {
+      padding: 10px 0;
+    }
+  }
+
+  .info {
+    display: flex;
+  }
+
+  .type-div {
+    display: flex;
+
+    .type-title {
+      margin-left: 10px;
+    }
+  }
+
+  .value-title,
+  .type-title {
+    align-self: center;
+    color: hsl(222.2, 84%, 4.9%);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .table-section {
+    margin-top: 10px;
+  }
+
+  .link-row {
+    display: flex;
+  }
+
+  .link-div {
+    cursor: pointer;
+
+    &:hover {
+      color: #2996f1;
+      text-decoration: underline;
+    }
+  }
+
+  .middle-view-div,
+  .main-view-div {
+    margin-top: 14px;
+    margin-bottom: 34px;
+  }
+
+  .spin-div {
+    margin-left: 6px;
+  }
+
+  .connection {
+    font-size: 14px;
+    font-weight: 400;
+    align-self: center;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .col-sync {
+    cursor: pointer;
+    align-self: center;
+
+    &.disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+
+  .action-div {
+    display: flex;
+  }
+
+  .switch-div {
+    button {
+      background-color: rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .ant-switch-checked {
+      background-color: rgb(56, 161, 105) !important;
+    }
+  }
+
+  .status-title {
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ant-modal-confirm-btns {
+    button {
+      background: #1677ff !important;
+      color: #fff !important;
+    }
+  }
+}
+
+.center-title {
+  color: #9ba4a8;
+  margin-bottom: 10px;
+}
+
+.center-log-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

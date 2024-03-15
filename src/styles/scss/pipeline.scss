@@ -1,0 +1,80 @@
+.pipeline-container {
+  padding: 30px;
+  background-color: #f6f8f9;
+  width: 100%;
+  min-height: 100vh;
+
+  .lable-title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 22px;
+    align-self: center;
+    flex: 1;
+  }
+
+  .pipeline-list-section {
+    margin-top: 15px;
+  }
+
+  .header-wrapper {
+    width: 100%;
+  }
+
+  .title-div {
+    display: flex;
+
+    &.value-section {
+      padding: 10px 0;
+    }
+  }
+
+  .card-item-content {
+    padding: 10px;
+  }
+
+  .pipeline-header-title {
+    color: hsl(240, 3.8%, 46.1%);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .source-image {
+    width: 35px;
+    height: 35px !important;
+  }
+
+  .value-title,
+  .type-title {
+    align-self: center;
+    color: hsl(222.2, 84%, 4.9%);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .type-div {
+    display: flex;
+
+    .type-title {
+      margin-left: 10px;
+    }
+  }
+
+  .info {
+    display: flex;
+  }
+
+  .message {
+    align-self: center;
+    color: #000002;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .image-content {
+    align-self: center;
+  }
+
+  .card-div-pipeline {
+    cursor: pointer;
+  }
+}

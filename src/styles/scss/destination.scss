@@ -1,0 +1,45 @@
+.destination-wrapper {
+  padding: 30px;
+  background-color: #f6f8f9;
+  width: 100%;
+  min-height: 100vh;
+
+  .center-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form-box {
+    width: 60%;
+    border-radius: 1rem;
+    background-color: white;
+    border: 1px solid #d9d9d9;
+    transition-duration: 500ms;
+    padding: 15px !important;
+    margin-top: 20px;
+  }
+
+  .lable-title {
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+
+  .db-name {
+    text-transform: capitalize;
+    font-size: 20px;
+  }
+
+  .form-label-name {
+    font-weight: 600;
+    font-size: .875rem;
+  }
+}

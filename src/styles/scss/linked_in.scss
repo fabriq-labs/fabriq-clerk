@@ -1,0 +1,70 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+
+  .form-row {
+    margin-bottom: 15px;
+  }
+
+  .content-pipeline {
+    min-width: 402px;
+    max-width: 402px;
+    background: hsl(0, 0%, 100%);
+    box-shadow: 0 2px 4px hsla(241, 51%, 20%, 12%);
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .oauth-title {
+    // color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding-left: 4px;
+    align-self: center;
+  }
+
+  .linked-title {
+    font-weight: 500;
+    font-size: 14px;
+    color: #344054;
+    padding-bottom: 8px;
+  }
+
+  .button-row {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+
+    .right-btn {
+      margin-right: 10px;
+    }
+  }
+
+  .linked-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6px;
+
+    .ant-btn {
+      align-self: center;
+    }
+
+    .input-linkedin {
+      width: 280px;
+
+      &.full {
+        width: 100%;
+      }
+    }
+  }
+
+  .button-row {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
