@@ -2,18 +2,19 @@
 // Pipeline Connect Component
 import React, { useEffect, useState } from "react";
 import { Result, notification } from "antd";
-import { useRouter, useParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import axios from "axios";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useOrganization } from "@clerk/nextjs";
 
 const PipelineConnect = () => {
-  const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const [state, setState] = useState<string>("");
   const [api, contextHolder] = notification.useNotification();
   const { organization }: any = useOrganization();
   const [loading, setLoading] = useState<boolean>(true);
+  const queryParams = Object.fromEntries(searchParams);
 
   useEffect(() => {
     async function fetchData() {
@@ -21,7 +22,11 @@ const PipelineConnect = () => {
         const operation = "insertConnection";
         const variables = {
           display_name: `OAuth`,
-          credentials: params,
+          credentials: {
+            secret_id: queryParams?.secret_id,
+            sourceId: params?.sourceId,
+            pipelineId: params?.pipelineId,
+          },
           source_id: params?.sourceId,
           org_id: organization?.publicMetadata?.fabriq_org_id,
         };
