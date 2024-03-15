@@ -1,3 +1,4 @@
+"use client";
 // Pipeline Connect Component
 import React, { useEffect, useState } from "react";
 import { Result, notification } from "antd";
@@ -8,7 +9,7 @@ import { useOrganization } from "@clerk/nextjs";
 
 const PipelineConnect = () => {
   const router = useRouter();
-  const params = useParams()
+  const params = useParams();
   const [state, setState] = useState<string>("");
   const [api, contextHolder] = notification.useNotification();
   const { organization }: any = useOrganization();
@@ -20,8 +21,8 @@ const PipelineConnect = () => {
         const operation = "insertConnection";
         const variables = {
           display_name: `OAuth`,
-          credentials: router.query,
-          source_id: router?.query?.sourceId,
+          credentials: params,
+          source_id: params?.sourceId,
           org_id: organization?.publicMetadata?.fabriq_org_id,
         };
         const result = await axios.post("/api/pipeline", {
@@ -35,7 +36,7 @@ const PipelineConnect = () => {
           await axios.post("/api/pipeline", {
             operation: "connectionPipelineUpdate",
             variables: {
-              id: router?.query.pipelineId,
+              id: params.pipelineId,
               connection_id: connectionItem.id,
               org_id: organization?.publicMetadata?.fabriq_org_id,
             },
@@ -50,14 +51,14 @@ const PipelineConnect = () => {
         setLoading(false);
         api.error({
           message: "Pipeline OAuth",
-          description: `Unable to initiate OAuth for pipeline with item ID ${router?.query.pipelineId}.`,
+          description: `Unable to initiate OAuth for pipeline with item ID ${params.pipelineId}.`,
         });
       }
     }
     if (organization) {
       fetchData();
     }
-  }, [router?.query?.sourceId, router?.query.pipelineId, organization]);
+  }, [params?.sourceId, params.pipelineId, organization]);
 
   if (loading) {
     return (

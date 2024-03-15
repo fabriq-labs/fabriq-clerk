@@ -135,7 +135,7 @@ const HeaderDetails = ({
 
       if (destination_id) {
         const deployResponse = await axios.post(
-          `/api/elt-wrapper/connection/update`,
+          `/api/connection/update`,
           {
             event: {
               data: {

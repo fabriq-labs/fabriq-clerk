@@ -1,6 +1,7 @@
+"use client";
 // Connect Right View Component
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import { notification } from "antd";
 import Image from "next/image";
@@ -18,8 +19,7 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
   const [sourceLoader, setSourceLoader] = useState(false);
   const { organization }: any = useOrganization();
   const router = useRouter();
-  const { query } = router;
-  const { pipelineId } = query;
+  const { pipelineId } = useParams();
 
   const getPipeline = async () => {
     const operation = "getPipelineId";
@@ -68,6 +68,8 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
 
   const onClickReconnect = () => {
     const redirect_url = `https://${window.location.host}/`;
+    console.log(redirect_url);
+
     axios
       .post(`/api/pipeline/update`, {
         event: {
@@ -101,7 +103,8 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
           }
         }, 1000);
       })
-      .catch(() => {
+      .catch((err: any) => {
+        console.log("err", err.message);
         api.error({
           message: "Pipeline Edit ",
           description: `Unable to initiate OAuth for pipeline with item ID ${pipelineItem.id}.`,
