@@ -1,6 +1,5 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import Cookies from "cookies";
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import axios from "axios";
 
 function decodeJwt(token: any) {
@@ -10,15 +9,11 @@ function decodeJwt(token: any) {
   return payload;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-) {
-  const cookies = new Cookies(req, res);
-  const { id, reqdata } = req.body;
+export async function POST(req: NextRequest) {
+  const { id, reqdata } = await req.json();
 
   // Get a cookie
-  const token = cookies.get("__session");
+  const token = cookies().get("__session")?.value;
   const decoded = decodeJwt(token);
 
   const headers = {
@@ -37,12 +32,13 @@ export default async function handler(
 
   if (response.data && response.data.status && response.data.message) {
     // Return the main API response
-    res.status(response.status).json(response.data);
+    return NextResponse.json(response.data, { status: 200 });
   } else {
     // If the response structure is unexpected, handle it accordingly
     console.error("Unexpected API Response Structure");
-    res
-      .status(500)
-      .json({ status: "error", message: "Unexpected response structure" });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
