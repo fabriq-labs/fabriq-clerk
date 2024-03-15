@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import * as graphqlApi from "./graphql";
 import * as airbyte from "./airbyte";
 import * as source_config from "../../utils/elt_source_config";
 import * as connection_config from "../../utils/elt_connection_config";
 
-async function get_discover_schema(req: NextRequest, res: NextResponse) {
+async function get_discover_schema(req: NextApiRequest, res: NextApiResponse) {
   var pipe_event = req.body;
   var pipeline_id = pipe_event["pipelineId"];
   var source_id = pipe_event["sourceId"];
@@ -13,7 +13,6 @@ async function get_discover_schema(req: NextRequest, res: NextResponse) {
 
   const ab_response = await airbyte.discover_schema(source_id, pipeline);
   res.send(ab_response?.data);
-
 }
 
 async function on_pipeline_event_source(

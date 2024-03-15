@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -20,7 +22,7 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { useOrganization } from "@clerk/nextjs";
 
@@ -347,8 +349,9 @@ export const PipelineView: React.FC<any> = React.memo(() => {
 
   const { organization }: any = useOrganization();
   const router = useRouter();
-  const { query } = router;
-  const { pipelineId } = query;
+  const params = useParams();
+
+  const pipelineId: any = params?.pipelineId;
 
   useEffect(() => {
     if (organization) {
