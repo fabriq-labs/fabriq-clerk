@@ -55,7 +55,7 @@ const HeaderDetails = ({
   useEffect(() => {
     if (pipeline?.external_mapping?.elt_connection_id) {
       axios
-        .post("/api/elt-wrapper/pipeline/update", {
+        .post("/api/pipeline/update", {
           event: {
             session_variables: {
               "x-hasura-role": "admin",
@@ -93,7 +93,7 @@ const HeaderDetails = ({
   const CreateAirbyteSource = () => {
     setLoader(true);
     axios
-      .post(`/api/elt-wrapper/pipeline/update`, {
+      .post(`/api/pipeline/update`, {
         event: {
           data: {
             new: {
@@ -412,7 +412,7 @@ export const PipelineView: React.FC<any> = React.memo(() => {
       setChecked(pipeline?.status);
       setPipelineName(pipeline?.name);
       if (pipeline?.external_mapping?.elt_connection_id) {
-        const result = await axios.post("/api/elt-wrapper/pipeline/update", {
+        const result = await axios.post("/api/pipeline/update", {
           event: {
             session_variables: {
               "x-hasura-role": "admin",
@@ -446,7 +446,7 @@ export const PipelineView: React.FC<any> = React.memo(() => {
     setShowSpinner(true);
 
     axios
-      .post("/api/elt-wrapper/pipeline/update", {
+      .post("/api/pipeline/update", {
         event: {
           session_variables: {
             "x-hasura-role": "admin",
@@ -474,7 +474,7 @@ export const PipelineView: React.FC<any> = React.memo(() => {
 
   const getLogInfo = () => {
     return axios
-      .post(`/api/elt-wrapper/pipeline/update`, {
+      .post(`/api/pipeline/update`, {
         event: {
           session_variables: {
             "x-hasura-role": "admin",
@@ -516,7 +516,7 @@ export const PipelineView: React.FC<any> = React.memo(() => {
 
   const fetchDataFromJob = (dataJobId: any): Promise<any | undefined> => {
     return axios
-      .post(`/api/elt-wrapper/pipeline/update`, {
+      .post(`/api/pipeline/update`, {
         event: {
           session_variables: {
             "x-hasura-role": "admin",
@@ -553,7 +553,7 @@ export const PipelineView: React.FC<any> = React.memo(() => {
 
   const onClickSync = () => {
     axios
-      .post(`/api/elt-wrapper/pipeline/update`, {
+      .post(`/api/pipeline/update`, {
         event: {
           session_variables: {
             "x-hasura-role": "admin",

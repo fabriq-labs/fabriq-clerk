@@ -69,7 +69,7 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
   const onClickReconnect = () => {
     const redirect_url = `https://${window.location.host}/`;
     axios
-      .post(`/api/elt-wrapper/pipeline/update`, {
+      .post(`/api/pipeline/update`, {
         event: {
           session_variables: {
             "x-hasura-role": "admin",
