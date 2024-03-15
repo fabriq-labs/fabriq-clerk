@@ -14,7 +14,11 @@ export default function Navbar() {
   const canManage = has && has({ permission: "org:feature:protected" });
 
   const isActive = (path: string) => {
-    return pathname === path;
+    const basePath = path.split('/')[1];
+    const currentBasePath = pathname.split('/')[1]; 
+
+
+    return currentBasePath === basePath;
   };
 
   const onClick: MenuProps["onClick"] = ({ key }: any) => {};
