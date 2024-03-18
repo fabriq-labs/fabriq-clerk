@@ -110,6 +110,19 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
+            {organization && organization?.publicMetadata?.is_explore && (
+              <li>
+                <Link href="/explore">
+                  <span
+                    className={`tab ${
+                      isActiveExplore ? "active" : ""
+                    } transition`}
+                  >
+                    Explore New
+                  </span>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 

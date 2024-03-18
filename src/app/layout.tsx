@@ -1,5 +1,7 @@
 import { ClerkProvider, ClerkLoaded } from "@clerk/nextjs";
 
+import { AI } from "./action";
+
 import "./globals.css";
 import "@/styles/scss/index.scss";
 
@@ -16,7 +18,10 @@ export default function RootLayout({
           <title>Fabriq</title>
         </head>
         <body>
-          <ClerkLoaded>{children}</ClerkLoaded>
+          <ClerkLoaded>
+            {" "}
+            <AI>{children}</AI>
+          </ClerkLoaded>
         </body>
       </html>
     </ClerkProvider>
