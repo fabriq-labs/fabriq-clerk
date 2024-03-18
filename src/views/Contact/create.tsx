@@ -188,6 +188,7 @@ const CreateContact = () => {
       )
       .join("&");
     setLoader(true);
+    console.log("contact", id);
 
     if (id) {
       axios({
