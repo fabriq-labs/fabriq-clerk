@@ -1,27 +1,34 @@
-"use client";
-
 import React from "react";
 import { UserButton, Protect, useAuth, useOrganization } from "@clerk/nextjs";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { Dropdown, MenuProps } from "antd";
+import Logo from "../../public/nigo-app.png";
 
 export default function Navbar() {
-  const pathname = usePathname();
+  const router = useRouter();
   const { has } = useAuth();
+  const [open, setOpen] = React.useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState<string | null>(
+    null
+  );
   const { organization }: any = useOrganization();
+  const pathname = usePathname();
 
   const canManage = has && has({ permission: "org:feature:protected" });
 
   const isActive = (path: string) => {
-    const basePath = path.split('/')[1];
-    const currentBasePath = pathname.split('/')[1]; 
-
-
-    return currentBasePath === basePath;
+    return pathname === path;
   };
 
-  const onClick: MenuProps["onClick"] = ({ key }: any) => {};
+  const onClick: MenuProps["onClick"] = ({ key }) => {
+    setSelectedMenuItem(key);
+  };
+
+  const openInPopup = (url: string) => {
+    window.open(url, "_blank", "width=1200,height=800");
+  };
 
   const items: any = [
     {
@@ -42,28 +49,7 @@ export default function Navbar() {
         </Protect>
       ),
     },
-    {
-      key: "3",
-      label: (
-        <Link href={"/destination"}>
-          <span className={`menu-item`}>Destination</span>
-        </Link>
-      ),
-    },
   ].filter(Boolean);
-
-  const pipelinePaths = [
-    "/pipeline",
-    "/pipeline/[pipelineId]",
-    "/pipeline/[pipelineId]/edit",
-    "/pipeline/create",
-  ];
-  const explorePaths = ["/chat", "/chat/[chatId]"];
-  const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
-
-  const isActiveExplore = explorePaths?.some((path) => isActive(path));
-  const isActivePipeline = pipelinePaths?.some((path) => isActive(path));
-  const isActiveSetup = setupPaths?.some((path) => isActive(path));
 
   return (
     <div className="navbar-container">
@@ -71,7 +57,7 @@ export default function Navbar() {
         <nav aria-label="Global" className="hidden md:block">
           <ul className="flex items-center gap-6 text-sm">
             <li className="flex-list">
-              <span>Fabriq</span>
+              <Image src={Logo} alt="nigo" width={50} height={35} />
             </li>
             <li>
               <Link href="/">
@@ -80,34 +66,76 @@ export default function Navbar() {
                     isActive("/") ? "tab active" : "tab"
                   } transition`}
                 >
-                  Home
+                  Dashboard
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/company">
+                <span
+                  className={`${
+                    isActive("/company") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  Company
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact">
+                <span
+                  className={`${
+                    isActive("/contact") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  Contact
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/ticket">
+                <span
+                  className={`${
+                    isActive("/ticket") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  Ticket
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/trademark">
+                <span
+                  className={`${
+                    isActive("/trademark") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  Trademark
                 </span>
               </Link>
             </li>
             {organization && organization?.publicMetadata?.is_connection && (
               <li>
-                <Link href="/pipeline">
-                  <span
-                    className={`tab ${
-                      isActivePipeline ? "active" : ""
-                    } transition`}
-                  >
-                    Connection
-                  </span>
-                </Link>
+                <span
+                  className={`${
+                    isActive("/connect") ? "tab active" : "tab"
+                  } transition`}
+                  onClick={() => openInPopup("/connect")}
+                >
+                  Connection
+                </span>
               </li>
             )}
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
-                <Link href="/chat">
-                  <span
-                    className={`tab ${
-                      isActiveExplore ? "active" : ""
-                    } transition`}
-                  >
-                    Explore
-                  </span>
-                </Link>
+                <span
+                  className={`${
+                    isActive("/explore") ? "tab active" : "tab"
+                  } transition`}
+                  onClick={() => openInPopup("/explore")}
+                >
+                  Explore
+                </span>
               </li>
             )}
           </ul>
@@ -115,11 +143,9 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           <Dropdown menu={{ items, onClick }}>
-            <span className={`tab ${isActiveSetup ? "active" : ""} transition`}>
-              Setup
-            </span>
+            <span className={`tab transition`}>Setup</span>
           </Dropdown>
-          <UserButton afterSignOutUrl="/" />
+          <UserButton afterSignOutUrl="/sign-in" />
         </div>
       </div>
     </div>

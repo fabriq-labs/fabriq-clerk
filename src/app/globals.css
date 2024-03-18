@@ -1,94 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
- 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
- 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
- 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
- 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
- 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
- 
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
- 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
- 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
- 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
- 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
- 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
- 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
- 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
 
 :root {
-  --foreground-rgb: 0, 0, 0;
+  /* --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255; */
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
-/* body {
-  color: rgb(var(--foreground-rgb));
+body {
+  /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
-} */
+    rgb(var(--background-start-rgb)); */
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 
 @layer utilities {
   .text-balance {
@@ -96,35 +36,12 @@
   }
 }
 
-
-html,
-body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-}
-
-*,
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
 .signin-container {
   width: 100%;
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.profile-page {
-  display: flex;
   justify-content: center;
-  align-items: center;
-  padding-top: 5%;
 }
 
 .signin-container .cl-footer {
@@ -137,149 +54,35 @@ body {
   top: 0px;
   z-index: 100;
   width: 100%;
-  background: #271259;
+  background: #151135;
   padding: 10px 32px;
   border-bottom: 1px solid #ebecf0;
 }
 
-.right-menu {
-  display: flex;
-  justify-content: flex-end;
+.dashboard-container {
+  padding: 20px;
+  background-color: #fff;
+  width: 100%;
 }
 
-.left-menu {
-  display: flex;
-  align-self: center;
-  justify-content: flex-start;
+.content-create-container {
+  width: 75%;
+  padding: 15px;
+  border-radius: 10px;
+  background: #fff;
+  margin-top: 30px;
+  /* overflow: scroll; */
+  /* height: 100vh; */
 }
 
 .content-container {
   width: 100%;
   background-color: rgb(246, 248, 249);
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.health-dashboard-container {
-  padding: 20px;
-  background-color: #f2f3f4;
-}
-
-.health-chart-div {
-  background-color: #fff; /* Toned down white color */
-  padding: 20px;
-  border-radius: 10px;
-  transition: box-shadow 0.3s ease;
-  border: 1px solid rgb(217, 217, 217);
-}
-
-.health-title {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-/* Custom styles for table headers */
-.custom-table .ant-table-thead th {
-  font-weight: 600;
-  background-color: #fafafa;
-}
-
-/* Custom styles for odd rows */
-.custom-table .ant-table-tbody tr:nth-child(odd) {
-  background-color: #f5f5f5; /* Odd row background color */
-}
-
-/* Custom styles for even rows */
-.custom-table .ant-table-tbody tr:nth-child(even) {
-  background-color: #fff; /* Even row background color */
-}
-
-/* Hover effect on rows */
-.custom-table .ant-table-tbody tr:hover {
-  background-color: #e6f7ff; /* Hovered row background color */
-}
-
-.load-container {
-  width: 100%;
-  height: 300px;
+  /* height: 100vh; */
+  /* overflow-x: hidden;
+  overflow-y: auto; */
   display: flex;
-  align-items: flex-end;
   justify-content: center;
-}
-
-.custom-collapse-explore {
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.custom-collapse-explore.expended {
-  border-bottom: 1px solid #d9d9d9;
-}
-
-.collapse-header-explore {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0 16px;
-  margin-top: -6px;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.mt-10 {
-  margin-top: 10px;
-}
-
-.tab {
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #ecebf1;
-}
-
-.menu-item {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: rgb(122 110 254) !important;
-}
-
-.tab.active {
-  background: rgb(255 255 255);
-  font-size: 16px;
-  font-weight: 700;
-  color: #271259;
-}
-
-.tab.active:hover {
-  background: rgb(255, 255, 255, 0.8);
-  color: #271259;
-}
-
-button.cl-userButtonPopoverActionButton.cl-userButtonPopoverActionButton__manageAccount.🔒️.cl-internal-yrq74 {
-  display: none;
-}
-
-.flex-list {
-  display: flex;
-}
-
-.flex-list span {
-  align-self: center;
-  font-weight: 600;
-  font-size: 28px;
-  color: #fff;
-}
-
-body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
-}
-
-body::-webkit-scrollbar {
-  display: none; /* Chrome and Safari */
 }
 
 /* loder div */
@@ -370,48 +173,109 @@ body::-webkit-scrollbar {
   align-items: center;
 }
 
-.profile-page .cl-internal-10eooxm {
-  box-shadow: unset !important;
-  width: 100rem !important;
-  border: 1px solid rgb(217, 217, 217);
+.mt-10 {
+  margin-top: 10px;
 }
 
-.emergency-room-cards .custom-card {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin: 10px;
-}
-
-.emergency-room-cards .custom-card .ant-statistic-title {
+.tab {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 16px;
   font-weight: 600;
+  font-family: "inherit";
+  color: #ecebf1;
 }
 
-.emergency-room-cards .custom-card .ant-statistic-content-value-int {
+.menu-item {
+  font-size: 0.875rem;
   font-weight: 700;
-  color: #7f56d9;
+  font-family: "inherit";
+  color: rgb(122 110 254) !important;
 }
 
-.emergency-room-cards .custom-card .ant-statistic-content-suffix {
-  font-size: 18px;
-  color: #475467;
-  font-weight: 600;
+.tab.active {
+  background: rgb(255 255 255);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "inherit";
+  color: #271259;
 }
 
-.okay-btn {
-  background: #1677ff !important;
-  color: #fff !important;
+.tab.active:hover {
+  background: rgb(255, 255, 255, 0.8);
+  color: #271259;
 }
 
-.okay-btn.disabled {
-  color: rgba(0, 0, 0, 0.25) !important;
-  background: rgba(0, 0, 0, 0.04) !important;
-}
-
-.oauth-content {
+.contact-wrapper {
   width: 100%;
-  height: 50vh;
+}
+
+.contact-content {
+  padding: 10px 32px;
+}
+
+.contact-header {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
+}
+
+.contact-header-title {
+  font-size: 24px;
+  font-weight: 500;
+  font-family: "inherit";
+  padding-bottom: 5px;
+}
+
+.search-container {
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.contact-add-button {
+  background: #6b47c3;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 500;
+  font-family: "inherit";
+  cursor: pointer;
+}
+
+.contact-submit-button {
+  background: #6b47c3;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 500;
+  font-family: "inherit";
+  cursor: pointer;
+}
+
+.associate-add-button {
+  background: #6b47c3;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 500;
+  font-family: "inherit";
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.contact-body {
+  margin-top: 20px;
+}
+
+.ant-btn-primary {
+  color: #fff;
+  background: #1677ff;
+}
+
+.company-address-heading {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "inherit";
+  /* color: #6B47C3; */
+  padding-bottom: 10px;
 }

@@ -1,3 +1,3 @@
-import { Overview } from "@views/overview/overview";
+import Dashboard from "@views/Dashboard/dashboard";
 
-export default Overview;
+export default Dashboard;

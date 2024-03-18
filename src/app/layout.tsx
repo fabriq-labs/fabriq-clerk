@@ -13,7 +13,7 @@ export default function RootLayout({
       <html lang="en">
         <head>
           {" "}
-          <title>Fabriq</title>
+          <title>Nigo</title>
         </head>
         <body>
           <ClerkLoaded>{children}</ClerkLoaded>

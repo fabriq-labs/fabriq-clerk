@@ -48,3 +48,43 @@ export function getPath(pathname: string) {
 
   return lastSegment;
 }
+
+// validationHelper.ts
+export const isNameValid = (value: string): boolean => {
+  return /^[a-zA-Z\s]*$/.test(value);
+};
+
+export const isPhoneNumberValid = (value: string): boolean => {
+  return /^[0-9]+$/.test(value) && value.length <= 10;
+};
+
+
+export const userTypeOptions: { value: any; label: React.ReactNode }[] = [
+  { value: 1, label: "KIRUTHIKA D" },
+  {
+    value: 2,
+    label: "VAISHNAVI M",
+  },
+  { value: 3, label: "NANDHINI V" },
+  { value: 4, label: "KIRUTHIKA V" },
+  { value: 5, label: "RAJMOHAN NITHYA" },
+  { value: 6, label: "GOKUL R" },
+  { value: 7, label: "ARUN PRASANNA" },
+  { value: 8, label: "MADHAN R" },
+];
+
+export const statusTypeOptions: { value: any; label: React.ReactNode }[] = [
+  { value: "Open", label: "Open" },
+  {
+    value: "In-Progress",
+    label: "In-Progress",
+  },
+  { value: "Hold", label: "Hold" },
+  {
+    value: "Waiting for Customer Doc/Confirmation",
+    label: "Waiting for Customer Doc/Confirmation",
+  },
+  { value: "Completed", label: "Completed" },
+  { value: "Cancelled", label: "Cancelled" },
+  { value: "Deferred ", label: "Deferred " },
+];
