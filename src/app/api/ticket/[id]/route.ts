@@ -4,8 +4,8 @@ import { GET_TICKET_BY_ID, UPDATE_TICKET } from "../../../../query/ticket";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   try {
-    const org_id = req.nextUrl.searchParams.get("org_id");
-    const id = req.nextUrl.searchParams.get("id");
+    const org_id = await req.nextUrl.searchParams.get("org_id");
+    const id = await req.nextUrl.searchParams.get("id");
 
     const apiResponse = await graphqlApi(GET_TICKET_BY_ID, {
       id: parseInt(id as string, 10),

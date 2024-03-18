@@ -7,8 +7,7 @@ export async function GET(
   res: NextResponse
 ) {
   try {
-    const org_id =req.nextUrl.searchParams.get("org_id");
-    console.log("*****", org_id);
+    const org_id =await req.nextUrl.searchParams.get("org_id");
   
     const apiResponse = await graphqlApi(GET_COMPANY_DETAILS, {
       org_id: parseInt(org_id as string, 10),

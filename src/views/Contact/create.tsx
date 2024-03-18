@@ -133,7 +133,7 @@ const CreateContact = () => {
   const [companyList, setCompanyList] = useState([]);
   const [contacID, setContactID]: any = useState("");
   const router = useRouter();
-  const { id } = useParams();
+  const { id }:any = useParams();
   const [form] = Form.useForm();
   const [isModalEdited, setISModalEdited] = useState(null);
   const { Option } = Select;
@@ -179,7 +179,7 @@ const CreateContact = () => {
   const getContactDataById = () => {
     let variables: any = {
       org_id: 1,
-      id: id,
+      id: parseInt(id),
     };
     const queryString = Object.keys(variables)
       .map(

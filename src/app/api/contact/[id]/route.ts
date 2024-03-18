@@ -12,8 +12,8 @@ export async function GET(
   res: NextResponse
 ) {
   try {
-    const org_id =req.nextUrl.searchParams.get("org_id");
-    const id = req.nextUrl.searchParams.get("id");
+    const org_id =await req.nextUrl.searchParams.get("org_id");
+    const id = await req.nextUrl.searchParams.get("id");
   
     const apiResponse = await graphqlApi(GET_CONTACT_BY_ID, {
       id: parseInt(id as string, 10),
@@ -58,8 +58,8 @@ export async function DELETE(
   res: NextResponse
 ) {
   try {
-    const org_id =req.nextUrl.searchParams.get("org_id");
-    const id = req.nextUrl.searchParams.get("id");
+    const org_id =await req.nextUrl.searchParams.get("org_id");
+    const id = await req.nextUrl.searchParams.get("id");
   
     const apiResponse = await graphqlApi(DELETE_CONTACT, {
       id: parseInt(id as string, 10),
