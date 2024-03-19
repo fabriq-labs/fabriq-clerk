@@ -36,16 +36,6 @@ export const Contact = () => {
   }, []);
 
   const getContactData = () => {
-    let variables: any = {
-      org_id: 1,
-    };
-    const queryString = Object.keys(variables)
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(variables[key])}`
-      )
-      .join("&");
-
     axios({
       method: "GET",
       url: `/api/contact`,
