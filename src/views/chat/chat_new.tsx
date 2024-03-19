@@ -21,9 +21,11 @@ import { Button } from "@components/ui/button";
 import { ChatList } from "@components/chat_list";
 import { EmptyScreen } from "@components/empty_screen";
 
+import Layout from "@components/layout";
+
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
-  const { submitUserMessage } = useActions<typeof AI>();
+  const { sendMessage } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -53,7 +55,7 @@ export default function Page() {
   }, [inputRef]);
 
   return (
-    <div>
+    <Layout>
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
@@ -72,7 +74,7 @@ export default function Page() {
               ]);
 
               // Submit and get response message
-              const responseMessage = await submitUserMessage(message);
+              const responseMessage = await sendMessage(message);
               setMessages((currentMessages: any) => [
                 ...currentMessages,
                 responseMessage,
@@ -110,7 +112,7 @@ export default function Page() {
 
                 try {
                   // Submit and get response message
-                  const responseMessage = await submitUserMessage(value);
+                  const responseMessage = await sendMessage(value);
                   setMessages((currentMessages: any) => [
                     ...currentMessages,
                     responseMessage,
@@ -158,19 +160,19 @@ export default function Page() {
                 />
                 <div className="absolute right-0 top-4 sm:right-4">
                   <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="submit"
-                        size="icon"
-                        disabled={inputValue === ""}
-                      >
-                        <IconArrowElbow />
-                        <span className="sr-only">Send message</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Send message</TooltipContent>
-                  </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="submit"
+                          size="icon"
+                          disabled={inputValue === ""}
+                        >
+                          <IconArrowElbow />
+                          <span className="sr-only">Send message</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Send message</TooltipContent>
+                    </Tooltip>
                   </TooltipProvider>
                 </div>
               </div>
@@ -179,6 +181,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

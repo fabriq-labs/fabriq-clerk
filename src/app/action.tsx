@@ -1,19 +1,16 @@
 import "server-only";
 
+import axios from "axios";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
-import OpenAI from "openai";
 
-import { spinner, Stock } from "@/components/llm-stocks";
-import {
-  runOpenAICompletion,
-} from '../utils/index';
+import QueryCard from "../components/chat/query_card";
+import { Table, Alert } from "antd";
 
-import { z } from "zod";
-import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
+import { spinner } from "@/components/llm-stocks";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-});
+const headers = {
+  "META-KEY": `eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yY3VXSjlzRDFxY2VGOU5RYkZWSVdPMnZtZEQiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJlbWFpbCI6InByYXNhbm5hQGZhYnJpcWRhdGEuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTcxMDg0MzY1OCwiaWF0IjoxNzEwODQzNTk4LCJpc3MiOiJodHRwczovL2ZpdC12dWx0dXJlLTg1LmNsZXJrLmFjY291bnRzLmRldiIsImp0aSI6IjBkYWRiYzBmOTEwNTc2N2U4NjYzIiwibmJmIjoxNzEwODQzNTg4LCJvcmdfaWQiOiJvcmdfMmN3aThKd3FXUHQ4Vnhja0J4a3NCbmtmZEtYIiwib3JnX3Blcm1pc3Npb25zIjpbIm9yZzpmZWF0dXJlOnByb3RlY3RlZCJdLCJvcmdfcm9sZSI6Im9yZzphZG1pbiIsIm9yZ19zbHVnIjoiZGVtbyIsIm9yZ2FuaXphdGlvbiI6eyJtZXRhZGF0YSI6eyJmYWJyaXFfb3JnX2lkIjoiNTIiLCJpc19jb25uZWN0aW9uIjp0cnVlLCJpc19leHBsb3JlIjp0cnVlfSwib3JnX3NsdWciOiJkZW1vIiwidXNlcl9tZXRkYXRhIjp7ImZhYnJpcV91c2VyX2lkIjoiMjE2In19LCJzaWQiOiJzZXNzXzJkaWZNVVM1c0RxTmJ0ODcxQU5NMjY2b25LZiIsInN1YiI6InVzZXJfMmN4RDNEQkhESjhKWWlsMkRySWdtY2llMVBYIiwidXNlcl9pZCI6InVzZXJfMmN4RDNEQkhESjhKWWlsMkRySWdtY2llMVBYIn0.rHynkR6Zb1-GnLzJ-BTf9KyMVxb-z6IYzCKADEbTKx0Q5RPXfSyzvgwWxQTZqlBzFMg5xjQQNrPV8sqTfridBokClFAjF_HvJD7KMXhuK_0CgzpgUfJHbPL2wIy926TAz3L4-p1BjVjMvjyO1PerQtYxQDaoi5L7cz6PsxQ6gyZOvwDQvXRoBLYb9DmvJkVMTKHZK4joB-jfdPyNk4OT90tx0FtX68iaUD9RpCNWpC8c7A1P0SqTwTf1kdC7IYDLxzXGNyvTooreKUcYzdxSPe9hXjQbnysea_N4cLfWXRYTbBok4vATzxiyiC9zCNZoLt6iccgJwLc46YKmSYHilQ`,
+};
 
 export const runAsyncFnWithoutBlocking = (
   fn: (...args: any) => Promise<any>
@@ -21,60 +18,80 @@ export const runAsyncFnWithoutBlocking = (
   fn();
 };
 
-export const formatNumber = (value: number) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(value);
-
-
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
+async function sendMessage(userInput: string) {
   "use server";
 
   const aiState = getMutableAIState<typeof AI>();
+  const params = {
+    query: userInput,
+    data_source_id: 122,
+    id: 12,
+    is_sql: true,
+  };
 
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>
+  const chat_message = createStreamableUI(
+    <div className="items-center">{spinner}</div>
   );
 
-  const systemMessage = createStreamableUI(null);
-
   runAsyncFnWithoutBlocking(async () => {
-    // You can update the UI at any point.
-    await sleep(1000);
+    await sleep(1000); // Delay for UI update
 
-    purchasing.update(
+    chat_message.update(
       <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
+        <div className="items-center">{spinner}</div>
       </div>
     );
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/gpt`,
+      params,
+      {
+        headers,
+      }
+    );
+
+    chat_message.update(
+      <div>
+        <QueryCard result={response?.data?.result} />
+      </div>
+    );
+
+    // get table data
+    const result = {
+      data_source_id: 122,
+      parameters: {},
+      query: response?.data?.result,
+      max_age: 0,
+    };
+
+    const queryResultResponse = await axios.post(
+      `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/query_results`,
+      {
+        result,
+      },
+      {
+        headers,
+      }
+    );
+
+    console.log("queryResultResponse", queryResultResponse);
 
     await sleep(1000);
-
-    purchasing.done(
+    chat_message.update(
       <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{" "}
-          {formatNumber(amount * price)}
-        </p>
+        <QueryCard result={response?.data?.result} />
+        <Alert message={<>Thinking&hellip;</>} type="info" />
       </div>
     );
 
-    systemMessage.done(
+    await sleep(2000);
+    chat_message.done(
       <div>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={" "}
-        {formatNumber(amount * price)}.
+        <QueryCard result={response?.data?.result} />
+        <Table />
       </div>
     );
 
@@ -82,206 +99,16 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
       ...aiState.get(),
       {
         role: "system",
-        content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-          amount * price
-        }]`,
+        content: `${(<QueryCard result={response?.data?.result} />)}`,
       },
     ]);
   });
 
   return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: Date.now(),
-      display: systemMessage.value,
-    },
-  };
-}
-
-async function submitUserMessage(content: string) {
-  "use server";
-
-  const aiState = getMutableAIState<typeof AI>();
-  aiState.update([
-    ...aiState.get(),
-    {
-      role: "user",
-      content,
-    },
-  ]);
-
-  const reply = createStreamableUI(
-    <div className="items-center">{spinner}</div>
-  );
-
-  const completion = runOpenAICompletion(openai, {
-    model: "gpt-3.5-turbo",
-    stream: true,
-    messages: [
-      {
-        role: "system",
-        content: `\
-You are a stock trading conversation bot and you can help users buy stocks, step by step.
-You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
-
-Messages inside [] means that it's a UI element or a user event. For example:
-- "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-- "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
-
-If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-If the user just wants the price, call \`show_stock_price\` to show the price.
-If you want to show trending stocks, call \`list_stocks\`.
-If you want to show events, call \`get_events\`.
-If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
-
-Besides that, you can also chat with users and do some calculations if needed.`,
-      },
-      ...aiState.get().map((info: any) => ({
-        role: info.role,
-        content: info.content,
-        name: info.name,
-      })),
-    ],
-    functions: [
-      {
-        name: "show_stock_price",
-        description:
-          "Get the current stock price of a given stock or currency. Use this to show the price to the user.",
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              "The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD."
-            ),
-          price: z.number().describe("The price of the stock."),
-          delta: z.number().describe("The change in price of the stock"),
-        }),
-      },
-      {
-        name: "show_stock_purchase_ui",
-        description:
-          "Show price and the UI to purchase a stock or currency. Use this if the user wants to purchase a stock or currency.",
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              "The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD."
-            ),
-          price: z.number().describe("The price of the stock."),
-          numberOfShares: z
-            .number()
-            .describe(
-              "The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it."
-            ),
-        }),
-      },
-      {
-        name: "list_stocks",
-        description: "List three imaginary stocks that are trending.",
-        parameters: z.object({
-          stocks: z.array(
-            z.object({
-              symbol: z.string().describe("The symbol of the stock"),
-              price: z.number().describe("The price of the stock"),
-              delta: z.number().describe("The change in price of the stock"),
-            })
-          ),
-        }),
-      },
-      {
-        name: "get_events",
-        description:
-          "List funny imaginary events between user highlighted dates that describe stock activity.",
-        parameters: z.object({
-          events: z.array(
-            z.object({
-              date: z
-                .string()
-                .describe("The date of the event, in ISO-8601 format"),
-              headline: z.string().describe("The headline of the event"),
-              description: z.string().describe("The description of the event"),
-            })
-          ),
-        }),
-      },
-    ],
-    temperature: 0,
-  });
-
-  completion.onTextContent((content: string, isFinal: boolean) => {
-    reply.update(<div>{content}</div>);
-    if (isFinal) {
-      reply.done();
-      aiState.done([...aiState.get(), { role: "assistant", content }]);
-    }
-  });
-
-  completion.onFunctionCall(
-    "show_stock_price",
-    async ({ symbol, price, delta }: any) => {
-      reply.update(<StockSkeleton />);
-
-      await sleep(1000);
-
-      reply.done(<Stock name={symbol} price={price} delta={delta} />);
-
-      aiState.done([
-        ...aiState.get(),
-        {
-          role: "function",
-          name: "show_stock_price",
-          content: `[Price of ${symbol} = ${price}]`,
-        },
-      ]);
-    }
-  );
-
-  completion.onFunctionCall(
-    "show_stock_purchase_ui",
-    ({ symbol, price, numberOfShares = 100 }: any) => {
-      if (numberOfShares <= 0 || numberOfShares > 1000) {
-        reply.done(<div>Invalid amount</div>);
-        aiState.done([
-          ...aiState.get(),
-          {
-            role: "function",
-            name: "show_stock_purchase_ui",
-            content: `[Invalid amount]`,
-          },
-        ]);
-        return;
-      }
-
-      reply.done(
-        <>
-          <div>
-            Sure!{" "}
-            {typeof numberOfShares === "number"
-              ? `Click the button below to purchase ${numberOfShares} shares of $${symbol}:`
-              : `How many $${symbol} would you like to purchase?`}
-          </div>
-        </>
-      );
-      aiState.done([
-        ...aiState.get(),
-        {
-          role: "function",
-          name: "show_stock_purchase_ui",
-          content: `[UI for purchasing ${numberOfShares} shares of ${symbol}. Current price = ${price}, total cost = ${
-            numberOfShares * price
-          }]`,
-        },
-      ]);
-    }
-  );
-
-  return {
     id: Date.now(),
-    display: reply.value,
+    display: chat_message.value,
   };
 }
-
-// Define necessary types and create the AI.
 
 const initialAIState: {
   role: "user" | "assistant" | "system" | "function";
@@ -297,8 +124,7 @@ const initialUIState: {
 
 export const AI = createAI({
   actions: {
-    submitUserMessage,
-    confirmPurchase,
+    sendMessage,
   },
   initialUIState,
   initialAIState,
