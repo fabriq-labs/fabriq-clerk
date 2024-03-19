@@ -8,9 +8,11 @@ import "ace-builds/src-noconflict/theme-github";
 
 import { Label } from "@/components/ui/label";
 
-const QueryCard = ({ result }: any) => {
+const QueryCard = ({ result, isAction }: any) => {
   return (
-    <div className="chat-query-card-wrapper">
+    <div
+      className={`chat-query-card-wrapper ${isAction ? "action-section" : ""}`}
+    >
       <div className="query-title">
         <Label className="query-label">Query</Label>
       </div>
@@ -21,7 +23,8 @@ const QueryCard = ({ result }: any) => {
           value={result}
           readOnly
           wrapEnabled
-          style={{ width: "100%", height: "200px" }}
+          maxLines={Infinity}
+          style={{ width: "100%" }}
         />
       </div>
     </div>

@@ -152,7 +152,7 @@ export default function Chat() {
   };
 
   const handleClickNewChat = () => {
-    router.push(`/chat`);
+    router.push(`/explore`);
 
     getChartTypes();
     getDestination();
@@ -162,11 +162,8 @@ export default function Chat() {
 
   const handleClickChat = (id: any) => {
     setDisabled(true);
-    setTemplate((prevState: any) => ({
-      ...prevState,
-      error: false,
-    }));
-    router.push(`/chat/${id}`);
+    setTemplate(null);
+    router.push(`/explore/${id}`);
   };
 
   const onChange = (val: any) => {
@@ -390,7 +387,7 @@ export default function Chat() {
 
           if (chatId) {
             getChatSidebarList();
-            router.push(`/chat/${chatId}`);
+            router.push(`/explore/${chatId}`);
           }
         }
       } catch (err: any) {

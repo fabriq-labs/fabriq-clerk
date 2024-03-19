@@ -20,15 +20,7 @@ const ChatAI = ({
               value={userInput}
               onChange={(e) => onChange(e.target.value)}
               type="text"
-              style={{
-                height: "50px",
-                borderRadius: "10px",
-                boxShadow: "none",
-                width: "100%",
-                padding: "0 10px",
-                backgroundColor: "#ebeffa",
-                fontWeight: 600,
-              }}
+              className="chat-input-comp"
               disabled={loading}
             />
             <div className="input-icon" onClick={onClickClear}>

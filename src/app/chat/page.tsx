@@ -1,3 +1,3 @@
-import Chat from "@views/chat/chat";
+import ChatNew from "@views/chat/chat_new";
 
-export default Chat;
+export default ChatNew;
