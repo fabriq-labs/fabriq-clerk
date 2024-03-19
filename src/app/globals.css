@@ -279,3 +279,7 @@ body {
   /* color: #6B47C3; */
   padding-bottom: 10px;
 }
+
+.ant-table-thead > tr > th {
+  background-color: #eadcdc !important;
+}

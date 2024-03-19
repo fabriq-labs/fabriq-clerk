@@ -377,7 +377,7 @@ const CreateContact = () => {
 
   const onFinish = (values: any) => {
     Object.keys(values).forEach((key) => {
-      if (key === "dsc_registered_data" || key === "dsc_renewal_date") {
+      if (key === "dsc_registered_date" || key === "dsc_renewal_date") {
         values[key] = values[key] && values[key].format("DD-MM-YYYY");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
