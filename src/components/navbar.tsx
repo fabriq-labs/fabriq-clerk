@@ -14,9 +14,8 @@ export default function Navbar() {
   const canManage = has && has({ permission: "org:feature:protected" });
 
   const isActive = (path: string) => {
-    const basePath = path.split('/')[1];
-    const currentBasePath = pathname.split('/')[1]; 
-
+    const basePath = path.split("/")[1];
+    const currentBasePath = pathname.split("/")[1];
 
     return currentBasePath === basePath;
   };
@@ -58,10 +57,12 @@ export default function Navbar() {
     "/pipeline/[pipelineId]/edit",
     "/pipeline/create",
   ];
-  const explorePaths = ["/chat", "/chat/[chatId]"];
+  const explorePaths = ["/explore/[chatId]", "/explore"];
+  const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
 
   const isActiveExplore = explorePaths?.some((path) => isActive(path));
+  const isActiveChat = chatPaths?.some((path) => isActive(path));
   const isActivePipeline = pipelinePaths?.some((path) => isActive(path));
   const isActiveSetup = setupPaths?.some((path) => isActive(path));
 
@@ -99,7 +100,7 @@ export default function Navbar() {
             )}
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
-                <Link href="/chat">
+                <Link href="/explore">
                   <span
                     className={`tab ${
                       isActiveExplore ? "active" : ""
@@ -112,13 +113,11 @@ export default function Navbar() {
             )}
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
-                <Link href="/explore">
+                <Link href="/chat">
                   <span
-                    className={`tab ${
-                      isActiveExplore ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActiveChat ? "active" : ""} transition`}
                   >
-                    Explore New
+                    Chat
                   </span>
                 </Link>
               </li>

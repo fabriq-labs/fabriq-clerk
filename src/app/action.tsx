@@ -1,17 +1,14 @@
 import "server-only";
+import { cookies } from "next/headers";
 
 import axios from "axios";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 
 import QueryCard from "../components/chat/query_card";
-import { Table, Alert } from "antd";
-import { Label } from "@/components/ui/label";
+import TableCard from "../components/chat/table_card";
+import CollapseCard from "../components/chat/collapse_card";
 
-import { spinner } from "@/components/llm-stocks";
-
-const headers = {
-  "META-KEY": `eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yY3VXSjlzRDFxY2VGOU5RYkZWSVdPMnZtZEQiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJlbWFpbCI6InByYXNhbm5hQGZhYnJpcWRhdGEuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTcxMDg0MzY1OCwiaWF0IjoxNzEwODQzNTk4LCJpc3MiOiJodHRwczovL2ZpdC12dWx0dXJlLTg1LmNsZXJrLmFjY291bnRzLmRldiIsImp0aSI6IjBkYWRiYzBmOTEwNTc2N2U4NjYzIiwibmJmIjoxNzEwODQzNTg4LCJvcmdfaWQiOiJvcmdfMmN3aThKd3FXUHQ4Vnhja0J4a3NCbmtmZEtYIiwib3JnX3Blcm1pc3Npb25zIjpbIm9yZzpmZWF0dXJlOnByb3RlY3RlZCJdLCJvcmdfcm9sZSI6Im9yZzphZG1pbiIsIm9yZ19zbHVnIjoiZGVtbyIsIm9yZ2FuaXphdGlvbiI6eyJtZXRhZGF0YSI6eyJmYWJyaXFfb3JnX2lkIjoiNTIiLCJpc19jb25uZWN0aW9uIjp0cnVlLCJpc19leHBsb3JlIjp0cnVlfSwib3JnX3NsdWciOiJkZW1vIiwidXNlcl9tZXRkYXRhIjp7ImZhYnJpcV91c2VyX2lkIjoiMjE2In19LCJzaWQiOiJzZXNzXzJkaWZNVVM1c0RxTmJ0ODcxQU5NMjY2b25LZiIsInN1YiI6InVzZXJfMmN4RDNEQkhESjhKWWlsMkRySWdtY2llMVBYIiwidXNlcl9pZCI6InVzZXJfMmN4RDNEQkhESjhKWWlsMkRySWdtY2llMVBYIn0.rHynkR6Zb1-GnLzJ-BTf9KyMVxb-z6IYzCKADEbTKx0Q5RPXfSyzvgwWxQTZqlBzFMg5xjQQNrPV8sqTfridBokClFAjF_HvJD7KMXhuK_0CgzpgUfJHbPL2wIy926TAz3L4-p1BjVjMvjyO1PerQtYxQDaoi5L7cz6PsxQ6gyZOvwDQvXRoBLYb9DmvJkVMTKHZK4joB-jfdPyNk4OT90tx0FtX68iaUD9RpCNWpC8c7A1P0SqTwTf1kdC7IYDLxzXGNyvTooreKUcYzdxSPe9hXjQbnysea_N4cLfWXRYTbBok4vATzxiyiC9zCNZoLt6iccgJwLc46YKmSYHilQ`,
-};
+import { Alert } from "antd";
 
 export const runAsyncFnWithoutBlocking = (
   fn: (...args: any) => Promise<any>
@@ -19,12 +16,27 @@ export const runAsyncFnWithoutBlocking = (
   fn();
 };
 
+function decodeJwt(token: any) {
+  const parts = token?.split(".");
+  const payload = parts && JSON.parse(atob(parts?.[1]));
+
+  return payload;
+}
+
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 async function sendMessage(userInput: string) {
   "use server";
+  const token = cookies().get("__session")?.value;
 
+  const decoded = decodeJwt(token);
+
+  const headers = {
+    "META-KEY": token,
+  };
+
+  let message = "Thinking";
   const aiState = getMutableAIState<typeof AI>();
   const params = {
     query: userInput,
@@ -34,7 +46,9 @@ async function sendMessage(userInput: string) {
   };
 
   const chat_message = createStreamableUI(
-    <div className="items-center">{spinner}</div>
+    <div>
+      <Alert message={<>{message}&hellip;</>} type="info" />
+    </div>
   );
 
   function timeRange(ms: any) {
@@ -44,24 +58,34 @@ async function sendMessage(userInput: string) {
   const getQueryResultData = async (queryId: any) => {
     if (queryId) {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/query_results/${queryId}`,{ headers } );
-        const { data } = response.data.query_result;          
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/query_results/${queryId}`,
+          { headers }
+        );
+        const { data } = response.data.query_result;
         return await data;
       } catch (error: any) {
-        console.log("Error", error.message)
+        console.log("Error", error.message);
       }
     }
   };
-  const fetchDataFromJob = async (jobData: any): Promise<any> => {    
 
-    let url = `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/jobs/${jobData?.job.id}`
-    console.log(url);
-    
+  const fetchDataFromJob = async (jobData: any): Promise<any> => {
+    let url = `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/jobs/${jobData?.job.id}`;
     try {
-      const response = await axios.get(url,{ headers },
-      );
+      const response = await axios.get(url, { headers });
       const { data } = await response;
-      
+
+      if (jobData.job.status === 2) {
+        message = "Executing query";
+      } else if (jobData.job.status === 4 || jobData.job.error.code === 1) {
+        message = "Error running query";
+      } else if (jobData.job.status === 1) {
+        message = "Query in queue";
+      } else if (jobData.job.status === 3) {
+        message = "Loading results";
+      }
+
       if (data.job.status < 3) {
         await timeRange(3000);
         return await fetchDataFromJob(data);
@@ -73,82 +97,92 @@ async function sendMessage(userInput: string) {
         throw new Error(data.job.error);
       }
     } catch (error: any) {
-      console.log("Error", error.message)
+      console.log("Error", error.message);
     }
   };
 
-
   runAsyncFnWithoutBlocking(async () => {
-    await sleep(1000);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/gpt`,
+        params,
+        { headers }
+      );
 
-    chat_message.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        <div className="items-center">{spinner}</div>
-      </div>
-    );
+      await sleep(2000);
+      chat_message.update(
+        <div>
+          <div className="table-div">
+            <QueryCard result={response?.data?.result} />
+          </div>
+          <Alert message={<>Executing query&hellip;</>} type="info" />
+        </div>
+      );
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/gpt`,
-      params,
-      {
-        headers,
-      }
-    );
+      const result = {
+        data_source_id: 122,
+        parameters: {},
+        query: response?.data?.result,
+        max_age: 0,
+      };
 
-    await sleep(2000);
-    chat_message.update(
-      <div>
-        <QueryCard result={response?.data?.result} />
-      </div>
-    );
+      const queryResultResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/query_results`,
+        result,
+        { headers }
+      );
 
-    // get table data
-    const result = {
-      data_source_id: 122,
-      parameters: {},
-      query: response?.data?.result,
-      max_age: 0,
-    };
+      const jobResult = await fetchDataFromJob(queryResultResponse?.data);
+      await sleep(1000);
+      chat_message.update(
+        <div>
+          <div className="table-div">
+            <QueryCard result={response?.data?.result} />
+          </div>
+          <Alert message={<>{message}&hellip;</>} type="info" />
+        </div>
+      );
 
-    const queryResultResponse = await axios.post(
-      `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/query_results`,
-      result,
-      {
-        headers,
-      }
-    );
-      
-    const jobResult = await fetchDataFromJob(queryResultResponse?.data)
-    const finalResult = await getQueryResultData(jobResult)
+      const finalResult = await getQueryResultData(jobResult);
+      let columns = finalResult?.columns.map((key: any) => ({
+        title: key.name,
+        dataIndex: key.name,
+        key: key.name,
+      }));
 
-    await sleep(2000);
-    chat_message.update(
-      <div>
-        <QueryCard result={response?.data?.result} />
-        <Alert message={<>Thinking&hellip;</>} type="info" />
-      </div>
-    );
+      const tableData = {
+        columns,
+        rows: finalResult.rows,
+      };
 
-    await sleep(4000);
-    chat_message.done(
-      <div>
-        <QueryCard result={response?.data?.result} />
-        <>
-          <Label className="query-label">Table</Label>
-          <Table />
-        </>
-      </div>
-    );
+      await sleep(2500);
+      chat_message.done(
+        <div>
+          <div className="table-div">
+            <CollapseCard result={response?.data?.result} />
+          </div>
+          <TableCard tableData={tableData} />
+        </div>
+      );
 
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: "system",
-        content: `${(<QueryCard result={response?.data?.result} />)}`,
-      },
-    ]);
+      aiState.done([
+        ...aiState.get(),
+        {
+          role: "system",
+          content: `${(
+            <div>
+              <div className="table-div">
+                <CollapseCard result={response?.data?.result} />
+              </div>
+              <TableCard tableData={tableData} />
+            </div>
+          )}`,
+        },
+      ]);
+    } catch (error: any) {
+      console.log("Error", error.message);
+    }
   });
-
   return {
     id: Date.now(),
     display: chat_message.value,

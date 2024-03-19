@@ -7,7 +7,6 @@ import { UserMessage } from "@components/message";
 
 import { type AI } from "../../app/action";
 import { ChatScrollAnchor } from "../../utils/chat-scroll-anchor";
-import { FooterText } from "@components/footer";
 import Textarea from "react-textarea-autosize";
 import { useEnterSubmit } from "../../utils/user-enter-submit";
 import {
@@ -177,7 +176,6 @@ export default function Page() {
                 </div>
               </div>
             </form>
-            <FooterText className="hidden sm:block" />
           </div>
         </div>
       </div>
