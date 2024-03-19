@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import graphqlApi from "../../../../service/graphQLApi";
 import {
   GET_TRADEMARK_BY_ID,
@@ -7,11 +8,14 @@ import {
 
 export async function GET(
   req: NextRequest,
-  res: NextResponse
+  { params }: any
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-    const id = await req.nextUrl.searchParams.get("id");
+    const { id } = params;
+    // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
+    const org_id = "1";
   
     const apiResponse = await graphqlApi(GET_TRADEMARK_BY_ID, {
       id: parseInt(id as string, 10),

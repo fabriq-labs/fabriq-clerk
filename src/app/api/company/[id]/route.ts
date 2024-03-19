@@ -1,15 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import graphqlApi from "../../../../service/graphQLApi";
+import { cookies } from "next/headers";
 import { UPDATE_COMPANY, GET_COMPANY_BY_ID, DELETE_COMPANY } from "../../../../query/company";
 
+function decodeJwt(token: any) {
+  const parts = token?.split(".");
+  const payload = parts && JSON.parse(atob(parts?.[1]));
+
+  return payload;
+}
 
 export async function GET(
   req: NextRequest,
-  res: NextResponse
+  { params }: any
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-    const id = await req.nextUrl.searchParams.get("id");
+    const org_id = "1"
+    const { id } = params;
+
+     // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
   
     const apiResponse = await graphqlApi(GET_COMPANY_BY_ID, {
       id: parseInt(id as string, 10),
@@ -51,11 +62,16 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  res: NextResponse
+  { params }: any
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-    const id = await req.nextUrl.searchParams.get("id");
+    // const org_id =await req.nextUrl.searchParams.get("org_id");
+    const { id } = params;
+
+     // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
+    const org_id = "1";
   
     const apiResponse = await graphqlApi(DELETE_COMPANY, {
       id: parseInt(id as string, 10),

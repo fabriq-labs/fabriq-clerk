@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import graphqlApi from "../../../../service/graphQLApi";
 import { GET_COMPANY_DETAILS } from "../../../../query/ticket";
+
+function decodeJwt(token: any) {
+  const parts = token?.split(".");
+  const payload = parts && JSON.parse(atob(parts?.[1]));
+
+  return payload;
+}
+
 
 export async function GET(
   req: NextRequest,
   res: NextResponse
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-  
+    // const org_id =await req.nextUrl.searchParams.get("org_id");
+    const org_id = "1";
     const apiResponse = await graphqlApi(GET_COMPANY_DETAILS, {
       org_id: parseInt(org_id as string, 10),
     });

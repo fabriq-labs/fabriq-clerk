@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import graphqlApi from "../../../../service/graphQLApi";
 import {
   GET_CONTACT_BY_ID,
@@ -6,15 +7,23 @@ import {
   DELETE_CONTACT,
 } from "../../../../query/contact";
 
+function decodeJwt(token: any) {
+  const parts = token?.split(".");
+  const payload = parts && JSON.parse(atob(parts?.[1]));
 
-export async function GET(
-  req: NextRequest,
-  res: NextResponse
-) {
+  return payload;
+}
+
+export async function GET(req: NextRequest, { params }: any) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-    const id = await req.nextUrl.searchParams.get("id");
-  
+    // const org_id = await req.nextUrl.searchParams.get("org_id");
+    const { id } = params;
+
+    // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
+    const org_id = "1";
+
     const apiResponse = await graphqlApi(GET_CONTACT_BY_ID, {
       id: parseInt(id as string, 10),
       org_id: parseInt(org_id as string, 10),
@@ -32,14 +41,11 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  res: NextResponse
-) {
+export async function PUT(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
-    const { variables } : any = data;
-    const apiResponse = await graphqlApi(UPDATE_CONTACT,variables);
+    const { variables }: any = data;
+    const apiResponse = await graphqlApi(UPDATE_CONTACT, variables);
 
     if (apiResponse && apiResponse.data) {
       return NextResponse.json(apiResponse.data);
@@ -53,14 +59,16 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  res: NextResponse
-) {
+export async function DELETE(req: NextRequest, { params }: any) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
-    const id = await req.nextUrl.searchParams.get("id");
-  
+    const { id } = params;
+    // const org_id = req.nextUrl.searchParams.get("org_id");
+
+     // Get a cookie
+     const token = cookies().get("__session")?.value;
+     const decoded = decodeJwt(token);
+     const org_id = "1";
+
     const apiResponse = await graphqlApi(DELETE_CONTACT, {
       id: parseInt(id as string, 10),
       org_id: parseInt(org_id as string, 10),

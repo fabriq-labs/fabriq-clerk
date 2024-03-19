@@ -48,7 +48,7 @@ const Company = () => {
 
     axios({
       method: "GET",
-      url: `/api/company?${queryString}`,
+      url: `/api/company`,
     })
       .then((res) => {
         setCompanyData(res?.data?.data?.company);
@@ -79,7 +79,7 @@ const Company = () => {
 
     axios({
       method: "DELETE",
-      url: `/api/company/${record?.id}?${queryString}`,
+      url: `/api/company/${record?.id}`,
     })
       .then((res) => {
         console.log("company deleted", res?.data?.data);

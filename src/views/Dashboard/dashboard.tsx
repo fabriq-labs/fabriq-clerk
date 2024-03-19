@@ -60,7 +60,7 @@ const Dahsboard = () => {
       .join("&");
     axios({
       method: "GET",
-      url: `/api/dashboard?${queryString}`,
+      url: `/api/dashboard`,
     })
       .then((res) => {
         let formatedData = calculateRenewalCounts(res?.data?.data);

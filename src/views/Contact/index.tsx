@@ -48,7 +48,7 @@ export const Contact = () => {
 
     axios({
       method: "GET",
-      url: `/api/contact?${queryString}`,
+      url: `/api/contact`,
     })
       .then((res) => {
         setContactData(res?.data?.data?.contact);
@@ -79,7 +79,7 @@ export const Contact = () => {
 
     axios({
       method: "DELETE",
-      url: `/api/contact/${record?.id}?${queryString}`,
+      url: `/api/contact/${record?.id}`,
     })
       .then((res) => {
         console.log("contact deleted", res?.data?.data);

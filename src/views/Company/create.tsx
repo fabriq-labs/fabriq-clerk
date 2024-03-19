@@ -183,7 +183,7 @@ const CreateCompany = () => {
     if (id) {
       axios({
         method: "GET", // You can replace 'get' with other HTTP methods if needed
-        url: `/api/company/${id}?${queryString}`,
+        url: `/api/company/${id}`,
       })
         .then((res) => {
           let initialValues = res?.data?.data?.company?.[0];
@@ -222,7 +222,6 @@ const CreateCompany = () => {
         id: parseInt(id),
         set: { ...values },
       };
-      console.log("variables", variables)
       axios({
         method: "PUT",
         url: `/api/company/${id}`,

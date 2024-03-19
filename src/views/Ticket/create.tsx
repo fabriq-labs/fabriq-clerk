@@ -56,7 +56,7 @@ const CreateTicket = () => {
     if (id) {
       axios({
         method: "GET", // You can replace 'get' with other HTTP methods if needed
-        url: `/api/ticket/${id}?${queryString}`,
+        url: `/api/ticket/${id}`,
       })
         .then((res) => {
           let initialValues: any = res?.data?.data?.ticket?.[0];
@@ -104,7 +104,7 @@ const CreateTicket = () => {
     setLoader(true);
     axios({
       method: "GET", // You can replace 'get' with other HTTP methods if needed
-      url: `/api/ticket/company?${queryString}`,
+      url: `/api/ticket/company`,
     })
       .then((res) => {
         let initialValues = res?.data?.data?.company;
@@ -127,8 +127,6 @@ const CreateTicket = () => {
   };
 
   const handleCompanyChange = (value: any, data: any) => {
-    // Find the selected company in the API response
-    console.log("value", value);
     const selectedCompany: any = data.find(
       (company: any) => company?.id === value
     );

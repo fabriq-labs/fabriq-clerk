@@ -133,7 +133,7 @@ const CreateContact = () => {
   const [companyList, setCompanyList] = useState([]);
   const [contacID, setContactID]: any = useState("");
   const router = useRouter();
-  const { id }:any = useParams();
+  const { id }: any = useParams();
   const [form] = Form.useForm();
   const [isModalEdited, setISModalEdited] = useState(null);
   const { Option } = Select;
@@ -159,7 +159,7 @@ const CreateContact = () => {
 
     axios({
       method: "GET",
-      url: `/api/contact?${queryString}`,
+      url: `/api/contact`,
     })
       .then((res) => {
         setReferenceList(res?.data?.data?.contact);
@@ -188,12 +188,10 @@ const CreateContact = () => {
       )
       .join("&");
     setLoader(true);
-    console.log("contact", id);
-
     if (id) {
       axios({
         method: "GET", // You can replace 'get' with other HTTP methods if needed
-        url: `/api/contact/${id}?${queryString}`,
+        url: `/api/contact/${id}`,
       })
         .then((res) => {
           let initialValues = res?.data?.data?.contact?.[0];
@@ -504,8 +502,6 @@ const CreateContact = () => {
         setConfirmLoading(false);
       });
   };
-
-  // console.log("****", dayjs(addAssociate?.renewal_duration, "DD-MM-YYYY"));
 
   return (
     <Layout>

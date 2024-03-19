@@ -61,7 +61,7 @@ export const Ticket = () => {
 
     axios({
       method: "GET",
-      url: `/api/ticket?${queryString}`,
+      url: `/api/ticket`,
     })
       .then((res) => {
         setTicketData(res?.data?.data?.ticket);

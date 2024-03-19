@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import graphqlApi from "../../../service/graphQLApi";
 import {GET_TRADEMARK, INSERT_TRADEMARK} from "../../../query/trademark";
+
+function decodeJwt(token: any) {
+  const parts = token?.split(".");
+  const payload = parts && JSON.parse(atob(parts?.[1]));
+
+  return payload;
+}
 
 export async function GET(
   req: NextRequest,
   res: NextResponse
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
+    // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
+    const org_id = "1";
     const apiResponse = await graphqlApi(GET_TRADEMARK, {
       org_id: org_id,
     });

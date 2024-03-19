@@ -1,5 +1,5 @@
 // Create Trademark
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Input, Select, Button, Form, Space, DatePicker } from "antd";
 import { useRouter, useParams } from "next/navigation";
@@ -18,7 +18,7 @@ const CreateTrademark = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [contacts, setContacts] = useState([]);
   const router = useRouter();
-  const { id }:any = useParams();
+  const { id }: any = useParams();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const CreateTrademark = () => {
     if (id) {
       axios({
         method: "GET",
-        url: `/api/trademark/${id}?${queryString}`,
+        url: `/api/trademark/${id}`,
       })
         .then((res) => {
           let initialValues: any = res?.data?.data?.trademark?.[0];
@@ -91,7 +91,7 @@ const CreateTrademark = () => {
     setLoader(true);
     axios({
       method: "GET", // You can replace 'get' with other HTTP methods if needed
-      url: `/api/ticket/company?${queryString}`,
+      url: `/api/ticket/company`,
     })
       .then((res) => {
         let initialValues = res?.data?.data?.company;
@@ -233,8 +233,8 @@ const CreateTrademark = () => {
                 </div>
                 <div style={{ width: "50%" }}>
                   <Form.Item
-                    label="Contact"
-                    name="contact_id"
+                    label="Brand Name"
+                    name="brand_name"
                     rules={[
                       {
                         required: false,
@@ -242,12 +242,7 @@ const CreateTrademark = () => {
                       },
                     ]}
                   >
-                    <Select
-                      mode="tags"
-                      style={{ width: "100%" }}
-                      placeholder="Tags Mode"
-                      options={contacts}
-                    />
+                    <Input style={{ width: "100%" }} />
                   </Form.Item>
                 </div>
               </div>
@@ -290,8 +285,8 @@ const CreateTrademark = () => {
               <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "50%" }}>
                   <Form.Item
-                    label="Brand Name"
-                    name="brand_name"
+                    label="Contact"
+                    name="contact_id"
                     rules={[
                       {
                         required: false,
@@ -299,7 +294,12 @@ const CreateTrademark = () => {
                       },
                     ]}
                   >
-                    <Input style={{ width: "100%" }} />
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      placeholder="Tags Mode"
+                      options={contacts}
+                    />
                   </Form.Item>
                 </div>
                 <div style={{ width: "50%" }}>

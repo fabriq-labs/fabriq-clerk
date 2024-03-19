@@ -3,11 +3,11 @@ import graphqlApi from "../../../service/graphQLApi";
 import { INSERT_CONTACT, GET_CONTACT } from "../../../query/contact";
 
 export async function GET(
-  req: NextRequest,
-  res: NextResponse
+  req: NextRequest
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
+    const org_id = "1";
+    // const org_id =await req.nextUrl.searchParams.get("org_id");
     const apiResponse = await graphqlApi(GET_CONTACT, {
       org_id: org_id,
     });
@@ -25,8 +25,7 @@ export async function GET(
 }
 
 export async function POST(
-  req: NextRequest,
-  res: NextResponse
+  req: NextRequest
 ) {
   try {
     const data = await req.json();

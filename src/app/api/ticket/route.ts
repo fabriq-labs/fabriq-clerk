@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import graphqlApi from "../../../service/graphQLApi";
 import {GET_TICKET, INSERT_TICKET} from "../../../query/ticket";
 
@@ -8,7 +9,10 @@ export async function GET(
   res: NextResponse
 ) {
   try {
-    const org_id =await req.nextUrl.searchParams.get("org_id");
+     // Get a cookie
+    // const token = cookies().get("__session")?.value;
+    // const decoded = decodeJwt(token);
+    const org_id = "1";
     const apiResponse = await graphqlApi(GET_TICKET, {
       org_id: org_id,
     });
