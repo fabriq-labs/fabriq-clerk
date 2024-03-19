@@ -41,28 +41,32 @@ async function sendMessage(userInput: string) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  const fetchDataFromJob = async (jobData: any): Promise<any> => {
-    let message = "";
-
-    if (jobData.job.status === 2) {
-      message = "Executing query";
-    } else if (jobData.job.status === 4 || jobData.job.error.code === 1) {
-      message = "Error running query";
-    } else if (jobData.job.status === 1) {
-      message = "Query in queue";
-    } else if (jobData.job.status === 3) {
-      message = "Loading results";
+  const getQueryResultData = async (queryId: any) => {
+    if (queryId) {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/query_results/${queryId}`,{ headers } );
+        const { data } = response.data.query_result;          
+        return await data;
+      } catch (error: any) {
+        console.log("Error", error.message)
+      }
     }
+  };
+  const fetchDataFromJob = async (jobData: any): Promise<any> => {    
 
+    let url = `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/jobs/${jobData?.job.id}`
+    console.log(url);
+    
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/get_jobs/${jobData?.job.id}`);
-      const { data } = response;
-
+      const response = await axios.get(url,{ headers },
+      );
+      const { data } = await response;
+      
       if (data.job.status < 3) {
         await timeRange(3000);
-        return fetchDataFromJob(data);
+        return await fetchDataFromJob(data);
       } else if (data.job.status === 3) {
-        return data.job.result;
+        return await data.job.result;
       } else if (data.job.status === 4 && data.job.error.code === 1) {
         return [];
       } else {
@@ -113,6 +117,9 @@ async function sendMessage(userInput: string) {
         headers,
       }
     );
+      
+    const jobResult = await fetchDataFromJob(queryResultResponse?.data)
+    const finalResult = await getQueryResultData(jobResult)
 
     await sleep(2000);
     chat_message.update(
