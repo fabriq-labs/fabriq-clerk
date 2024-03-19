@@ -36,6 +36,43 @@ async function sendMessage(userInput: string) {
     <div className="items-center">{spinner}</div>
   );
 
+  function timeRange(ms: any) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  const fetchDataFromJob = async (jobData: any): Promise<any> => {
+    let message = "";
+
+    if (jobData.job.status === 2) {
+      message = "Executing query";
+    } else if (jobData.job.status === 4 || jobData.job.error.code === 1) {
+      message = "Error running query";
+    } else if (jobData.job.status === 1) {
+      message = "Query in queue";
+    } else if (jobData.job.status === 3) {
+      message = "Loading results";
+    }
+
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/get_jobs/${jobData?.job.id}`);
+      const { data } = response;
+
+      if (data.job.status < 3) {
+        await timeRange(3000);
+        return fetchDataFromJob(data);
+      } else if (data.job.status === 3) {
+        return data.job.result;
+      } else if (data.job.status === 4 && data.job.error.code === 1) {
+        return [];
+      } else {
+        throw new Error(data.job.error);
+      }
+    } catch (error: any) {
+      console.log("Error", error.message)
+    }
+  };
+
+
   runAsyncFnWithoutBlocking(async () => {
     await sleep(1000); // Delay for UI update
 
