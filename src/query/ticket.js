@@ -7,6 +7,7 @@ query get_ticket($org_id: Int) {
     id
     status
     subject
+    priority
     company {
       id
       name
@@ -16,8 +17,8 @@ query get_ticket($org_id: Int) {
 `;
 
 const INSERT_TICKET = `
-mutation insert_ticket($assignee_id: Int, $company_id: Int, $contact_id: jsonb, $description: String, $org_id: Int, $status: String, $subject: String, $type: String, $tag: String, $comment: String, $due_date: String, $pay_due_date: String) {
-  insert_ticket(objects: {assignee_id: $assignee_id, company_id: $company_id, contact_id: $contact_id, description: $description, org_id: $org_id, status: $status, subject: $subject, type: $type, tag: $tag, comment: $comment, due_date: $due_date, pay_due_date: $pay_due_date}) {
+mutation insert_ticket($assignee_id: Int, $company_id: Int, $contact_id: jsonb, $description: String, $org_id: Int, $status: String, $subject: String, $type: String, $tag: String, $comment: String, $due_date: String, $pay_due_date: String,$priority: String) {
+  insert_ticket(objects: {assignee_id: $assignee_id, company_id: $company_id, contact_id: $contact_id, description: $description, org_id: $org_id, status: $status, subject: $subject, type: $type, tag: $tag, comment: $comment, due_date: $due_date, pay_due_date: $pay_due_date, priority: $priority}) {
     returning {
       id
       subject
@@ -52,6 +53,7 @@ query get_ticket_by_id($id: Int, $org_id: Int) {
     tag
     due_date
     pay_due_date
+    priority
   }
   company: company(where: {org_id: {_eq: $org_id}}) {
     id

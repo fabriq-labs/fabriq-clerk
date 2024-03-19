@@ -714,7 +714,7 @@ const CreateCompany = () => {
                 </div>
                 <div style={{ width: "50%" }}>
                   <Form.Item
-                    label="PinCode"
+                    label="Pincode"
                     name="pincode"
                     rules={[
                       {

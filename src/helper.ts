@@ -88,3 +88,15 @@ export const statusTypeOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Cancelled", label: "Cancelled" },
   { value: "Deferred ", label: "Deferred " },
 ];
+
+export const priorityTypeOptions: { value: any; label: React.ReactNode }[] = [
+  { value: "1", label: "1" },
+  {
+    value: "2",
+    label: "2",
+  },
+  {
+    value: "3",
+    label: "3",
+  },
+];

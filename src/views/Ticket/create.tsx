@@ -11,6 +11,8 @@ import { CopyOutlined } from "@ant-design/icons";
 import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 
+import {priorityTypeOptions} from "../../helper";
+
 import { userTypeOptions, statusTypeOptions } from "../../helper";
 const ticketTypeOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Ticket", label: "Ticket" },
@@ -373,6 +375,28 @@ const CreateTicket = () => {
                 </div>
               </div>
               <div style={{ display: "flex", gap: "50px" }}>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
+                    label="Priority"
+                    name="priority"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a priority"
+                      options={priorityTypeOptions}
+                    />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "50%" }}>
+              
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "100%" }}>
                   <Form.Item
                     label="Subject"
@@ -447,7 +471,7 @@ const CreateTicket = () => {
               <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "100%" }}>
                   <Form.Item
-                    label="Commetnts"
+                    label="Comments"
                     name="comment"
                     rules={[
                       {

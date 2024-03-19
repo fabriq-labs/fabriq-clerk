@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Table, Popconfirm, Typography, Space, Input, Select, Tag } from "antd";
 import { useAuth } from "@clerk/nextjs";
@@ -15,6 +15,7 @@ import {
   getPath,
   userTypeOptions,
   statusTypeOptions,
+  priorityTypeOptions,
 } from "@/helper";
 
 export const Ticket = () => {
@@ -23,6 +24,7 @@ export const Ticket = () => {
   const [haveCreatePermission, setHavePermission] = useState(false);
   const [ticketData, setTicketData]: any = useState([]);
   const [userFilter, setUserFilter] = useState(null);
+  const [priorityFilter, setPriorityFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -106,6 +108,11 @@ export const Ticket = () => {
       render: (assigneeId: any) => mapAssigneeIdToName(assigneeId),
     },
     {
+      title: "Priority",
+      dataIndex: "priority",
+      key: "priority",
+    },
+    {
       title: "Status",
       key: "status",
       dataIndex: "status",
@@ -142,6 +149,10 @@ export const Ticket = () => {
     setUserFilter(value ? value : null);
   };
 
+  const handleChangeSelectPriority = (value: any) => {
+    setPriorityFilter(value ? value : null);
+  };
+
   const handleChangeSelectStatus = (value: any) => {
     setStatusFilter(value ? value : null);
   };
@@ -153,6 +164,7 @@ export const Ticket = () => {
       title: ticketData[key]?.subject || "",
       company: ticketData[key]?.company?.name || "",
       assignee: ticketData[key]?.assignee_id || "",
+      priority: ticketData[key]?.priority || "",
       status: ticketData[key]?.status || "",
     }));
 
@@ -168,10 +180,15 @@ export const Ticket = () => {
       ? filteredData.filter((item: any) => item.assignee === userFilter)
       : filteredData;
 
+  let filterPriorityData =
+    priorityFilter != null
+      ? filterUserData.filter((item: any) => item.priority === priorityFilter)
+      : filterUserData;
+
   let filterStatusData =
     statusFilter != null
-      ? filterUserData.filter((item: any) => item.status === statusFilter)
-      : filterUserData;
+      ? filterPriorityData.filter((item: any) => item.status === statusFilter)
+      : filterPriorityData;
 
   return (
     <Layout>
@@ -220,6 +237,30 @@ export const Ticket = () => {
                         onChange={handleChangeSelectUser}
                         allowClear={true}
                         placeholder="filter by assignee"
+                        // value={addAssociate && JSON.stringify(addAssociate?.company_id)}
+                      />
+                    </div>
+                    <div>
+                      {" "}
+                      <Select
+                        style={{ width: 150 }}
+                        showSearch
+                        size="middle"
+                        optionFilterProp="children"
+                        filterOption={(input, option: any) =>
+                          ((option?.label as string) ?? "").includes(input)
+                        }
+                        filterSort={(optionA, optionB) =>
+                          ((optionA?.label as string) ?? "")
+                            .toLowerCase()
+                            .localeCompare(
+                              ((optionB?.label as string) ?? "").toLowerCase()
+                            )
+                        }
+                        options={priorityTypeOptions}
+                        onChange={handleChangeSelectPriority}
+                        allowClear={true}
+                        placeholder="filter by priority"
                         // value={addAssociate && JSON.stringify(addAssociate?.company_id)}
                       />
                     </div>
