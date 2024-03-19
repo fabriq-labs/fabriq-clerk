@@ -5,6 +5,7 @@ import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 
 import QueryCard from "../components/chat/query_card";
 import { Table, Alert } from "antd";
+import { Label } from "@/components/ui/label";
 
 import { spinner } from "@/components/llm-stocks";
 
@@ -74,7 +75,7 @@ async function sendMessage(userInput: string) {
 
 
   runAsyncFnWithoutBlocking(async () => {
-    await sleep(1000); // Delay for UI update
+    await sleep(1000);
 
     chat_message.update(
       <div className="inline-flex items-start gap-1 md:items-center">
@@ -90,6 +91,7 @@ async function sendMessage(userInput: string) {
       }
     );
 
+    await sleep(2000);
     chat_message.update(
       <div>
         <QueryCard result={response?.data?.result} />
@@ -106,17 +108,13 @@ async function sendMessage(userInput: string) {
 
     const queryResultResponse = await axios.post(
       `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}demo/api/query_results`,
-      {
-        result,
-      },
+      result,
       {
         headers,
       }
     );
 
-    console.log("queryResultResponse", queryResultResponse);
-
-    await sleep(1000);
+    await sleep(2000);
     chat_message.update(
       <div>
         <QueryCard result={response?.data?.result} />
@@ -124,11 +122,14 @@ async function sendMessage(userInput: string) {
       </div>
     );
 
-    await sleep(2000);
+    await sleep(4000);
     chat_message.done(
       <div>
         <QueryCard result={response?.data?.result} />
-        <Table />
+        <>
+          <Label className="query-label">Table</Label>
+          <Table />
+        </>
       </div>
     );
 
