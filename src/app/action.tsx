@@ -7,6 +7,7 @@ import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import QueryCard from "../components/chat/query_card";
 import TableCard from "../components/chat/table_card";
 import CollapseCard from "../components/chat/collapse_card";
+import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
 
 import { Alert } from "antd";
 
@@ -63,9 +64,9 @@ async function sendMessage(userInput: string) {
           { headers }
         );
         const { data } = response.data.query_result;
-        return await data;
+        return data;
       } catch (error: any) {
-        console.log("Error", error.message);
+        console.log("Error - getQueryResultData", error.message);
       }
     }
   };
@@ -74,7 +75,7 @@ async function sendMessage(userInput: string) {
     let url = `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/jobs/${jobData?.job.id}`;
     try {
       const response = await axios.get(url, { headers });
-      const { data } = await response;
+      const { data } = response;
 
       if (jobData.job.status === 2) {
         message = "Executing query";
@@ -90,24 +91,40 @@ async function sendMessage(userInput: string) {
         await timeRange(3000);
         return await fetchDataFromJob(data);
       } else if (data.job.status === 3) {
-        return await data.job.result;
+        return data.job.result;
       } else if (data.job.status === 4 && data.job.error.code === 1) {
         return [];
       } else {
         throw new Error(data.job.error);
       }
     } catch (error: any) {
-      console.log("Error", error.message);
+      chat_message.done(
+        <div>
+          <Alert message="Error fetching job data" type="error" />
+        </div>
+      );
     }
   };
 
   runAsyncFnWithoutBlocking(async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/gpt`,
-        params,
-        { headers }
-      );
+      let response;
+      try {
+        response = await axios.post(
+          `${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}${decoded?.org_slug}/api/gpt`,
+          params,
+          { headers, timeout: 30000 }
+        );
+      } catch (err) {
+        chat_message.done(
+          <div>
+            <Alert
+              message="Unable to get the query. Please try again later."
+              type="error"
+            />
+          </div>
+        );
+      }
 
       await sleep(2000);
       chat_message.update(
@@ -115,7 +132,7 @@ async function sendMessage(userInput: string) {
           <div className="table-div">
             <QueryCard result={response?.data?.result} />
           </div>
-          <Alert message={<>Executing query&hellip;</>} type="info" />
+          <Alert message="Executing query…" type="info" />
         </div>
       );
 
@@ -152,10 +169,20 @@ async function sendMessage(userInput: string) {
 
       const tableData = {
         columns,
-        rows: finalResult.rows,
+        rows: finalResult?.rows,
       };
 
-      await sleep(2500);
+      await sleep(1000);
+      chat_message.update(
+        <div>
+          <div className="table-div">
+            <CollapseCard result={response?.data?.result} />
+          </div>
+          <StockSkeleton />
+        </div>
+      );
+
+      await sleep(1000);
       chat_message.done(
         <div>
           <div className="table-div">
@@ -180,9 +207,17 @@ async function sendMessage(userInput: string) {
         },
       ]);
     } catch (error: any) {
-      console.log("Error", error.message);
+      chat_message.done(
+        <div>
+          <Alert
+            message="Error processing message. Please try again later."
+            type="error"
+          />
+        </div>
+      );
     }
   });
+
   return {
     id: Date.now(),
     display: chat_message.value,

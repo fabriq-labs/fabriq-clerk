@@ -421,7 +421,6 @@ body::-webkit-scrollbar {
 }
 
 .table-div {
-  transition: box-shadow 0.3s ease;
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -434,4 +433,14 @@ body::-webkit-scrollbar {
 
 .action-table-content {
   padding: 20px;
+}
+
+.message-box {
+  margin-bottom: 100px;
+}
+
+.ant-skeleton-title {
+  width: 100% !important;
+  background-color: #fafafa;
+  height: 20px;
 }

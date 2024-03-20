@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Button, Col, Result, Row, notification, Tooltip } from "antd";
@@ -28,7 +28,7 @@ export default function Chat() {
 
   const [api, contextHolder] = notification.useNotification();
   const { organization }: any = useOrganization();
-  const params = useParams()
+  const params = useParams();
   const router = useRouter();
   const chatId: any = params?.chatId;
 
