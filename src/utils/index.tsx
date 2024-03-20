@@ -1,6 +1,6 @@
-import { OpenAIStream } from "ai"; // Assuming this is a custom module providing stream utilities
-import type OpenAI from "openai"; // Importing type for OpenAI
-import zodToJsonSchema from "zod-to-json-schema"; // Importing a utility for converting Zod schemas to JSON schemas
+import { OpenAIStream } from "ai";
+import type OpenAI from "openai";
+import zodToJsonSchema from "zod-to-json-schema";
 
 const consumeStream = async (stream: ReadableStream) => {
   const reader = stream.getReader();
@@ -11,9 +11,9 @@ const consumeStream = async (stream: ReadableStream) => {
 };
 
 export function runOpenAICompletion(
-  openai: OpenAI, // Parameter openai with type OpenAI
+  openai: OpenAI,
   params: {
-    functions: any[]; // Assuming functions is an array of any type
+    functions: any[];
   } & Omit<
     Parameters<typeof OpenAI.prototype.chat.completions.create>[0],
     "functions"
@@ -22,7 +22,7 @@ export function runOpenAICompletion(
   let text = "";
   let hasFunction = false;
   let onTextContent: (text: string, isFinal: boolean) => void = () => {};
-  let onFunctionCall: Record<string, any> = {}; // Defining onFunctionCall as a record of string keys and any values
+  let onFunctionCall: Record<string, any> = {};
 
   (async () => {
     consumeStream(
