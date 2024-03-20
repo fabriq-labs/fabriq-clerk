@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { UserButton, Protect, useAuth, useOrganization } from "@clerk/nextjs";
 import Link from "next/link";
@@ -111,6 +112,17 @@ export default function Navbar() {
                   } transition`}
                 >
                   Trademark
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/reports">
+                <span
+                  className={`${
+                    isActive("/reports") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  Reports
                 </span>
               </Link>
             </li>

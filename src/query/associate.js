@@ -1,11 +1,11 @@
 const INSERT_ASSOCIATE = `
-mutation add_associate($company_id: Int!,$appointment_date: String, $association: String, $contact_id: Int, $renewal_date: String, $org_id: Int  ) {
-    insert_company_contact(objects: {company_id: $company_id, appointment_date: $appointment_date, association: $association, contact_id: $contact_id, renewal_date: $renewal_date, org_id: $org_id}) {
-      returning {
-        id
-      }
+mutation add_associate($company_id: Int!, $appointment_date: date, $association: String, $contact_id: Int, $renewal_date: date, $org_id: Int) {
+  insert_company_contact(objects: {company_id: $company_id, appointment_date: $appointment_date, association: $association, contact_id: $contact_id, renewal_date: $renewal_date, org_id: $org_id}) {
+    returning {
+      id
     }
   }
+}
 `;
 
 const UPDATE_ASSOCIATE = `

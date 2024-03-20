@@ -18,9 +18,10 @@ export async function GET(
     // const token = cookies().get("__session")?.value;
     // const decoded = decodeJwt(token);
     const org_id = "1";
-    const apiResponse = await graphqlApi(GET_DASHBOARD_DATA, {
-      org_id: org_id,
-    });
+    const apiResponse = await graphqlApi(GET_DASHBOARD_DATA);
+    // const apiResponse = await graphqlApi(GET_DASHBOARD_DATA, {
+    //   org_id: parseInt(org_id as string, 10),
+    // });
 
     if (apiResponse && apiResponse.data) {
       return NextResponse.json(apiResponse.data);

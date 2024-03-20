@@ -1,3 +1,5 @@
+import { format, addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+
 export const authObject: Record<string, Record<string, string[]>> = {
   "org:admin": {
     contact: ["GET", "POST", "PUT", "DELETE"],
@@ -100,3 +102,31 @@ export const priorityTypeOptions: { value: any; label: React.ReactNode }[] = [
     label: "3",
   },
 ];
+
+export const getStartAndEndDate = (filterType: string): { startDate: string, endDate: string } => {
+  const currentDate = new Date();
+
+  switch (filterType) {
+    case 'thisWeek': {
+      const startDate = format(startOfWeek(currentDate), 'yyyy-MM-dd');
+      const endDate = format(endOfWeek(currentDate), 'yyyy-MM-dd');
+      return { startDate, endDate };
+    }
+    case 'thisMonth': {
+      const startDate = format(startOfMonth(currentDate), 'yyyy-MM-dd');
+      const endDate = format(endOfMonth(currentDate), 'yyyy-MM-dd');
+      return { startDate, endDate };
+    }
+    case 'overdue': {
+      // Assuming 'Over Due' means until yesterday
+      const yesterday = addDays(currentDate, -1);
+      const startDate = '1990-01-01'; // Assuming a reasonable start date for overdue check
+      const endDate = format(yesterday, 'yyyy-MM-dd');
+      return { startDate, endDate };
+    }
+    default: {
+      // Return an empty range by default
+      return { startDate: '', endDate: '' };
+    }
+  }
+};

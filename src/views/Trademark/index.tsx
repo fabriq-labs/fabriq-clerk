@@ -1,11 +1,12 @@
 // TradeMark
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Table, Input } from "antd";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import axios from "axios";
+import dayjs from "dayjs";
 
 // Component
 import { withRoles } from "@/app/role";
@@ -91,13 +92,25 @@ export const Trademark = () => {
       key: trademarkData[key]?.id || "",
       brand: trademarkData[key]?.brand_name || "",
       company: trademarkData[key]?.company?.name || "",
-      registered_date: trademarkData[key]?.registered_date || "",
-      renewal_date: trademarkData[key]?.renewal_date || "",
+      registered_date:
+        (trademarkData[key]?.registered_date &&
+          dayjs(trademarkData[key]?.registered_date, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )) ||
+        null,
+      renewal_date:
+        (trademarkData[key]?.renewal_date &&
+          dayjs(trademarkData[key]?.renewal_date, "YYYY-MM-DD").format(
+            "DD-MM-YYYY"
+          )) ||
+        null,
     }));
 
-  let filteredData = transformedData && transformedData.filter((item: any) =>
-    item.brand.toLowerCase().includes(searchValue)
-  );
+  let filteredData =
+    transformedData &&
+    transformedData.filter((item: any) =>
+      item.brand.toLowerCase().includes(searchValue)
+    );
 
   return (
     <Layout>

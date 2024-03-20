@@ -17,7 +17,7 @@ query getContact($org_id: Int!) {
 `;
 
 const INSERT_CONTACT = `
-mutation insert_contact($aadhar: String, $alternate_email: String, $din: String, $dsc_registered_date: String, $dsc_renewal_date: String, $email: String, $name: String, $org_id: Int, $pan: String, $passport: String, $phone: String, $reference: String, $whatsapp: String, $salutation: String, $tag: String) {
+mutation insert_contact($aadhar: String, $alternate_email: String, $din: String, $dsc_registered_date: date, $dsc_renewal_date: date, $email: String, $name: String, $org_id: Int, $pan: String, $passport: String, $phone: String, $reference: String, $whatsapp: String, $salutation: String, $tag: String) {
   insert_contact(objects: {aadhar: $aadhar, alternate_email: $alternate_email, din: $din, dsc_registered_date: $dsc_registered_date, dsc_renewal_date: $dsc_renewal_date, email: $email, name: $name, org_id: $org_id, pan: $pan, passport: $passport, phone: $phone, reference: $reference, whatsapp: $whatsapp, salutation: $salutation, tag: $tag}) {
     returning {
       id

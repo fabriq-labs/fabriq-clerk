@@ -1,22 +1,22 @@
 // Dashboard
 
 const GET_DASHBOARD_DATA = `
-query get_dashbaord_data($org_id: Int) {
-  company_contact: company_contact(where: {org_id: {_eq: $org_id}}) {
+query get_dashbaord_data {
+  company_contact: company_contact {
     association
     id
     renewal_date
   }
-  trademark: trademark(where: {org_id: {_eq: $org_id}}) {
+  trademark: trademark {
     renewal_date
     id
     company_id
   }
-  contact: contact(where: {org_id: {_eq: $org_id}}) {
+  contact: contact {
     dsc_renewal_date
     id
   }
-  ticket: ticket(where: {org_id: {_eq: $org_id}}) {
+  ticket: ticket {
     pay_due_date
     id
     assignee_id

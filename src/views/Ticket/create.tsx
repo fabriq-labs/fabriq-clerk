@@ -77,10 +77,10 @@ const CreateTicket = () => {
           const formattedInitialValues = {
             ...initialValues,
             due_date: initialValues.due_date
-              ? dayjs(initialValues.due_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.due_date, "YYYY-MM-DD")
               : null,
             pay_due_date: initialValues.pay_due_date
-              ? dayjs(initialValues.pay_due_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.pay_due_date, "YYYY-MM-DD")
               : null,
           };
           form.setFieldsValue(formattedInitialValues);
@@ -151,7 +151,7 @@ const CreateTicket = () => {
     setConfirmLoading(true);
     Object.keys(values).forEach((key) => {
       if (key === "due_date" || key === "pay_due_date") {
-        values[key] = values[key] && values[key].format("DD-MM-YYYY");
+        values[key] = values[key] && values[key].format("YYYY-MM-DD");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
         values[key] = null;

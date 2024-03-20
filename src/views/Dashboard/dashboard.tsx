@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Modal, Skeleton } from "antd";
+import { useRouter } from "next/navigation";
 
 // Component
 import Layout from "../../components/layout";
@@ -38,6 +39,7 @@ const Dahsboard = () => {
   const [associateData, setAssociateData]: any = useState(null);
   const [modalLoader, setModalLoader] = useState(true);
   const [showList, setShowList] = useState(false);
+  const router = useRouter();
 
   const istDate = new Date().toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
@@ -55,16 +57,24 @@ const Dahsboard = () => {
 
   // Function to check if a date is in the current month
   const isInCurrentMonth = (date: any) => {
+    const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    
     const renewalDate = new Date(date);
-    return renewalDate.getMonth() === currentMonth;
-  };
+    const renewalMonth = renewalDate.getMonth();
+    const renewalYear = renewalDate.getFullYear();
+    
+    return renewalMonth === currentMonth && renewalYear === currentYear;
+};
 
   // Function to check if a date is overdue with today
   const isOverdue = (date: any) => {
-    const today = new Date();
+    const currentDate = new Date();
     const compareDate = new Date(date);
-    return compareDate < today;
+    currentDate.setHours(0, 0, 0, 0);
+    compareDate.setHours(0, 0, 0, 0);
+    return compareDate < currentDate;
   };
 
   useEffect(() => {
@@ -97,7 +107,7 @@ const Dahsboard = () => {
 
     data.trademark.forEach((trademark: any) => {
       if (trademark.renewal_date) {
-        const [day, month, year] = trademark.renewal_date
+        const [year, month, day] = trademark.renewal_date
           .split("-")
           .map(Number);
         const renewalDate = new Date(year, month - 1, day);
@@ -130,7 +140,7 @@ const Dahsboard = () => {
 
     data?.company_contact?.forEach((contact: any) => {
       if (contact.renewal_date) {
-        const [day, month, year] = contact.renewal_date.split("-").map(Number);
+        const [year, month, day] = contact.renewal_date.split("-").map(Number);
         // JavaScript's Date constructor expects months to be 0-indexed, so we subtract 1
         const renewalDate = new Date(year, month - 1, day);
         if (!counts[contact.association]) {
@@ -160,7 +170,7 @@ const Dahsboard = () => {
 
     data.contact.forEach((contact: any) => {
       if (contact.dsc_renewal_date) {
-        const [day, month, year] = contact.dsc_renewal_date
+        const [year, month, day] = contact.dsc_renewal_date
           .split("-")
           .map(Number);
         const renewalDate = new Date(year, month - 1, day);
@@ -189,7 +199,7 @@ const Dahsboard = () => {
 
     data.ticket.forEach((ticket: any) => {
       if (ticket.pay_due_date) {
-        const [day, month, year] = ticket.pay_due_date.split("-").map(Number);
+        const [year, month, day] = ticket.pay_due_date.split("-").map(Number);
         const renewalDate = new Date(year, month - 1, day);
         const association = "Pay Later";
         if (!counts[association]) {
@@ -259,7 +269,6 @@ const Dahsboard = () => {
         },
       })
       .then((res) => {
-        console.log("res", res);
         let dataValue = res?.data?.data?.associate;
         setModalLoader(false);
         setAssociateData(dataValue);
@@ -335,10 +344,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisWeekIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("thisWeek", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -351,10 +358,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisMonthIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("thisMonth", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -367,10 +372,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisOverdueIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("overdue", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -392,10 +395,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisWeekIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("thisWeek", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -408,10 +409,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisMonthIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("thisMonth", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -424,10 +423,8 @@ const Dahsboard = () => {
       align: "center",
       render: (text: any, record: any) => (
         <span
-          onClick={() =>
-            handleListClick(record?.thisOverdueIds, record?.association)
-          }
-          style={{color: "#3c58f8", cursor: "pointer"}}
+          onClick={() => handleListClick("overdue", record?.association)}
+          style={{ color: "#3c58f8", cursor: "pointer" }}
         >
           {text}
         </span>
@@ -478,10 +475,12 @@ const Dahsboard = () => {
 
   // Function to handle list click and fetch corresponding data
   const handleListClick = (record: any, association: any) => {
-    setIsOpen(true);
-    setSelectedItem(association);
-    setSelectedIds(record);
-    getAssociationDetails(record, association);
+    // setIsOpen(true);
+    // setSelectedItem(association);
+    // setSelectedIds(record);
+    // getAssociationDetails(record, association);
+    console.log("click", record, association);
+    router.push(`/reports?associate=${association}&filter=${record}`);
   };
 
   const handleCancel = () => {
@@ -560,13 +559,13 @@ const Dahsboard = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      width: "40%"
+      width: "40%",
     },
     {
       title: "Company",
       dataIndex: "company",
       key: "company",
-      width: "35%"
+      width: "35%",
     },
     {
       title: "Assigne",
@@ -579,7 +578,7 @@ const Dahsboard = () => {
       title: "Pay Later (Date)",
       dataIndex: "pay_due_date",
       key: "pay_due_date",
-      width: "15%"
+      width: "15%",
     },
   ];
 

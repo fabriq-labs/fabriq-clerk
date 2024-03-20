@@ -199,10 +199,10 @@ const CreateContact = () => {
           const formattedInitialValues = {
             ...initialValues,
             dsc_registered_date: initialValues.dsc_registered_date
-              ? dayjs(initialValues.dsc_registered_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.dsc_registered_date, "YYYY-MM-DD")
               : null,
             dsc_renewal_date: initialValues.dsc_renewal_date
-              ? dayjs(initialValues.dsc_renewal_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.dsc_renewal_date, "YYYY-MM-DD")
               : null,
           };
           form.setFieldsValue(formattedInitialValues);
@@ -231,10 +231,21 @@ const CreateContact = () => {
 
   const handleOk = () => {
     setModalConfirmLoading(true);
+    let formatAssociate = {...addAssociate};
+    Object.keys(formatAssociate).forEach((key) => {
+      if (key === "appointment_date" || key === "renewal_date") {
+        if (formatAssociate[key]) {
+          formatAssociate[key] = dayjs(
+            formatAssociate[key],
+            "DD-MM-YYYY"
+          ).format("YYYY-MM-DD");
+        }
+      }
+    });
     if (isModalEdited !== null) {
       let variables: any = {
         id: isModalEdited,
-        set: { ...addAssociate },
+        set: { ...formatAssociate },
       };
       axios({
         method: "PUT",
@@ -244,7 +255,7 @@ const CreateContact = () => {
         .then((res) => {
           setModalConfirmLoading(false);
           setIsOpen(false);
-          setAddAssociate({});
+          setAddAssociate(null);
           getContactDataById();
         })
         .catch((err) => {
@@ -253,7 +264,7 @@ const CreateContact = () => {
           setConfirmLoading(false);
         });
     } else {
-      let variables = { ...addAssociate, org_id: 1, contact_id: id };
+      let variables = { ...formatAssociate, org_id: 1, contact_id: id };
       axios({
         method: "POST",
         url: "/api/associate",
@@ -314,7 +325,6 @@ const CreateContact = () => {
       data: { variables },
     })
       .then((res) => {
-        console.log("Associate deleted", res?.data?.data);
         setLoader(false);
         getContactDataById();
       })
@@ -371,14 +381,20 @@ const CreateContact = () => {
       key: associateData[key]?.id || "",
       name: associateData[key]?.company?.[0]?.name || "",
       association: associateData[key]?.association || "",
-      appointment_date: associateData[key]?.appointment_date || "",
-      renewal_date: associateData[key]?.renewal_date || "",
+      appointment_date:
+        dayjs(associateData[key]?.appointment_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
+      renewal_date:
+        dayjs(associateData[key]?.renewal_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
     }));
 
   const onFinish = (values: any) => {
     Object.keys(values).forEach((key) => {
       if (key === "dsc_registered_date" || key === "dsc_renewal_date") {
-        values[key] = values[key] && values[key].format("DD-MM-YYYY");
+        values[key] = values[key] && values[key].format("YYYY-MM-DD");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
         values[key] = null;
@@ -449,6 +465,9 @@ const CreateContact = () => {
       company_id: companyId,
       association: record?.association,
       appointment_date: record?.appointment_date,
+      // dayjs(record?.appointment_date, "YYYY-MM-DD").format(
+      //   "DD-MM-YYYY"
+      // ),
       renewal_date: record?.renewal_date,
     };
     setAddAssociate(editAssociate);
@@ -477,7 +496,7 @@ const CreateContact = () => {
   const onSumbit = (values: any) => {
     Object.keys(values).forEach((key) => {
       if (key === "dsc_registered_date" || key === "dsc_renewal_date") {
-        values[key] = values[key] && values[key].format("DD-MM-YYYY");
+        values[key] = values[key] && values[key].format("YYYY-MM-DD");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
         values[key] = null;
@@ -752,7 +771,13 @@ const CreateContact = () => {
             </Form>
             {id && (
               <>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
                   <div style={{ fontWeight: "500" }}>Associate</div>
                   <div
                     className="associate-add-button"
@@ -834,6 +859,7 @@ const CreateContact = () => {
                 onChange(date, dateString, "appointment_date")
               }
               style={{ width: 220 }}
+              format={"DD-MM-YYYY"}
               value={
                 addAssociate &&
                 addAssociate?.appointment_date &&
@@ -850,6 +876,7 @@ const CreateContact = () => {
                 onChange(date, dateString, "renewal_date")
               }
               style={{ width: 220 }}
+              format={"DD-MM-YYYY"}
               value={
                 addAssociate &&
                 addAssociate?.renewal_date &&

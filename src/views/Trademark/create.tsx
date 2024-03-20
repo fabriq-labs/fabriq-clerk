@@ -52,10 +52,10 @@ const CreateTrademark = () => {
           const formattedInitialValues = {
             ...initialValues,
             registered_date: initialValues.registered_date
-              ? dayjs(initialValues.registered_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.registered_date, "YYYY-MM-DD")
               : null,
             renewal_date: initialValues.renewal_date
-              ? dayjs(initialValues.renewal_date, "DD-MM-YYYY")
+              ? dayjs(initialValues.renewal_date, "YYYY-MM-DD")
               : null,
           };
           setCompanyData(res?.data?.data?.company);
@@ -136,7 +136,7 @@ const CreateTrademark = () => {
   const onFinish = (values: any) => {
     Object.keys(values).forEach((key) => {
       if (key === "registered_date" || key === "renewal_date") {
-        values[key] = values[key] && values[key].format("DD-MM-YYYY");
+        values[key] = values[key] && values[key].format("YYYY-MM-DD");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
         values[key] = null;
