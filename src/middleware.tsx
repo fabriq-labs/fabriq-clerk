@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { authorize } from "./helper";
 
 export default authMiddleware({
-  publicRoutes: ["/sign-in"],
+  publicRoutes: ["/sign-in", "/api/user_create(.*)"],
   afterAuth(auth, req) {
     const { pathname } = req.nextUrl;
 
