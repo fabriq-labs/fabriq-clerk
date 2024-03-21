@@ -26,6 +26,7 @@ export const Ticket = () => {
   const [userFilter, setUserFilter] = useState(null);
   const [priorityFilter, setPriorityFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
+  const [userList, setUserList]:any = useState(null);
   const router = useRouter();
   const pathname = usePathname();
   const { orgRole }: any = useAuth();
@@ -45,22 +46,35 @@ export const Ticket = () => {
 
   useEffect(() => {
     getTicketData();
+    getUserList();
     let pathValue: any = getPath(pathname);
     let addPermission = authorize(orgRole, pathValue, "POST");
     setHavePermission(addPermission);
   }, []);
 
-  const getTicketData = () => {
-    let variables: any = {
-      org_id: 1,
-    };
-    const queryString = Object.keys(variables)
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(variables[key])}`
-      )
-      .join("&");
+  const getUserList = () => {
+    axios({
+      method: "GET",
+      url: `/api/user`,
+    })
+      .then((res) => {
+        let userData = res?.data?.data?.user;
+        const formattedData = userData.map((item: any) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setUserList(formattedData);
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoader(false);
+      });
+  };
 
+  const getTicketData = () => {
     axios({
       method: "GET",
       url: `/api/ticket`,
@@ -81,8 +95,9 @@ export const Ticket = () => {
   };
 
   const mapAssigneeIdToName = (assigneeId: any) => {
-    const user = users.find((user) => user.id === assigneeId);
-    return user ? user.name : "Unknown";
+    const user =
+      userList && userList.find((user: any) => user.value === assigneeId);
+    return user ? user.label : "Unknown";
   };
 
   const columns: any = [
@@ -106,6 +121,7 @@ export const Ticket = () => {
       dataIndex: "assignee",
       key: "assignee",
       render: (assigneeId: any) => mapAssigneeIdToName(assigneeId),
+      width: "10%"
     },
     {
       title: "Priority",
@@ -233,7 +249,7 @@ export const Ticket = () => {
                               ((optionB?.label as string) ?? "").toLowerCase()
                             )
                         }
-                        options={userTypeOptions}
+                        options={userList}
                         onChange={handleChangeSelectUser}
                         allowClear={true}
                         placeholder="filter by assignee"

@@ -126,6 +126,17 @@ export default function Navbar() {
                 </span>
               </Link>
             </li>
+            <li>
+              <Link href="/user">
+                <span
+                  className={`${
+                    isActive("/user") ? "tab active" : "tab"
+                  } transition`}
+                >
+                  User
+                </span>
+              </Link>
+            </li>
             {organization && organization?.publicMetadata?.is_connection && (
               <li>
                 <span

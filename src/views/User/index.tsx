@@ -1,7 +1,7 @@
-// TradeMark
+// User
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Input } from "antd";
+import { Table, Input, Space, Typography } from "antd";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -13,29 +13,29 @@ import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 import { authorize, getPath } from "@/helper";
 
-export const Trademark = () => {
+export const User = () => {
   const [loader, setLoader] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const [trademarkData, setTrademarkData]: any = useState([]);
+  const [userData, setUserData]: any = useState([]);
   const [haveCreatePermission, setHavePermission] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const { orgRole }: any = useAuth();
 
   useEffect(() => {
-    getTrademarkData();
+    getUserData();
     let pathValue: any = getPath(pathname);
     let addPermission = authorize(orgRole, pathValue, "POST");
     setHavePermission(addPermission);
   }, []);
 
-  const getTrademarkData = () => {
+  const getUserData = () => {
     axios({
       method: "GET",
-      url: `/api/trademark`,
+      url: `/api/user`,
     })
       .then((res) => {
-        setTrademarkData(res?.data?.data?.trademark);
+        setUserData(res?.data?.data?.user);
         setLoader(false);
       })
       .catch((err) => {
@@ -50,56 +50,58 @@ export const Trademark = () => {
   };
 
   const handleClickNavigate = (record: any) => {
-    router.push(`/trademark/${record?.key}`);
+    router.push(`/user/${record?.key}`);
   };
 
   const columns: any = [
     {
-      title: "Company",
-      dataIndex: "company",
-      key: "company",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Brand Name",
-      dataIndex: "brand",
-      key: "brand",
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
     },
     {
-      title: "Registered Date",
-      dataIndex: "registered_date",
-      key: "registered_date",
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
-      title: "Renewal Date",
-      dataIndex: "renewal_date",
-      key: "renewal_date",
+      title: "Email ID",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Action",
+      key: "operation",
+      fixed: "right",
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          <Typography.Link onClick={() => handleClickNavigate(record)}>
+            Edit
+          </Typography.Link>
+        </Space>
+      ),
     },
   ];
 
   const transformedData =
-    trademarkData &&
-    Object.keys(trademarkData).map((key) => ({
-      key: trademarkData[key]?.id || "",
-      brand: trademarkData[key]?.brand_name || "",
-      company: trademarkData[key]?.company?.name || "",
-      registered_date:
-        (trademarkData[key]?.registered_date &&
-          dayjs(trademarkData[key]?.registered_date, "YYYY-MM-DD").format(
-            "DD-MM-YYYY"
-          )) ||
-        null,
-      renewal_date:
-        (trademarkData[key]?.renewal_date &&
-          dayjs(trademarkData[key]?.renewal_date, "YYYY-MM-DD").format(
-            "DD-MM-YYYY"
-          )) ||
-        null,
+    userData &&
+    Object.keys(userData).map((key) => ({
+      key: userData[key]?.id || "",
+      name: userData[key]?.name || "",
+      role: userData[key]?.role || "",
+      phone: userData[key]?.phone || "",
+      email: userData[key]?.email || "",
     }));
 
   let filteredData =
     transformedData &&
     transformedData.filter((item: any) =>
-      item.brand.toLowerCase().includes(searchValue)
+      item.name.toLowerCase().includes(searchValue)
     );
 
   return (
@@ -117,26 +119,14 @@ export const Trademark = () => {
                   <div className="contact-header-title">Trademark</div>
                   <div className="search-container">
                     <Input
-                      placeholder="search by brand"
+                      placeholder="search by user"
                       style={{ width: "200px" }}
                       onChange={(e) => handleChangeSearch(e)}
                     />
                   </div>
-                  {haveCreatePermission && (
-                    <Link href="/trademark/create">
-                      <span className="contact-add-button">Add Trademark</span>
-                    </Link>
-                  )}
                 </div>
                 <div className="contact-body">
                   <Table
-                    onRow={(record, rowIndex) => {
-                      return {
-                        onClick: () => {
-                          handleClickNavigate(record);
-                        }, // click row
-                      };
-                    }}
                     columns={columns}
                     dataSource={filteredData}
                     bordered={false}
@@ -153,4 +143,4 @@ export const Trademark = () => {
   );
 };
 
-export default withRoles(Trademark, ["org:admin", "org:member"]);
+export default withRoles(User, ["org:admin", "org:member"]);

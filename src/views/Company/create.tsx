@@ -1,5 +1,5 @@
 // Create Company
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import {
@@ -78,20 +78,6 @@ const companyTypeOptions: { value: string; label: React.ReactNode }[] = [
   { value: "Partnership firm", label: "Partnership firm" },
 ];
 
-const userTypeOptions: { value: any; label: React.ReactNode }[] = [
-  { value: 1, label: "KIRUTHIKA D" },
-  {
-    value: 2,
-    label: "VAISHNAVI M",
-  },
-  { value: 3, label: "NANDHINI V" },
-  { value: 4, label: "KIRUTHIKA V" },
-  { value: 5, label: "RAJMOHAN NITHYA" },
-  { value: 6, label: "GOKUL R" },
-  { value: 7, label: "ARUN PRASANNA" },
-  { value: 8, label: "MADHAN R" },
-];
-
 const ROCTypeOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Chennai", label: "Chennai" },
   {
@@ -154,32 +140,42 @@ const CreateCompany = () => {
   const [addAssociate, setAddAssociate]: any = useState({});
   const [contactList, setContactList] = useState([]);
   const [isModalEdited, setISModalEdited] = useState(null);
+  const [userList, setUserList]:any = useState(null);
   const router = useRouter();
-  const { id }:any = useParams();
+  const { id }: any = useParams();
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (id) {
       getCompanyDataById();
     }
-    // getContactList();
+    getUserList();
   }, []);
 
+  const getUserList = () => {
+    axios({
+      method: "GET",
+      url: `/api/user`,
+    })
+      .then((res) => {
+        let userData = res?.data?.data?.user;
+        const formattedData = userData.map((item: any) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setUserList(formattedData);
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoader(false);
+      });
+  };
+
   const getCompanyDataById = () => {
-    let variables: any = {
-      org_id: 1,
-      id: id,
-    };
-    const queryString = Object.keys(variables)
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(variables[key])}`
-      )
-      .join("&");
     setLoader(true);
-
-    console.log("`/api/company/${id}?${queryString}`", `/api/company/${id}?${queryString}`)
-
     if (id) {
       axios({
         method: "GET", // You can replace 'get' with other HTTP methods if needed
@@ -472,7 +468,7 @@ const CreateCompany = () => {
                   >
                     <Select
                       placeholder="Please select a reference"
-                      options={userTypeOptions}
+                      options={userList}
                     />
                   </Form.Item>
                 </div>

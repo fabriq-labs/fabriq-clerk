@@ -39,6 +39,7 @@ const Dahsboard = () => {
   const [associateData, setAssociateData]: any = useState(null);
   const [modalLoader, setModalLoader] = useState(true);
   const [showList, setShowList] = useState(false);
+  const [userList, setUserList]:any = useState(null);
   const router = useRouter();
 
   const istDate = new Date().toLocaleString("en-US", {
@@ -83,6 +84,7 @@ const Dahsboard = () => {
   }, []);
 
   const getDashboardData = () => {
+    setLoader(true);
     axios({
       method: "GET",
       url: `/api/dashboard`,
@@ -90,6 +92,14 @@ const Dahsboard = () => {
       .then((res) => {
         let formatedData = calculateRenewalCounts(res?.data?.data);
         let ticketData = getCountsByAssigneeIdAndStatus(res?.data?.data);
+        let userData = res?.data?.data?.user;
+        const formattedData = userData.map((item: any) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setUserList(formattedData);
         setTicketsData(ticketData);
         setDashboradData(formatedData);
         setLoader(false);
@@ -433,8 +443,8 @@ const Dahsboard = () => {
   ];
 
   const mapAssigneeIdToName = (assigneeId: any) => {
-    const user = userTypeOptions.find(
-      (user) => user.value == parseInt(assigneeId)
+    const user = userList && userList.find(
+      (user: any) => user?.value == parseInt(assigneeId)
     );
     return user ? user.label : "Unknown";
   };

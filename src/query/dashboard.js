@@ -22,6 +22,13 @@ query get_dashbaord_data {
     assignee_id
     status
   }
+  user: user {
+    email
+    name
+    phone
+    id
+    role
+  }
 }
 `;
 

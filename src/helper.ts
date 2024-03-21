@@ -6,12 +6,14 @@ export const authObject: Record<string, Record<string, string[]>> = {
     company: ["GET", "POST", "PUT", "DELETE"],
     ticket: ["GET", "POST", "PUT", "DELETE"],
     trademark: ["GET", "POST", "PUT", "DELETE"],
+    user: ["GET", "POST", "PUT", "DELETE"],
   },
   "org:member": {
     contact: ["GET"],
     company: ["GET"],
     ticket: ["GET"],
     trademark: ["GET"],
+    user: ["GET"],
   },
 };
 

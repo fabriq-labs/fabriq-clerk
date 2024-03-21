@@ -30,6 +30,7 @@ const CreateTicket = () => {
   const [contacts, setContacts] = useState([]);
   const [duplicateValue, setDuplicateValue]: any = useState({});
   const [disableIcon, setDisableIcon] = useState(false);
+  const [userList, setUserList]:any = useState(null);
   const router = useRouter();
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -41,7 +42,30 @@ const CreateTicket = () => {
     } else {
       getCompanyList();
     }
+    getUserList();
   }, []);
+
+  const getUserList = () => {
+    axios({
+      method: "GET",
+      url: `/api/user`,
+    })
+      .then((res) => {
+        let userData = res?.data?.data?.user;
+        const formattedData = userData.map((item: any) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setUserList(formattedData);
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoader(false);
+      });
+  };
 
   const getTicketDataById = () => {
     let variables: any = {
@@ -294,7 +318,7 @@ const CreateTicket = () => {
                   >
                     <Select
                       placeholder="Please select a assignee"
-                      options={userTypeOptions}
+                      options={userList}
                     />
                   </Form.Item>
                 </div>
