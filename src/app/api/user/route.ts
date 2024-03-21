@@ -26,9 +26,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       const reqData: any = {
         email: email,
         role: organization_memberships?.data?.data?.[0]?.role,
-        org_id: parseInt(
-          organization_memberships?.data?.data?.[0]?.organization?.id
-        ),
+        org_id: organization_memberships?.data?.data?.[0]?.organization?.id,
         created_at: currentTimestamp,
         updated_at: currentTimestamp,
       };
@@ -42,7 +40,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         return NextResponse.json({ error: "Server Error" });
       }
     }
-    return NextResponse.json("userId");
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: "Server Error" });
