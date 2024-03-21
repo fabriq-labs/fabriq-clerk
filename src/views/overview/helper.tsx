@@ -278,3 +278,4 @@ export const emergencyRoomData = {
   averageWaitTime: 15,
 };
 
+
