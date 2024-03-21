@@ -1,3 +1,12 @@
-import Dashboard from "@views/Dashboard/dashboard";
+import React from "react";
 
-export default Dashboard;
+// Page
+import Dahsboard from "../views/Dashboard/dashboard";
+
+export default function Page() {
+  return (
+    <>
+      <Dahsboard />
+    </>
+  );
+}

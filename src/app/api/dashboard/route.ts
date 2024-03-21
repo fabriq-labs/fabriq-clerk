@@ -10,6 +10,7 @@ function decodeJwt(token: any) {
   return payload;
 }
 
+export const dynamic = 'force-dynamic';
 export async function GET(
   req: NextRequest
 ) {
