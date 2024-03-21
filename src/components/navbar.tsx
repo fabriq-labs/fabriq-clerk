@@ -74,18 +74,20 @@ export default function Navbar() {
             <li className="flex-list">
               <span>Fabriq</span>
             </li>
-            <li>
-              <Link href="/">
-                <span
-                  className={`${
-                    isActive("/") ? "tab active" : "tab"
-                  } transition`}
-                >
-                  Home
-                </span>
-              </Link>
-            </li>
-            {organization && organization?.publicMetadata?.is_connection && (
+            <Protect permission="org:demo:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`${
+                      isActive("/") ? "tab active" : "tab"
+                    } transition`}
+                  >
+                    Home
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
                   <span
@@ -97,7 +99,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            )}
+            </Protect>
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/explore">
@@ -122,6 +124,19 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/overview">
+                  <span
+                    className={`tab ${
+                      isActive("/overview") ? "active" : ""
+                    } transition`}
+                  >
+                    Overview
+                  </span>
+                </Link>
+              </li>
+            </Protect>
           </ul>
         </nav>
 

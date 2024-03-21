@@ -24,6 +24,7 @@ import Layout from "@components/layout";
 import Barchart from "@/components/chart/barchart";
 import LineChart from "@/components/chart/linechart";
 import LineChartTiny from "@/components/chart/linechart_tiny";
+import ErrorResult from "@/components/error_result";
 
 // images
 import WebLogo from "../../assets/web.png";
@@ -1349,7 +1350,11 @@ const OverviewPage = () => {
   return (
     <Layout>
       <div className="overview-wrapper">
-        {loader ? (
+        {isError ? (
+          <div className="overview-error-result">
+            <ErrorResult />
+          </div>
+        ) : loader ? (
           <div className="loader-cotainer">
             <div className="loader"></div>
           </div>
