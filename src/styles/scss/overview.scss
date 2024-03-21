@@ -234,7 +234,7 @@
   /* table content */
   .body-content {
     max-height: 400px;
-    overflow: scroll;
+    overflow-y: scroll;
   }
 
   .article-table-body,
@@ -246,6 +246,10 @@
     margin: 10px 0;
     padding: 5px 5px;
     border-radius: 12px;
+  }
+
+  .video-table-body {
+    padding: 36px 0 26px 0 !important;
   }
 
   .column-title {
@@ -272,5 +276,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .link-text {
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 500;
+  }
+
+  .overview-title {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+    color: #3a3f3a;
+    width: fit-content;
+    display: inline-block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -235,7 +235,14 @@ const ArticleTableCard = (props: any) => {
                             {record?.title}
                           </Tooltip>
                         </Link> */}
-                        <Tooltip title={record.title}>{record?.title}</Tooltip>
+                        <div
+                          className="overview-title"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Tooltip title={record.title}>
+                            {record?.title}
+                          </Tooltip>
+                        </div>
                       </div>
                       <div className="column-row">
                         {" "}
@@ -250,7 +257,12 @@ const ArticleTableCard = (props: any) => {
                           >
                             {record?.author}
                           </Link> */}
-                          {record?.author}
+                          <div
+                            className="overview-author-div-author"
+                            style={{ cursor: "pointer" }}
+                          >
+                            {record?.author}
+                          </div>
                         </span>
                         <span>{record?.category}</span>
                         <span className="link-text">
@@ -385,7 +397,6 @@ const AuthorTableCard = (props: any) => {
                       <div
                         className="column-title"
                         style={{ cursor: "pointer" }}
-                        onClick={() => handleClickTitle("author")}
                       >
                         {" "}
                         {record.title}
@@ -472,7 +483,7 @@ const CategoryTableCard = (props: any) => {
               <Row gutter={[16, 16]} className="table-card-row">
                 <Col span={6}>
                   <div className="column-container">
-                    <div className="column-title" style={{ cursor: "pointer" }}>
+                    <div className="column-title">
                       <span
                         style={{
                           marginRight: "15px",
@@ -516,118 +527,126 @@ const CategoryTableCard = (props: any) => {
   );
 };
 
-// const VideoTableCard = ({ dataSource, siteLink, handleClickTitle }) => {
-//   return (
-//     <div className="video-table-card-wrapper">
-//       <div className="video-table-header">
-//         <Row gutter={[16, 16]} className="table-card-row">
-//           <Col className="text-center table-heading" span={12} />
-//           <Col
-//             className="text-right table-heading"
-//             span={4}
-//             style={{ textAlign: "right" }}
-//           >
-//             <Tooltip title="Number of views on the website for the current day.">
-//               Views Today
-//             </Tooltip>
-//           </Col>
-//           <Col
-//             className="text-right table-heading"
-//             span={4}
-//             style={{ textAlign: "right" }}
-//           >
-//             <Tooltip title="Percentage of users who play a video out of those who have viewed the video thumbnail.">
-//               Play Rate
-//             </Tooltip>
-//           </Col>
-//           <Col
-//             className="text-right table-heading"
-//             span={4}
-//             style={{ textAlign: "right" }}
-//           >
-//             <Tooltip title="Rate at which users interact with content on the website.">
-//               Engagement rate
-//             </Tooltip>
-//           </Col>
-//         </Row>
-//       </div>
-//       <div className="body-content">
-//         {dataSource?.length > 0 ? (
-//           dataSource?.map((record, index) => (
-//             <div className="video-table-body" key={index}>
-//               <Row gutter={[16, 16]} className="table-card-row">
-//                 <Col span={12}>
-//                   <Row>
-//                     <div style={{ display: "flex" }}>
-//                       <span
-//                         style={{
-//                           marginRight: "15px",
-//                           fontSize: "14px",
-//                           fontWeight: 600,
-//                           color: "#737a73",
-//                           textAlign: "center"
-//                         }}
-//                       >
-//                         {index + 1}
-//                       </span>
-//                       <div className="column-container">
-//                         <Link
-//                           to={`/content/article/${record?.article?.article_id}?max_age=-1`}
-//                           className="overview-title"
-//                           style={{ cursor: "pointer" }}
-//                           onClick={() => handleClickTitle("article")}
-//                         >
-//                           <Tooltip title={record?.article?.title}>
-//                             {record?.article?.title}
-//                           </Tooltip>
-//                         </Link>
-//                         <div className="column-row">
-//                           <span>
-//                             Published on{" "}
-//                             {formationTimezone(record?.article?.published_date)}
-//                           </span>
-//                           <span className="link-text">
-//                             <a
-//                               href={`${siteLink}/story/${record?.article?.title}/${record?.article?.article_id}`}
-//                               target="_blank"
-//                               rel="noreferrer"
-//                             >
-//                               <img
-//                                 src={"/images/open-link.webp"}
-//                                 alt="link"
-//                                 style={{
-//                                   width: "12px",
-//                                   height: "12px"
-//                                 }}
-//                               />
-//                             </a>
-//                           </span>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </Row>
-//                 </Col>
-//                 <Col className="text-right" span={4}>
-//                   {record?.valid_play_views?.toLocaleString() || 0}
-//                 </Col>
-//                 <Col className="text-right" span={4}>
-//                   {`${record?.avg_playback_rate?.toFixed(2) || 0} %`}
-//                 </Col>
-//                 <Col className="text-right" span={4}>
-//                   {`${record?.avg_percent_played?.toFixed(2) || 0} %`}
-//                 </Col>
-//               </Row>
-//             </div>
-//           ))
-//         ) : (
-//           <div className="page-no-data">
-//             <Empty description="No Video Available" />
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
+const VideoTableCard = ({ dataSource, siteLink, handleClickTitle }: any) => {
+  return (
+    <div className="video-table-card-wrapper">
+      <div className="video-table-header">
+        <Row gutter={[16, 16]} className="table-card-row">
+          <Col className="text-center table-heading" span={12} />
+          <Col
+            className="text-right table-heading"
+            span={4}
+            style={{ textAlign: "right" }}
+          >
+            <Tooltip title="Number of views on the website for the current day.">
+              Views Today
+            </Tooltip>
+          </Col>
+          <Col
+            className="text-right table-heading"
+            span={4}
+            style={{ textAlign: "right" }}
+          >
+            <Tooltip title="Percentage of users who play a video out of those who have viewed the video thumbnail.">
+              Play Rate
+            </Tooltip>
+          </Col>
+          <Col
+            className="text-right table-heading"
+            span={4}
+            style={{ textAlign: "right" }}
+          >
+            <Tooltip title="Rate at which users interact with content on the website.">
+              Engagement rate
+            </Tooltip>
+          </Col>
+        </Row>
+      </div>
+      <div className="body-content">
+        {dataSource?.length > 0 ? (
+          dataSource?.map((record: any, index: any) => (
+            <div className="video-table-body" key={index}>
+              <Row gutter={[16, 16]} className="table-card-row">
+                <Col span={12}>
+                  <Row>
+                    <div style={{ display: "flex" }}>
+                      <span
+                        style={{
+                          marginRight: "15px",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          color: "#737a73",
+                          textAlign: "center",
+                        }}
+                      >
+                        {index + 1}
+                      </span>
+                      <div className="column-container">
+                        {/* <Link
+                          to={`/content/article/${record?.article?.article_id}?max_age=-1`}
+                          className="overview-title"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleClickTitle("article")}
+                        >
+                          <Tooltip title={record?.article?.title}>
+                            {record?.article?.title}
+                          </Tooltip>
+                        </Link> */}
+                        <div
+                          className="overview-title"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Tooltip title={record?.article?.title}>
+                            {record?.article?.title}
+                          </Tooltip>
+                        </div>
+                        <div className="column-row">
+                          <span>
+                            Published on{" "}
+                            {formationTimezone(record?.article?.published_date)}
+                          </span>
+                          <span className="link-text">
+                            <a
+                              href={`${siteLink}/story/${record?.article?.title}/${record?.article?.article_id}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <Image
+                                src={OpenLink}
+                                alt="link"
+                                style={{
+                                  width: "12px",
+                                  height: "12px",
+                                }}
+                              />
+                            </a>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Row>
+                </Col>
+                <Col className="text-right" span={4}>
+                  {record?.valid_play_views?.toLocaleString() || 0}
+                </Col>
+                <Col className="text-right" span={4}>
+                  {`${record?.avg_playback_rate?.toFixed(2) || 0} %`}
+                </Col>
+                <Col className="text-right" span={4}>
+                  {`${record?.avg_percent_played?.toFixed(2) || 0} %`}
+                </Col>
+              </Row>
+            </div>
+          ))
+        ) : (
+          <div className="page-no-data">
+            <Empty description="No Video Available" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const OverviewPage = () => {
   const [loader, setLoader] = useState(false);
@@ -661,6 +680,7 @@ const OverviewPage = () => {
   const [authorSeries, setAuthorSeries] = useState({});
   const [overviewTagsHour, setoverviewTagsHour] = useState([]);
   const [categorySeries, setCategorySeries] = useState({});
+  const [videoList, setVideoList] = useState([]);
 
   const timeInterval = 30 * 60 * 1000;
 
@@ -756,32 +776,6 @@ const OverviewPage = () => {
         })
         .then((res) => {
           const data = res?.data?.data;
-          // const targetTimezone =
-          //   localStorage.getItem("org_timezone") || "America/New_York";
-          // let currentData = data?.ArticleCurrentHours;
-          // let largestHour = 0;
-
-          // if (currentData?.length > 0) {
-          //   currentData.forEach((item) => {
-          //     if (item.hour > largestHour) {
-          //       largestHour = item.hour;
-          //     }
-          //   });
-          // }
-
-          // if (largestHour + 1 === 24) {
-          //   largestHour = 0;
-          // } else {
-          //   largestHour += 1;
-          // }
-          // const currentTime = moment()
-          //   .tz(targetTimezone)
-          //   .hour(largestHour)
-          //   .minute(0);
-
-          // const formattedDateNow = currentTime.format("MMM D, YYYY h:mm A");
-          // dispatch(updateLastUpdatedAt(formattedDateNow));
-
           if (data) {
             let topPost = data?.TopPosts;
             let topAuthor = data?.TopAuthors;
@@ -805,7 +799,7 @@ const OverviewPage = () => {
 
             setOverviewAuthor(topAuthor);
 
-            // setVideoList(data?.TopVideos);
+            setVideoList(data?.TopVideos);
 
             const scrollDepthData = data?.ScrollDepth?.aggregate?.sum;
 
@@ -863,7 +857,7 @@ const OverviewPage = () => {
             setTopPostToday(updatedTopPosts);
             getLast24HoursArticles(siteInfo, topPost);
             getLast24HoursForAuthor(siteInfo, topAuthor);
-            //   getLast24HoursCategory(siteDetails, data?.TopCategorys);
+            getLast24HoursCategory(siteInfo, data?.TopCategorys);
             if (data?.TopCity?.length > 0) {
               getTopCity(data?.TopCity?.[0]?.top_cities);
               generateChartSeriesAndLabels(data?.TopCity?.[0]?.top_referer);
@@ -1019,63 +1013,69 @@ const OverviewPage = () => {
   };
 
   const getLast24HoursCategory = async (siteDetails: any, categorys: any) => {
-    // const categoryIds = categorys?.map((item: any) => item?.category);
+    const categoryIds = categorys?.map((item: any) => item?.category);
 
-    // if (categoryIds?.length > 0) {
-    //   const real_time =
-    //     localStorage.getItem("real_time_date") ||
-    //     formationTimezone(moment(), "YYYY-MM-DD");
-    //   const req = {
-    //     period_date: real_time,
-    //     site_id: siteDetails?.site_id,
-    //     category: categoryIds,
-    //   };
+    if (categoryIds?.length > 0) {
+      const real_time =
+        localStorage.getItem("real_time_date") ||
+        formationTimezone(moment(), "YYYY-MM-DD");
+      const req = {
+        period_date: real_time,
+        site_id: siteDetails?.site_id,
+        category: categoryIds,
+      };
 
-    //   const lableValue = Array.from({ length: 24 }, (_, i) => i);
+      const lableValue = Array.from({ length: 24 }, (_, i) => i);
 
-    //   try {
-    //     const {
-    //       data: { data, errors },
-    //     } = await Overview.getLast24HoursForCategory(req);
+      try {
+        const {
+          data: { data, errors },
+        } = await axios.post("/api/overview", {
+          operation: "getCategoryList",
+          variables: req,
+        });
 
-    //     const result: any = {};
+        const result: any = {};
 
-    //     if (errors) {
-    //       throw errors;
-    //     }
+        if (errors) {
+          throw errors;
+        }
 
-    //     if (data?.last24HoursData?.length > 0) {
-    //       data.last24HoursData.forEach((categoryItem: any) => {
-    //         const category = categoryItem?.category;
+        if (data?.last24HoursData?.length > 0) {
+          data.last24HoursData.forEach((categoryItem: any) => {
+            const category = categoryItem?.category;
 
-    //         if (!result[category]) {
-    //           result[category] = {
-    //             series: [
-    //               {
-    //                 name: "Page Views",
-    //                 data: lableValue.map(() => 0),
-    //               },
-    //             ],
-    //             labels: lableValue.map((item) =>
-    //               moment(item, "H").format("h:mm a")
-    //             ),
-    //           };
-    //         }
+            if (!result[category]) {
+              result[category] = {
+                series: [
+                  {
+                    name: "Page Views",
+                    data: lableValue.map(() => 0),
+                  },
+                ],
+                labels: lableValue.map((item) =>
+                  moment(item, "H").format("h:mm a")
+                ),
+              };
+            }
 
-    //         const hourIndex = categoryItem?.hour;
+            const hourIndex = categoryItem?.hour;
 
-    //         if (hourIndex !== -1) {
-    //           result[category].series[0].data[hourIndex] =
-    //             categoryItem?.page_views;
-    //         }
-    //       });
-    //     }
+            if (hourIndex !== -1) {
+              result[category].series[0].data[hourIndex] =
+                categoryItem?.page_views;
+            }
+          });
+        }
 
-    //     setCategorySeries(result);
-    //   } catch (err) {
-    //     // notification.error("Failed to fetch category data");
-    //   }
-    // }
+        setCategorySeries(result);
+      } catch (err) {
+        api.error({
+          message: "Overview ",
+          description: "Failed to fetch category data",
+        });
+      }
+    }
   };
 
   /* City Data */
@@ -1585,7 +1585,7 @@ const OverviewPage = () => {
                     className="overview-tabs"
                     items={[
                       {
-                        label: `Top Articles`,
+                        label: "Top Articles",
                         key: "1",
                         children: (
                           <ArticleTableCard
@@ -1598,7 +1598,7 @@ const OverviewPage = () => {
                         ),
                       },
                       {
-                        label: `Top Authors`,
+                        label: "Top Authors",
                         key: "2",
                         children: (
                           <AuthorTableCard
@@ -1609,12 +1609,23 @@ const OverviewPage = () => {
                         ),
                       },
                       {
-                        label: `Top Category`,
+                        label: "Top Category",
                         key: "3",
                         children: (
                           <CategoryTableCard
                             dataSource={categoryData}
                             categorySeries={categorySeries}
+                          />
+                        ),
+                      },
+                      {
+                        label: "Top Videos",
+                        key: "4",
+                        children: (
+                          <VideoTableCard
+                            // handleClickTitle={handleClickTitle}
+                            dataSource={videoList}
+                            siteLink={siteLink}
                           />
                         ),
                       },

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   GET_LAST_24_HOURS_ARTICLE_DATA,
   GET_LAST_24HOURS_DATA,
+  GET_LAST_24HOURS_DATA_BASED_ON_CATEGORY,
 } from "./graphql";
 
 // Example function for making a GraphQL call
@@ -37,6 +38,15 @@ export async function POST(req: NextRequest) {
         result = await makeGraphQLCall(author_query, {
           site_id: variables?.site_id,
           author_id: variables?.author_id,
+        });
+        break;
+      case "getCategoryList":
+        const category_query = GET_LAST_24HOURS_DATA_BASED_ON_CATEGORY(
+          variables?.period_date
+        );
+        result = await makeGraphQLCall(category_query, {
+          site_id: variables?.site_id,
+          category: variables?.category,
         });
         break;
       default:

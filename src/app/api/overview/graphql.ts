@@ -69,3 +69,34 @@ export const GET_LAST_24HOURS_DATA = (period_date: any) => {
 
   return query;
 };
+
+export const GET_LAST_24HOURS_DATA_BASED_ON_CATEGORY = (period_date: any) => {
+  const twentyFourHoursAgo = periodDateFormation(
+    period_date,
+    "hours",
+    "YYYY-MM-DD"
+  );
+  const obj = `
+      where: {
+        period_date: { _gte: "${twentyFourHoursAgo}", _lte: "${period_date}" }
+        site_id: { _eq: $site_id }
+        category: { _in: $category }
+      }
+  `;
+
+  const query = `
+    query overViewData($site_id: String!, $category: [String!]!) {
+      last24HoursData:${Reactenv.content_analytics_entity_prefix}articles_hourly_with_category_wise_view (
+        ${obj}
+        order_by: {period_date: asc}
+      ) {
+        page_views
+        period_date
+        category
+        hour
+      }
+    }
+  `;
+
+  return query;
+};
