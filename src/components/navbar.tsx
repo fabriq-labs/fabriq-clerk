@@ -58,6 +58,7 @@ export default function Navbar() {
     "/pipeline/create",
   ];
   const explorePaths = ["/explore/[chatId]", "/explore"];
+  const authorsPath = ["/author/[authorId]", "/author"];
   const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
 
@@ -65,6 +66,7 @@ export default function Navbar() {
   const isActiveChat = chatPaths?.some((path) => isActive(path));
   const isActivePipeline = pipelinePaths?.some((path) => isActive(path));
   const isActiveSetup = setupPaths?.some((path) => isActive(path));
+  const isActiveAuthor = authorsPath?.some((path) => isActive(path));
 
   return (
     <div className="navbar-container">
@@ -74,18 +76,46 @@ export default function Navbar() {
             <li className="flex-list">
               <span>Fabriq</span>
             </li>
-            <li>
-              <Link href="/">
-                <span
-                  className={`${
-                    isActive("/") ? "tab active" : "tab"
-                  } transition`}
-                >
-                  Home
-                </span>
-              </Link>
-            </li>
-            {organization && organization?.publicMetadata?.is_connection && (
+            <Protect permission="org:demo:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`${
+                      isActive("/") ? "tab active" : "tab"
+                    } transition`}
+                  >
+                    Home
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`tab ${
+                      isActive("/") ? "active" : ""
+                    } transition`}
+                  >
+                    Overview
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`tab ${
+                      isActiveAuthor ? "active" : ""
+                    } transition`}
+                  >
+                    Author
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
                   <span
@@ -97,7 +127,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            )}
+            </Protect>
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/explore">
@@ -124,7 +154,6 @@ export default function Navbar() {
             )}
           </ul>
         </nav>
-
         <div className="flex items-center gap-4">
           <Dropdown menu={{ items, onClick }}>
             <span className={`tab ${isActiveSetup ? "active" : ""} transition`}>

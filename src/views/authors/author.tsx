@@ -3,21 +3,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Button,
-  Table,
-  Tooltip,
-  Select,
-  Radio,
-  Skeleton,
-} from "antd";
+import { Row, Col, Select, Radio } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@components/layout";
 import StackedBarChart from "@/components/chart/stackedBarChart";
 import {
-  formatNumber,
   formationTimezone,
   getQuarterFromDate,
   getQuarterMonths,
@@ -39,6 +29,8 @@ import LineChart from "@/components/chart/linechart";
 import BarChart from "@/components/barchart";
 
 export default function Authors() {
+  const router = useRouter();
+
   const [data, setData] = useState<any>([]);
   const [countryListLabel, setCountryListLabel] = useState<any>([]);
   const [countryListValue, setCountryListValue] = useState<any>([]);
@@ -1029,7 +1021,7 @@ export default function Authors() {
   };
 
   const handleClickBack = () => {
-    // navigate("/content/author");
+    router.push("/author");
   };
 
   const handleChangeDistribution = (value: React.SetStateAction<string>) => {

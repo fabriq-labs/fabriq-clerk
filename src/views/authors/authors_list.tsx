@@ -523,6 +523,14 @@ const ExpandedRow = ({
                                     width: "12px",
                                     height: "12px"
                                 }} />
+                                <img
+                                    src={"/images/open-link.webp"}
+                                    alt="link"
+                                    style={{
+                                        width: "12px",
+                                        height: "12px"
+                                    }}
+                                />
                             </a>
                         </div>
                     </div>
