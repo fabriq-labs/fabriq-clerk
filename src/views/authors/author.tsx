@@ -23,7 +23,7 @@ import {
   BreakDownData,
 } from "./author_cards";
 import { DatepickerComponent } from "@/components/authors/date_picker";
-import ErrorResult from "@/components/ErrorResult/error_result";
+import ErrorResult from "@/components/error_result";
 import Category from "@/components/Category/category";
 import LineChart from "@/components/chart/linechart";
 import BarChart from "@/components/barchart";
