@@ -10,6 +10,7 @@ import {
 import {
   AUTHORS_MONTHLY,
   AUTHORS_QUARTERLY,
+  AUTHORS_REALTIME,
   AUTHORS_YEARLY,
   GET_LAST_30DAYS_DATA_AUTHOR,
   getAuthorBasedArticleList,
@@ -139,6 +140,9 @@ export async function POST(req: NextRequest) {
       case "get_authors_yearly":
         result = await makeGraphQLCall(AUTHORS_YEARLY, variables);
         break;
+      case "get_author_list_realtime":
+          result = await makeGraphQLCall(AUTHORS_REALTIME, variables);
+          break;
       case "getLast24HoursForAuthor":
         const getLast24HoursForAuthor = GET_LAST_24HOURS_DATA(
           variables?.period_date

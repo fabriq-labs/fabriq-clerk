@@ -16,6 +16,7 @@ import Avatar from "../../assets/avatars/image-7.png";
 import Upload from "../../assets/upload.png";
 import DownArrow from "../../assets/down-arrow_nw.png";
 import OpenLink from "../../assets/open-link.webp";
+import { useParams, useRouter } from "next/navigation";
 let siteDetails: any = {
     id: 36,
     site_id: "wral.com",
@@ -340,7 +341,7 @@ export const AuthorTableCard = ({
                                         <Image src={record?.image_url || Avatar} className="author-logo-img" alt="blog" style={{ width: "70px" }} />
                                     </div>
                                     <Link
-                                        href={`/content/author/${record.author_id}`}
+                                        href={`/author/${record.author_id}`}
                                         className="hover-title"
                                         onClick={() =>
                                             handleClickAuthor(record.author_id, record.index)
@@ -642,6 +643,7 @@ export default function AuthorList() {
     //     (state) => state?.home?.queryIds?.authors_realtime_query_id
     // );
 
+    const router = useRouter();
     useEffect(() => {
         getCachedList();
     }, []);
@@ -754,25 +756,28 @@ export default function AuthorList() {
         const limitPerPage = 10;
         const offset = limitPerPage * ((page || currentpage) - 1);
 
-        // try {
-        //   const values = await AuthorList.get_author_list_realtime(
-        //     siteDetails?.site_id,
-        //     period_date,
-        //     offset,
-        //     `${period_date}%`
-        //   );
+        try {
+            const values = await axios.post("/api/author", {
+                operation: "getArticlesListMonthly",
+                variables: {
+                    site_id:siteDetails?.site_id,
+                    period_date:period_date,
+                    partical_period_date:offset,
+                    offset:`${period_date}%`,
+                },
+            });
 
-        //   if (values?.data?.data?.Authors) {
-        //     const result = values?.data?.data?.Authors;
+          if (values?.data?.data?.Authors) {
+            const result = values?.data?.data?.Authors;
 
-        //     const authorIds = result?.map((item) => item?.author_id);
-        //     setOffsetValue(offset);
-        //     getLast30DaysForAuthor(result, authorIds);
-        //   }
-        // } catch (err) {
-        //   setLoader(false);
+            const authorIds = result?.map((item:any) => item?.author_id);
+            setOffsetValue(offset);
+            getLast30DaysForAuthor(result, authorIds);
+          }
+        } catch (err) {
+          setLoader(false);
         //   notification.error(err?.message);
-        // }
+        }
     };
 
     const getMonthlyData = async (value: any, year: any, page = null) => {
@@ -1053,11 +1058,11 @@ export default function AuthorList() {
     };
 
     const handleClickAuthor = (id: any, index: any) => {
-        // navigate(`/content/author/${id}`, { state: { image: index } });
+        router.push(`/author/${id}`);
     };
 
     const handleClickArticle = (id: any) => {
-        // navigate(`/content/article/${id}`);
+        router.push(`/article/${id}`);
         // dispatch(updateActiveTab("article"));
     };
 
@@ -1189,7 +1194,7 @@ export default function AuthorList() {
                             </Radio.Group>
                         </div>
                         {segementValue === "real-time" && (
-                            <div className="article-DatepickerComponent">
+                            <div className="article-datepicker">
                                 <DatepickerComponent
                                     value={selectedDate}
                                     showDatePicker
@@ -1198,7 +1203,7 @@ export default function AuthorList() {
                             </div>
                         )}
                         {segementValue === "monthly" && (
-                            <div className="article-DatepickerComponent">
+                            <div className="article-datepicker">
                                 <DatepickerComponent
                                     value={selectedMonth}
                                     onChange={handleMonthChange}
@@ -1208,7 +1213,7 @@ export default function AuthorList() {
                             </div>
                         )}
                         {segementValue === "quarterly" && (
-                            <div className="article-DatepickerComponent">
+                            <div className="article-datepicker">
                                 <DatepickerComponent
                                     value={selectedQuarter}
                                     onChange={handleQuarterlyChange}
@@ -1218,7 +1223,7 @@ export default function AuthorList() {
                             </div>
                         )}
                         {segementValue === "yearly" && (
-                            <div className="article-DatepickerComponent">
+                            <div className="article-datepicker">
                                 <DatepickerComponent
                                     value={selectedYear}
                                     onChange={handleYearChange}
