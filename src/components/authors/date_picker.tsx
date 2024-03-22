@@ -1,7 +1,6 @@
 import DatePicker from "react-datepicker";
 import React from "react";
 
-
 export const DatepickerComponent = ({
   onChange,
   value,
@@ -9,19 +8,19 @@ export const DatepickerComponent = ({
   showMonthYearPicker,
   showQuarterYearPicker,
   showYearPicker,
-  showDatePicker
+  showDatePicker,
 }: any) => {
-  const handleDateChange = (date:any) => {
+  const handleDateChange = (date: any) => {
     if (onChange) {
       onChange(date);
     }
   };
 
-  const handleInputKeyDown = (e:any) => {
+  const handleInputKeyDown = (e: any) => {
     e.preventDefault();
   };
 
-  const isDateSelectable = (date:any) => {
+  const isDateSelectable = (date: any) => {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
@@ -32,7 +31,7 @@ export const DatepickerComponent = ({
 
   if (showDatePicker) {
     return (
-      <div className="authors-datepicker-container">
+      <div className="datepicker-wrapper">
         <DatePicker
           className="datepicker-comp"
           selected={value}
@@ -46,7 +45,7 @@ export const DatepickerComponent = ({
   }
 
   return (
-    <div className="authors-datepicker-container">
+    <div className="datepicker-wrapper">
       <DatePicker
         className="datepicker-comp"
         selected={value}
@@ -61,4 +60,3 @@ export const DatepickerComponent = ({
     </div>
   );
 };
-
