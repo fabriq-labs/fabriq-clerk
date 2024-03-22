@@ -18,8 +18,6 @@ const LineChart = ({
 }: any) => {
   const [seriesData, setSeriesData] = useState([]);
 
-  console.log("series", series);
-
   let period_date = formationTimezone(moment(), "YYYY-MM-DD");
   const formattedDate = selectedDate
     ? moment(selectedDate).format("YYYY-MM-DD")

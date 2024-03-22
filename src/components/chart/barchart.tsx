@@ -7,8 +7,6 @@ export default class Barchart extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
 
-    console.log(props?.labels, props.series);
-
     this.state = {
       series: props.series,
       options: {

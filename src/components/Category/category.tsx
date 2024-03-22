@@ -3,14 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Skeleton, Tooltip } from "antd";
 import moment from "moment";
 
-
-
-import "./category.css";
 import { formationTimezone } from "@/utils/helper";
 
-const HeaderContainer = (props:any) => {
-  const { title, value, loader, tooltip }:any = props;
-  function formatNumber(value:any) {
+const HeaderContainer = (props: any) => {
+  const { title, value, loader, tooltip }: any = props;
+  function formatNumber(value: any) {
     if (value >= 1000000) {
       return (
         <div className="header-count-view">
@@ -34,7 +31,7 @@ const HeaderContainer = (props:any) => {
     }
   }
 
-  function formatSecondsToTime(seconds:any) {
+  function formatSecondsToTime(seconds: any) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
 
@@ -81,7 +78,7 @@ const HeaderContainer = (props:any) => {
   return formattedDuration;
 }; */
 
-const Category = (props:any) => {
+const Category = (props: any) => {
   const {
     id,
     view,
@@ -95,7 +92,7 @@ const Category = (props:any) => {
     category,
     articleAuthorName,
     loader,
-    siteLink
+    siteLink,
   } = props;
   const [headerData, setHeaderData] = useState<any>([]);
 
@@ -107,13 +104,13 @@ const Category = (props:any) => {
 
   const formattedDate = formationTimezone(publishedDate, "MMMM Do YYYY");
 
-  function secondsToMinutes(seconds:any) {
+  function secondsToMinutes(seconds: any) {
     const duration = moment.duration(seconds, "seconds");
     const minutes = Math.floor(duration.asMinutes());
     return minutes;
   }
 
-  const total_time_spent_minutes:any = secondsToMinutes(
+  const total_time_spent_minutes: any = secondsToMinutes(
     headerData?.total_time_spent ? headerData?.total_time_spent : 0
   );
 
@@ -185,7 +182,7 @@ const Category = (props:any) => {
                 style={{
                   textAlign: "center",
                   color: "#879eb0",
-                  fontSize: "12px"
+                  fontSize: "12px",
                 }}
               >
                 First article published{" "}
@@ -214,7 +211,7 @@ const Category = (props:any) => {
                     style={{
                       width: "12px",
                       height: "12px",
-                      marginBottom: "2px"
+                      marginBottom: "2px",
                     }}
                   />
                 </a>

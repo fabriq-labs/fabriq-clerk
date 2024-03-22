@@ -1,12 +1,25 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Row, Col, Button, Table, Tooltip, Select, Radio, Skeleton } from "antd";
+import {
+  Row,
+  Col,
+  Button,
+  Table,
+  Tooltip,
+  Select,
+  Radio,
+  Skeleton,
+} from "antd";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@components/layout";
 import StackedBarChart from "@/components/chart/stackedBarChart";
-import { formatNumber, formationTimezone, getQuarterFromDate } from "@/utils/helper";
+import {
+  formatNumber,
+  formationTimezone,
+  getQuarterFromDate,
+} from "@/utils/helper";
 import moment from "moment";
 import {
   SocialCard,
@@ -15,14 +28,13 @@ import {
   InternalCard,
   DirectCard,
   DetailsCard,
-  BreakDownData
-} from "./author_cards"
+  BreakDownData,
+} from "./author_cards";
 import { DatepickerComponent } from "@/components/authors/date_picker";
 import ErrorResult from "@/components/ErrorResult/error_result";
 import Category from "@/components/Category/category";
 import LineChart from "@/components/chart/linechart";
 import BarChart from "@/components/barchart";
-
 
 export default function Authors() {
   const [data, setData] = useState<any>([]);
@@ -33,7 +45,7 @@ export default function Authors() {
     labels: [],
     series: [],
     name: "",
-    referrer: null
+    referrer: null,
   });
   const [headerData, setHeaderData] = useState<any>([]);
   const [selectedDistribution, setSelectedDistribution] =
@@ -48,17 +60,17 @@ export default function Authors() {
   const [selectedQuarter, setSelectedQuarter] = useState<any>(null);
   const [siteAvg, setSiteAvg] = useState<any>({});
   const [selectedDate, setSelectedDate] = useState<any>(new Date());
-  const [authorCurrentChartResponse, setAuthorCurrentChartResponse] = useState<any>(
+  const [authorCurrentChartResponse, setAuthorCurrentChartResponse] =
+    useState<any>([]);
+  const [authorAverageChartResponse, setAuthorAverageChartResponse] =
+    useState<any>([]);
+  const [historicalChartResponse, setHistoricalChartResponse] = useState<any>(
     []
   );
-  const [authorAverageChartResponse, setAuthorAverageChartResponse] = useState<any>(
-    []
-  );
-  const [historicalChartResponse, setHistoricalChartResponse] = useState<any>([]);
   const [barchartResponse, setBarChartResponse] = useState<any>({
     labels: [],
     series: [],
-    name: ""
+    name: "",
   });
   const [topAuthorsMedium, setAuthorsMedium] = useState<any>({});
   const { Option } = Select;
@@ -69,10 +81,13 @@ export default function Authors() {
   const [breakdownDataObject, setBreakDownDataObject] = useState<any>({});
   const [tableVistitorData, setTableVisitorData] = useState<any>([]);
   const { authorId } = useParams();
-  // const location = useLocation();
-  // let siteDetails =
-  //     localStorage.getItem("view_id") !== "undefined" &&
-  // JSON.parse(localStorage.getItem("view_id"));
+  let siteDetails: any = {
+    id: 36,
+    site_id: "wral.com",
+    site_name: "Fabriq",
+    host_name: "https://fabriq.com",
+    collector_url: "wral.com/dt",
+  };
   const time_interval = localStorage.getItem("time_interval");
   const timeInterval = time_interval ? parseInt(time_interval) : 30 * 60 * 1000;
 
@@ -94,6 +109,48 @@ export default function Authors() {
     setTableLoader(true);
     setIsError(false);
     let period_date = date || formationTimezone(moment(), "YYYY-MM-DD");
+
+    axios
+      .post("/api/author", {
+        operation: "getAuthorRealTimeList",
+        variables: {
+          period_date,
+          author_id: authorId,
+          site_id: siteDetails?.site_id,
+        },
+      })
+      .then((res: any) => {
+        if (res?.data?.data) {
+          setHeaderData(res?.data?.data?.AuthorsDaily?.[0]);
+          setDataArray(res?.data?.data?.AuthorsDaily);
+          trafficSourceFormat(res?.data?.data?.AuthorsDaily?.[0], "real-time");
+          let topMediumFormat = formatTopMedium(
+            res?.data?.data?.AuthorsTopMedium
+          );
+
+          setAuthorsMedium(topMediumFormat);
+          convertDistribution(
+            res?.data?.data?.AuthorsDaily,
+            "city_distribution"
+          );
+          setAuthorCurrentChartResponse(res?.data?.data?.AuthorsHourly);
+          setSiteAvg(res?.data?.data?.SiteAvg?.[0]);
+          setData(res?.data?.data?.Authors[0]);
+          setAuthorAverageChartResponse(res?.data?.data?.AuthorsHourlyAverage);
+          areaChartData(res?.data?.data?.AuthorsDaily);
+
+          setTableLoader(false);
+          setLoader(false);
+        } else {
+          setLoader(false);
+          setIsError(true);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+        setLoader(false);
+        setIsError(true);
+      });
   };
   // useEffect(() => {
   //     const state = location.state;
@@ -112,7 +169,7 @@ export default function Authors() {
     if (authorCurrentChartResponse && authorAverageChartResponse) {
       const lableValue = [
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        21, 22, 23
+        21, 22, 23,
       ];
 
       const currentUserValues = lableValue.map((hour) => {
@@ -158,17 +215,17 @@ export default function Authors() {
               data:
                 value === "page_views"
                   ? currentPageViewsValues
-                  : currentUserValues
+                  : currentUserValues,
             },
             {
               name: "Average",
               data:
                 value === "page_views"
                   ? averagePageViewsValue
-                  : averageUserValues
-            }
+                  : averageUserValues,
+            },
           ],
-          label: lableValue
+          label: lableValue,
         };
 
         setAuthorChartData(chartSeriesFormat);
@@ -176,20 +233,17 @@ export default function Authors() {
     }
   };
 
-
   const getMonthlyData = (value: any, year: any) => {
     setTableLoader(true);
     setIsError(false);
     const partial_period_date = `${year}-${value
       ?.toString()
       .padStart(2, "0")}%`;
-
   };
 
   const getQuarterlyData = (value: any, year: any) => {
     setTableLoader(true);
     setIsError(false);
-
   };
 
   const getYearlyData = (value: any) => {
@@ -215,14 +269,16 @@ export default function Authors() {
       return {
         name,
         type: "line",
-        data: series.filter((value: any) => value !== undefined && value !== null),
-        yaxis: "line-y-axis"
+        data: series.filter(
+          (value: any) => value !== undefined && value !== null
+        ),
+        yaxis: "line-y-axis",
       };
     };
 
     let chartSeriesFormat = {
       series: [],
-      label: labels
+      label: labels,
     };
 
     // switch (chartOption) {
@@ -238,7 +294,11 @@ export default function Authors() {
     // setAuthorChartData(chartSeriesFormat);
   };
 
-  const generateDataForQuarterChart = (data: any, quarter: number, value: string) => {
+  const generateDataForQuarterChart = (
+    data: any,
+    quarter: number,
+    value: string
+  ) => {
     const list = data?.AuthorsMonthly;
     if (list?.length > 0) {
       const labels = Array.from({ length: 3 }, (_, i) => {
@@ -256,7 +316,9 @@ export default function Authors() {
 
       const outputArray = labels.map((label: any) => {
         const day = parseInt(label);
-        const dataItem = list?.find((item: { period_month: number; }) => item?.period_month === day);
+        const dataItem = list?.find(
+          (item: { period_month: number }) => item?.period_month === day
+        );
 
         return [
           day,
@@ -264,15 +326,15 @@ export default function Authors() {
             ? selectedItem === "page_views"
               ? dataItem.page_views
               : dataItem.users
-            : 0
+            : 0,
         ];
       });
 
       let series = [
         {
           name: selectedItem === "page_views" ? "Page Views" : "Users",
-          data: outputArray
-        }
+          data: outputArray,
+        },
       ];
 
       const monthNames = [
@@ -287,7 +349,7 @@ export default function Authors() {
         "September",
         "October",
         "November",
-        "December"
+        "December",
       ];
       const yValues = series?.[0]?.data.map((entry) => entry?.[1]);
       const monthLabels = labels.map((number) => monthNames[number - 1]);
@@ -295,14 +357,14 @@ export default function Authors() {
         ...prevState,
         labels: monthLabels,
         series: yValues,
-        name: selectedItem === "page_views" ? "Page Views" : "Users"
+        name: selectedItem === "page_views" ? "Page Views" : "Users",
       }));
     }
 
     if (data?.AuthorsQuaterly?.length > 0) {
       const list = data?.AuthorsQuaterly;
       const areaJsonData: any[] = [];
-      list.forEach((areadata: { medium_distribution: any; }) => {
+      list.forEach((areadata: { medium_distribution: any }) => {
         let result = areadata?.medium_distribution;
 
         if (typeof result === "string") {
@@ -318,7 +380,7 @@ export default function Authors() {
           Referral: obj["Referral"] ? obj["Referral"] : obj["unknown"] || 0,
           Search: obj["search"] || 0,
           Internal: obj["Internal"] ? obj["Internal"] : obj["internal"] || 0,
-          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0
+          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0,
         };
         return newObj;
       });
@@ -332,14 +394,14 @@ export default function Authors() {
       // Convert each value to percentage and create the new format
       const result = Object.entries(newData[0])?.map(([name, value]) => ({
         name,
-        data: [(value / total) * 100]
+        data: [(value / total) * 100],
       }));
 
       const referrer = Object.entries(newData[0]).reduce(
         (acc: any, [name, value]) => {
           acc[name] = {
             value,
-            percentage: ((value / total) * 100)?.toFixed(2)
+            percentage: ((value / total) * 100)?.toFixed(2),
           };
           return acc;
         },
@@ -349,7 +411,7 @@ export default function Authors() {
       setDistributionData((prevState: any) => ({
         ...prevState,
         series: result,
-        referrer
+        referrer,
       }));
     }
   };
@@ -357,24 +419,30 @@ export default function Authors() {
   const formatTopMedium = (apiData: any[]) => {
     const formattedData: any = {};
 
-    apiData.forEach((entry: { refr_medium: any; referer_site: any; refr_source: any; }) => {
-      const refrMedium = entry?.refr_medium;
-      let refrValue;
-      if (refrMedium === "unknown") {
-        refrValue = entry?.referer_site;
-      } else if (refrMedium === "internal") {
-        refrValue = entry?.referer_site;
-      } else {
-        refrValue = entry?.refr_source;
-      }
+    apiData.forEach(
+      (entry: { refr_medium: any; referer_site: any; refr_source: any }) => {
+        const refrMedium = entry?.refr_medium;
+        let refrValue;
+        if (refrMedium === "unknown") {
+          refrValue = entry?.referer_site;
+        } else if (refrMedium === "internal") {
+          refrValue = entry?.referer_site;
+        } else {
+          refrValue = entry?.refr_source;
+        }
 
-      formattedData[refrMedium] = refrValue;
-    });
+        formattedData[refrMedium] = refrValue;
+      }
+    );
 
     return formattedData;
   };
 
-  const generateDataForYearChart = (data: { AuthorsMonthly: any; AuthorsYearly: string | any[]; }, year: any, value: string) => {
+  const generateDataForYearChart = (
+    data: { AuthorsMonthly: any; AuthorsYearly: string | any[] },
+    year: any,
+    value: string
+  ) => {
     const list = data?.AuthorsMonthly;
     const labels = Array.from({ length: 12 }, (_, i) => {
       const month = i + 1;
@@ -400,15 +468,15 @@ export default function Authors() {
           ? selectedItem === "page_views"
             ? dataItem.page_views
             : dataItem.users
-          : 0
+          : 0,
       ];
     });
 
     let series = [
       {
         name: selectedItem === "page_views" ? "Page Views" : "Users",
-        data: outputArray
-      }
+        data: outputArray,
+      },
     ];
 
     const monthNames = [
@@ -423,7 +491,7 @@ export default function Authors() {
       "September",
       "October",
       "November",
-      "December"
+      "December",
     ];
     const yValues = series?.[0]?.data.map((entry) => entry?.[1]);
     const monthLabels = labels.map((number) => monthNames[number - 1]);
@@ -431,7 +499,7 @@ export default function Authors() {
       ...prevState,
       labels: monthLabels,
       series: yValues,
-      name: selectedItem === "page_views" ? "Page Views" : "Users"
+      name: selectedItem === "page_views" ? "Page Views" : "Users",
     }));
 
     if (data?.AuthorsYearly?.length > 0) {
@@ -454,7 +522,7 @@ export default function Authors() {
           Referral: obj["Referral"] ? obj["Referral"] : obj["unknown"] || 0,
           Search: obj["search"] || 0,
           Internal: obj["Internal"] ? obj["Internal"] : obj["internal"] || 0,
-          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0
+          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0,
         };
         return newObj;
       });
@@ -468,14 +536,14 @@ export default function Authors() {
       // Convert each value to percentage and create the new format
       const result = Object.entries(newData[0])?.map(([name, value]: any) => ({
         name,
-        data: [(value / total) * 100]
+        data: [(value / total) * 100],
       }));
 
       const referrer = Object.entries(newData[0]).reduce(
         (acc: any, [name, value]: any) => {
           acc[name] = {
             value,
-            percentage: ((value / total) * 100)?.toFixed(2)
+            percentage: ((value / total) * 100)?.toFixed(2),
           };
           return acc;
         },
@@ -485,7 +553,7 @@ export default function Authors() {
       setDistributionData((prevState: any) => ({
         ...prevState,
         series: result,
-        referrer
+        referrer,
       }));
     }
   };
@@ -503,13 +571,13 @@ export default function Authors() {
         areaJsonData.push(result);
       });
 
-      const newData = areaJsonData.map((obj: { [x: string]: any; }) => {
+      const newData = areaJsonData.map((obj: { [x: string]: any }) => {
         const newObj = {
           Social: obj["Social"] ? obj["Social"] : obj["social"] || 0,
           Referral: obj["Referral"] ? obj["Referral"] : obj["unknown"] || 0,
           Search: obj["search"] || 0,
           Internal: obj["Internal"] ? obj["Internal"] : obj["internal"] || 0,
-          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0
+          Direct: obj["Direct"] ? obj["Direct"] : obj["Other"] || 0,
         };
         return newObj;
       });
@@ -523,14 +591,14 @@ export default function Authors() {
       // Convert each value to percentage and create the new format
       const result = Object.entries(newData[0])?.map(([name, value]: any) => ({
         name,
-        data: [(value / total) * 100]
+        data: [(value / total) * 100],
       }));
 
       const referrer = Object.entries(newData[0]).reduce(
         (acc: any, [name, value]: any) => {
           acc[name] = {
             value,
-            percentage: ((value / total) * 100)?.toFixed(2)
+            percentage: ((value / total) * 100)?.toFixed(2),
           };
           return acc;
         },
@@ -540,12 +608,12 @@ export default function Authors() {
       setDistributionData((prevState: any) => ({
         ...prevState,
         series: result,
-        referrer
+        referrer,
       }));
     }
   };
 
-  const chartData = (data: { country_distribution: any; }[]) => {
+  const chartData = (data: { country_distribution: any }[]) => {
     // Country Distribution
     if (data?.[0]?.country_distribution) {
       let dataValue = data?.[0]?.country_distribution;
@@ -592,7 +660,10 @@ export default function Authors() {
       // Sort the districts in descending order based on the values
       const sortedIndices = districtValuesArray
         .map((_: any, index: any) => index)
-        .sort((a: string | number, b: string | number) => districtValuesArray[b] - districtValuesArray[a]);
+        .sort(
+          (a: string | number, b: string | number) =>
+            districtValuesArray[b] - districtValuesArray[a]
+        );
 
       const sortedDistrictKeys = sortedIndices.map(
         (index: string | number) => districtKeysArray[index]
@@ -622,7 +693,7 @@ export default function Authors() {
       "real-time": data,
       monthly: data,
       yearly: data,
-      quarterly: data
+      quarterly: data,
     };
     const segment = segmentData[key];
 
@@ -681,15 +752,15 @@ export default function Authors() {
         device: arrDevice,
         visitor: [
           { name: "New visitor", data: [newUsersPercentage] },
-          { name: "Returning Visitor", data: [usersPercentage] }
-        ]
+          { name: "Returning Visitor", data: [usersPercentage] },
+        ],
       };
 
       const tableData = breakdownTempValue.social.map((item: any) => {
         return {
           key: item.name,
           name: item.name,
-          data: item.data[0]
+          data: item.data[0],
         };
       });
       setTableVisitorData(tableData);
@@ -698,14 +769,14 @@ export default function Authors() {
       let breakdownTempValue = {
         social: [],
         device: [],
-        visitor: []
+        visitor: [],
       };
 
       const tableData: any = breakdownTempValue?.social?.map((item: any) => {
         return {
           key: item?.name,
           name: item?.name,
-          data: item?.data?.[0]
+          data: item?.data?.[0],
         };
       });
 
@@ -713,7 +784,6 @@ export default function Authors() {
       setBreakDownDataObject(breakdownTempValue);
     }
   };
-
 
   const handleChangeChart = (value: any) => {
     setSelectedChartValue(value);
@@ -740,7 +810,7 @@ export default function Authors() {
     setBarChartResponse((prevState: any) => ({
       ...prevState,
       labels: [],
-      series: []
+      series: [],
     }));
     setAuthorChartData([]);
 
@@ -758,19 +828,27 @@ export default function Authors() {
     }
   };
 
-  const handleDayChange = (date: any | moment.Moment | (string | number)[] | moment.MomentInputObject | null | undefined) => {
+  const handleDayChange = (
+    date:
+      | any
+      | moment.Moment
+      | (string | number)[]
+      | moment.MomentInputObject
+      | null
+      | undefined
+  ) => {
     setDistributionData({
       labels: [],
       series: [],
       name: "",
-      referrer: null
+      referrer: null,
     });
     setCountryListLabel([]);
     setCountryListValue([]);
     setBarChartResponse((prevState: any) => ({
       ...prevState,
       labels: [],
-      series: []
+      series: [],
     }));
     setAuthorChartData([]);
 
@@ -785,14 +863,14 @@ export default function Authors() {
       labels: [],
       series: [],
       name: "",
-      referrer: null
+      referrer: null,
     });
     setCountryListLabel([]);
     setCountryListValue([]);
     setBarChartResponse((prevState: any) => ({
       ...prevState,
       labels: [],
-      series: []
+      series: [],
     }));
     setAuthorChartData([]);
 
@@ -809,7 +887,7 @@ export default function Authors() {
       labels: [],
       series: [],
       name: "",
-      referrer: null
+      referrer: null,
     });
     setCountryListLabel([]);
     setCountryListValue([]);
@@ -821,14 +899,14 @@ export default function Authors() {
       labels: [],
       series: [],
       name: "",
-      referrer: null
+      referrer: null,
     });
     setCountryListLabel([]);
     setCountryListValue([]);
     setBarChartResponse((prevState: any) => ({
       ...prevState,
       labels: [],
-      series: []
+      series: [],
     }));
     setAuthorChartData([]);
 
@@ -852,13 +930,15 @@ export default function Authors() {
 
   const handleChangeBreakdownSegment = (e: any) => {
     setSelectedBreakdownValue(e.target.value);
-    const tableData = breakdownDataObject[e.target.value].map((item: { name: any; data: any[]; }) => {
-      return {
-        key: item.name,
-        name: item.name,
-        data: item.data[0]
-      };
-    });
+    const tableData = breakdownDataObject[e.target.value].map(
+      (item: { name: any; data: any[] }) => {
+        return {
+          key: item.name,
+          name: item.name,
+          data: item.data[0],
+        };
+      }
+    );
     setTableVisitorData(tableData);
   };
 
@@ -886,7 +966,7 @@ export default function Authors() {
       "Sep",
       "Oct",
       "Nov",
-      "Dec"
+      "Dec",
     ];
     const formattedLabels = labels.map((day: number) => {
       if (day <= daysInMonth) {
@@ -918,17 +998,17 @@ export default function Authors() {
     {
       title: "Visitor",
       dataIndex: "name",
-      key: "name"
+      key: "name",
     },
     {
       title: "Percentage",
       dataIndex: "data",
       key: "data",
-      render: (text:any) => <div>{`${text?.toFixed(2)} %`}</div>
-    }
+      render: (text: any) => <div>{`${text?.toFixed(2)} %`}</div>,
+    },
   ];
 
-  const timeLabels = authorChartData?.label?.map((item:any) => {
+  const timeLabels = authorChartData?.label?.map((item: any) => {
     const formattedTime = moment(selectedDate)
       .hour(item)
       .minute(0)
@@ -996,8 +1076,8 @@ export default function Authors() {
             )}
           </div>
           {loader ? (
-            <div>
-              <Skeleton />
+            <div className="loader-cotainer">
+              <div className="loader"></div>
             </div>
           ) : isError ? (
             <div className="author-error-result">
@@ -1051,7 +1131,7 @@ export default function Authors() {
                         </div>
                         <div className="article-country-chart">
                           {segementValue === "real-time" ||
-                            segementValue === "monthly" ? (
+                          segementValue === "monthly" ? (
                             <LineChart
                               labels={
                                 segementValue === "monthly"
@@ -1089,7 +1169,7 @@ export default function Authors() {
                           style={{
                             justifyContent: "flex-end",
                             display: "flex",
-                            width: "100%"
+                            width: "100%",
                           }}
                         >
                           <div className="author-id-chart-header">
@@ -1168,7 +1248,7 @@ export default function Authors() {
                                 "#f8b633",
                                 "#e63111",
                                 "#0add54",
-                                "#7f9386"
+                                "#7f9386",
                               ]}
                               max={100}
                               legend={false}
@@ -1236,7 +1316,9 @@ export default function Authors() {
                               <div className="author-breakdown-data-value">
                                 <BreakDownData
                                   data={
-                                    breakdownDataObject?.[selectedBreakdownValue]
+                                    breakdownDataObject?.[
+                                      selectedBreakdownValue
+                                    ]
                                   }
                                   columns={columnsVisitor}
                                   tableValue={tableVistitorData}
@@ -1255,5 +1337,5 @@ export default function Authors() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }

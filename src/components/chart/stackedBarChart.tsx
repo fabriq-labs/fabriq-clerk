@@ -1,8 +1,11 @@
 // BarChart
 import { formatNumber } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
+import dynamic from "next/dynamic";
 
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 const StackedBarChart = ({
   series,
@@ -14,7 +17,7 @@ const StackedBarChart = ({
   tooltipLabels = null,
   secondTooltipLabels = null,
   isRevenue = false,
-  isAudience = false
+  isAudience = false,
 }: any) => {
   const [seriesData, setSeriesData] = useState([]);
   const customLegendLabels = legendLabels || [];
@@ -61,7 +64,7 @@ const StackedBarChart = ({
             "</div>" +
             "</div>"
           );
-        }
+        },
       }
     : isAudience
     ? {
@@ -74,27 +77,30 @@ const StackedBarChart = ({
               <div class ="label-container-overview">
               ${formatNumber(tooltipLabels?.[seriesIndex])} 
               ${
-                secondTooltipLabels?.[seriesIndex] ?  !secondTooltipLabels?.[seriesIndex].includes("-")
-                  ?`<span class="ant-tag ant-tag-green additional-info">
+                secondTooltipLabels?.[seriesIndex]
+                  ? !secondTooltipLabels?.[seriesIndex].includes("-")
+                    ? `<span class="ant-tag ant-tag-green additional-info">
                       ${secondTooltipLabels?.[seriesIndex]}%<img src="/images/up-arrow_new.png" alt="" class="img-arrow" width="14" height="14">
                     </span>`
-                  : `<span class="ant-tag ant-tag-red additional-info">
-                      ${secondTooltipLabels?.[seriesIndex].substring(1)}%<img src="/images/down-arrow_new.png" alt="" class="img-arrow" width="14" height="14">
+                    : `<span class="ant-tag ant-tag-red additional-info">
+                      ${secondTooltipLabels?.[seriesIndex].substring(
+                        1
+                      )}%<img src="/images/down-arrow_new.png" alt="" class="img-arrow" width="14" height="14">
                     </span>`
-                    : `<span></span>`
+                  : `<span></span>`
               }
               </div>               
           </div>
           `;
-        }
+        },
       }
     : {
         x: {
-          show: true
+          show: true,
         },
         y: {
-          formatter: tooltipFormatter
-        }
+          formatter: tooltipFormatter,
+        },
       };
 
   return (
@@ -105,49 +111,49 @@ const StackedBarChart = ({
           // show: false,
           max: max && 100,
           labels: {
-            show: false
-          }
+            show: false,
+          },
         },
         colors: colors,
         stroke: {
           width: 1,
-          colors: ["transparant"]
+          colors: ["transparant"],
         },
         grid: {
           xaxis: {
             lines: {
-              show: false
-            }
+              show: false,
+            },
           },
           yaxis: {
             lines: {
-              show: false
-            }
-          }
+              show: false,
+            },
+          },
         },
         tooltip: chartTooltip,
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         chart: {
           type: "bar",
           height: 100,
           stacked: true,
           toolbar: {
-            show: false
-          }
+            show: false,
+          },
         },
         legend: {
           show: legend,
           labels: {
-            useSeriesColors: false
+            useSeriesColors: false,
           },
           itemMargin: {
-            vertical: 5
+            vertical: 5,
           },
           formatter: function (seriesName, opts) {
             return customLegendLabels[opts.seriesIndex];
-          }
+          },
         },
         plotOptions: {
           bar: {
@@ -158,12 +164,12 @@ const StackedBarChart = ({
                 offsetX: 0,
                 style: {
                   fontSize: "13px",
-                  fontWeight: 900
-                }
-              }
-            }
-          }
-        }
+                  fontWeight: 900,
+                },
+              },
+            },
+          },
+        },
       }}
       series={seriesData}
       type="bar"
