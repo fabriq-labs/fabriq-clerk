@@ -53,7 +53,7 @@ export default function Authors() {
   const [selectedYear, setSelectedYear] = useState<any>(null);
   const [selectedQuarter, setSelectedQuarter] = useState<any>(null);
   const [siteAvg, setSiteAvg] = useState<any>({});
-  const [selectedDate, setSelectedDate] = useState<any>(new Date());
+  const [selectedDate, setSelectedDate] = useState<any>(new Date("2024-01-22"));
   const [authorCurrentChartResponse, setAuthorCurrentChartResponse] =
     useState<any>([]);
   const [authorAverageChartResponse, setAuthorAverageChartResponse] =
@@ -104,7 +104,8 @@ export default function Authors() {
   const getRealtimeData = (date?: any) => {
     setTableLoader(true);
     setIsError(false);
-    let period_date = date || formationTimezone(moment(), "YYYY-MM-DD");
+    let period_date =
+      "2024-01-22" || date || formationTimezone(moment(), "YYYY-MM-DD");
 
     axios
       .post("/api/author", {
@@ -1144,7 +1145,7 @@ export default function Authors() {
                 <Radio.Button value="yearly">Year</Radio.Button>
               </Radio.Group>
             </div>
-            {segementValue === "real-time" && (
+            {/* {segementValue === "real-time" && (
               <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedDate}
@@ -1152,7 +1153,7 @@ export default function Authors() {
                   onChange={handleDayChange}
                 />
               </div>
-            )}
+            )} */}
             {segementValue === "monthly" && (
               <div className="article-datepicker">
                 <DatepickerComponent

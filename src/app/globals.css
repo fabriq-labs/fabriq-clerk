@@ -369,6 +369,11 @@ body::-webkit-scrollbar {
   align-items: center;
 }
 
+.loader-cotainer.mini-list {
+  height: unset;
+  padding: 30px;
+}
+
 .profile-page .cl-internal-10eooxm {
   box-shadow: unset !important;
   width: 100rem !important;
