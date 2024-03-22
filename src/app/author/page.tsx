@@ -1,5 +1,5 @@
 "use client";
 
-import Authors from "@views/authors/authors_list";
+import AuthorList from "@views/authors/authors_list";
 
-export default Authors;
+export default AuthorList;
