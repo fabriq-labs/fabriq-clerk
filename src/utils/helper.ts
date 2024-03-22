@@ -265,3 +265,8 @@ export const dummylabels = [
   "10:00 pm",
   "11:00 pm",
 ];
+
+export const getQuarterFromDate = (date:any) => {
+  const month = date.getMonth() + 1;
+  return Math.ceil(month / 3);
+};
