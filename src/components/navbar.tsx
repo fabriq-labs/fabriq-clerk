@@ -104,7 +104,7 @@ export default function Navbar() {
             </Protect>
             <Protect permission="org:media:all">
               <li>
-                <Link href="/">
+                <Link href="/author">
                   <span
                     className={`tab ${
                       isActiveAuthor ? "active" : ""
@@ -115,9 +115,9 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
-            <Protect permission="org:media:all">
+            {/* <Protect permission="org:media:all">
               <li>
-                <Link href="/">
+                <Link href="/audience">
                   <span
                     className={`tab ${
                       isActive("/audience") ? "active" : ""
@@ -127,7 +127,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            </Protect>
+            </Protect> */}
             <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
