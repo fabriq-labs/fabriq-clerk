@@ -124,7 +124,7 @@ const ArticleChartContainer = React.memo(
       name: label,
       pageViews: seriobj?.[id]?.series?.[0]?.data?.[index] || 0,
     }));
-
+    
     return (
       <div style={{ width: "100%", height: "100px" }}>
         <LineChartTiny
@@ -872,7 +872,7 @@ const OverviewPage = () => {
         localStorage.getItem("real_time_date") ||
         formationTimezone(moment(), "YYYY-MM-DD");
       const req = {
-        period_date: real_time,
+        period_date: "2024-01-22",
         site_id: siteDetails?.site_id,
         article_id: overviewIds,
       };
