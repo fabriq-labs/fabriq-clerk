@@ -8,16 +8,10 @@
 .author-page-wrapper {
   height: 100%;
   background-color: #f2f3f4;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  overflow: auto;
 }
 
 .author-page-content {
-  margin: 80px 30px;
+  padding: 20px 30px;
 }
 
 .author-list-table-wrapper {
@@ -299,14 +293,6 @@
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 15px;
-}
-
-.center-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 15%;
 }
 
 .author-table-card-wrapper {
