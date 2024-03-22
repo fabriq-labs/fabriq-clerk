@@ -937,7 +937,7 @@ export default function Authors() {
   });
   return (
     <Layout>
-      <div className="article-wrapper">
+      <div className="authors-wrapper">
         <div className="author-content">
           <div style={{ display: "flex", marginTop: 25 }}>
             <div className="back-image" onClick={handleClickBack}>
