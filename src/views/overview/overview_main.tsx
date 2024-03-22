@@ -114,7 +114,7 @@ const Chart = ({ id, value, maxValue }: any) => {
 
 const ArticleChartContainer = React.memo(
   ({ id, seriobj, chartLoader }: any) => {
-    const currentMonth = moment().format("MMM D");
+    const currentMonth = moment("2024-01-22").format("MMM D");
 
     const updatedLabels = seriobj?.[id]?.labels.map(
       (label: any) => `${currentMonth}, ${label}`
@@ -632,7 +632,98 @@ const VideoTableCard = ({ dataSource, siteLink }: any) => {
     </div>
   );
 };
-
+const CollapsePannel = ( { cityRows, referrerSeries}: any) => {
+  
+  const [collapsed, setCollapsed] = useState(false);
+  const [collapsedSecond, setCollapsedSecond] = useState(false);
+  const toggleCollapsed = (panel: any) => {
+    if (panel === "first") {
+      setCollapsed(!collapsed);
+      if (collapsedSecond) setCollapsedSecond(false);
+    } else if (panel === "second") {
+      setCollapsedSecond(!collapsedSecond);
+      if (collapsed) setCollapsed(false);
+    }
+  };
+  return (
+    <div className="custom-collapse" style={{overflow:"hidden"}}>
+      <div className="custom-collapse">
+        <div
+          className={`collapse-header-overview bottom-section ${collapsed ? "collapsed" : ""
+            }`}
+          onClick={() => toggleCollapsed("first")}
+        >
+          <div className="header-content-overview">
+            <Image
+              src={WorldwideLogo}
+              alt="Icon"
+              height={16}
+              width={16}
+              className="header-image"
+            />
+            <Tooltip
+              title={"Geographical location of the website's audience."}
+            >
+              <span className="header-text-overview">Geography</span>
+            </Tooltip>
+          </div>
+          <div>
+            <Image
+              src={collapsed ? UpArrow : DownArrow}
+              alt="Icon"
+              height={16}
+              width={16}
+            />
+          </div>
+        </div>
+        {collapsed && (
+          <div className="scrollable-table">
+            <Table
+              dataSource={cityRows}
+              className="geography-table"
+              columns={columnForGeography}
+              pagination={false}
+            />
+          </div>
+        )}
+      </div>
+      <div className="custom-collapse-overview">
+        <div
+          className={`collapse-header-overview bottom-section ${collapsedSecond ? "collapsed" : ""
+            }`}
+          onClick={() => toggleCollapsed("second")}
+        >
+          <div className="header-content">
+            <Image
+              src={Referral}
+              alt="Icon"
+              height={16}
+              width={16}
+              className="header-image"
+            />
+            <span className="header-text-overview">
+              Top 5 Referral Sources
+            </span>
+          </div>
+          <div>
+            <Image
+              src={collapsedSecond ? UpArrow : DownArrow}
+              alt="Icon"
+              height={16}
+              width={16}
+            />
+          </div>
+        </div>
+        {collapsedSecond && (
+          <Barchart
+            labels={referrerSeries?.labels}
+            series={referrerSeries?.series || []}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
 const OverviewPage = () => {
   const [loader, setLoader] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -643,8 +734,6 @@ const OverviewPage = () => {
   const [newPost, setNewPost] = useState(0);
   const [readPost, setReadPost] = useState(0);
   const [dowAvg, setDowAvg]: any = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
-  const [collapsedSecond, setCollapsedSecond] = useState(false);
   const [cityRows, setCityRows] = useState([]);
   const [referrerSeries, setReferrerSeries] = useState({
     labels: [],
@@ -829,8 +918,8 @@ const OverviewPage = () => {
                 total_scroll_depth_percentage === 0
                   ? 0
                   : parseFloat(
-                      (total_calc / total_scroll_depth_percentage).toFixed(2)
-                    );
+                    (total_calc / total_scroll_depth_percentage).toFixed(2)
+                  );
 
               return {
                 ...post,
@@ -868,11 +957,8 @@ const OverviewPage = () => {
 
     if (overviewIds?.length > 0) {
       setChartLoader(true);
-      const real_time =
-        localStorage.getItem("real_time_date") ||
-        formationTimezone(moment(), "YYYY-MM-DD");
       const req = {
-        period_date: real_time,
+        period_date: "2024-01-22",
         site_id: siteDetails?.site_id,
         article_id: overviewIds,
       };
@@ -919,7 +1005,7 @@ const OverviewPage = () => {
             }
           });
         }
-
+        
         setArticleSeries(result);
         setChartLoader(false);
       } catch (err) {
@@ -1221,15 +1307,7 @@ const OverviewPage = () => {
     }
   };
 
-  const toggleCollapsed = (panel: any) => {
-    if (panel === "first") {
-      setCollapsed(!collapsed);
-      if (collapsedSecond) setCollapsedSecond(false);
-    } else if (panel === "second") {
-      setCollapsedSecond(!collapsedSecond);
-      if (collapsed) setCollapsed(false);
-    }
-  };
+
 
   function analyzeTrafficEngagement() {
     const usersHigh = highAndLowValues?.aggregate?.max?.users;
@@ -1319,7 +1397,7 @@ const OverviewPage = () => {
     },
   ];
 
-  const currentMonth = moment().format("MMM D");
+  const currentMonth = moment("2024-01-22").format("MMM D");
   const timeLabels = overViewChartData?.label?.map((item: any) => {
     const formattedTime = moment().hour(item).minute(0).format("h:mm a");
     return `${currentMonth}, ${formattedTime}`;
@@ -1329,6 +1407,7 @@ const OverviewPage = () => {
   const data = mapArticleData(topPostToday);
   const authorData = mapAuthorData(overviewAuthor);
   const categoryData = mapCategoryData(overviewTagsHour);
+
 
   // main render
   return (
@@ -1455,82 +1534,7 @@ const OverviewPage = () => {
                   )}
                 </div>
               ))}
-              <div className="custom-collapse">
-                <div
-                  className={`collapse-header-overview bottom-section ${
-                    collapsed ? "collapsed" : ""
-                  }`}
-                  onClick={() => toggleCollapsed("first")}
-                >
-                  <div className="header-content-overview">
-                    <Image
-                      src={WorldwideLogo}
-                      alt="Icon"
-                      height={16}
-                      width={16}
-                      className="header-image"
-                    />
-                    <Tooltip
-                      title={"Geographical location of the website's audience."}
-                    >
-                      <span className="header-text-overview">Geography</span>
-                    </Tooltip>
-                  </div>
-                  <div>
-                    <Image
-                      src={collapsed ? UpArrow : DownArrow}
-                      alt="Icon"
-                      height={16}
-                      width={16}
-                    />
-                  </div>
-                </div>
-                {collapsed && (
-                  <div className="scrollable-table">
-                    <Table
-                      dataSource={cityRows}
-                      className="geography-table"
-                      columns={columnForGeography}
-                      pagination={false}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="custom-collapse-overview">
-                <div
-                  className={`collapse-header-overview bottom-section ${
-                    collapsedSecond ? "collapsed" : ""
-                  }`}
-                  onClick={() => toggleCollapsed("second")}
-                >
-                  <div className="header-content">
-                    <Image
-                      src={Referral}
-                      alt="Icon"
-                      height={16}
-                      width={16}
-                      className="header-image"
-                    />
-                    <span className="header-text-overview">
-                      Top 5 Referral Sources
-                    </span>
-                  </div>
-                  <div>
-                    <Image
-                      src={collapsedSecond ? UpArrow : DownArrow}
-                      alt="Icon"
-                      height={16}
-                      width={16}
-                    />
-                  </div>
-                </div>
-                {collapsedSecond && (
-                  <Barchart
-                    labels={referrerSeries?.labels}
-                    series={referrerSeries?.series || []}
-                  />
-                )}
-              </div>
+              <CollapsePannel cityRows={cityRows} referrerSeries={referrerSeries} ></CollapsePannel>
             </div>
           </Col>
           <Col span={19}>
