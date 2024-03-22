@@ -1018,7 +1018,7 @@ export default function AuthorList() {
 
   const getLast30DaysForAuthor = async (result: any, authorIds: any) => {
     if (authorIds?.length > 0) {
-      let real_time_date = localStorage.getItem("real_time_date");
+      let real_time_date = "2024-01-22";
       const req = {
         period_date:
           real_time_date || formationTimezone(moment(), "YYYY-MM-DD"),
