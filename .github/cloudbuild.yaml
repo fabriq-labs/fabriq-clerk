@@ -1,9 +1,9 @@
 steps:
   # Create .env.local file and populate it with args
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       - |
         echo "CLERK_SECRET_KEY=${_CLERK_SECRET_KEY}" >> .env.local
         echo "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=${_NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL}" >> .env.local
@@ -14,30 +14,32 @@ steps:
         echo "NEXT_PUBLIC_X_HASURA_ADMIN_URL=${_NEXT_PUBLIC_X_HASURA_ADMIN_URL}" >> .env.local
         echo "OPENAI_API_KEY=${_OPENAI_API_KEY}" >> .env.local
         echo "SERPAPI_API_KEY=${_SERPAPI_API_KEY}" >> .env.local
+        echo "NEXT_PUBLIC_CONTENT_ENTITY_PREFIX=${_NEXT_PUBLIC_CONTENT_ENTITY_PREFIX}" >> .env.local
+        echo "NEXT_PUBLIC_CONTENT_HASURA_ADMIN_URL=${_NEXT_PUBLIC_CONTENT_HASURA_ADMIN_URL}" >> .env.local
   # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: 
-      - 'build'
-      - '-t' 
-      - 'gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA'
-      - '.'
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA"
+      - "."
   # Push the container image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA']
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA"]
   # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'health-care'
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA'
-    - '--region'
-    - 'us-east1'
-    
+      - "run"
+      - "deploy"
+      - "health-care"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA"
+      - "--region"
+      - "us-east1"
+
 options:
   logging: CLOUD_LOGGING_ONLY
 
 images:
-- 'gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA'
+  - "gcr.io/$PROJECT_ID/fabriq/health-care:$COMMIT_SHA"

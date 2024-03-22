@@ -1,3 +1,3 @@
-import { Overview } from "@views/overview/overview";
+import HomePage from "@/views/home/home";
 
-export default Overview;
+export default HomePage;

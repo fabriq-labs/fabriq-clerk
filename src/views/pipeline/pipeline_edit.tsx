@@ -68,7 +68,6 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
 
   const onClickReconnect = () => {
     const redirect_url = `https://${window.location.host}/`;
-    console.log(redirect_url);
 
     axios
       .post(`/api/pipeline/update`, {

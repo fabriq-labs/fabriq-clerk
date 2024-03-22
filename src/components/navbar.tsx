@@ -74,18 +74,33 @@ export default function Navbar() {
             <li className="flex-list">
               <span>Fabriq</span>
             </li>
-            <li>
-              <Link href="/">
-                <span
-                  className={`${
-                    isActive("/") ? "tab active" : "tab"
-                  } transition`}
-                >
-                  Home
-                </span>
-              </Link>
-            </li>
-            {organization && organization?.publicMetadata?.is_connection && (
+            <Protect permission="org:demo:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`${
+                      isActive("/") ? "tab active" : "tab"
+                    } transition`}
+                  >
+                    Home
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`tab ${
+                      isActive("/") ? "active" : ""
+                    } transition`}
+                  >
+                    Overview
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
                   <span
@@ -97,7 +112,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            )}
+            </Protect>
             {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/explore">
@@ -124,7 +139,6 @@ export default function Navbar() {
             )}
           </ul>
         </nav>
-
         <div className="flex items-center gap-4">
           <Dropdown menu={{ items, onClick }}>
             <span className={`tab ${isActiveSetup ? "active" : ""} transition`}>
