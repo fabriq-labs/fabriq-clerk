@@ -3,13 +3,10 @@
 
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import dynamic from "next/dynamic";
+import ReactApexChart from "react-apexcharts";
+
 
 import { formatNumber, getCurrentHour, formationTimezone } from "@utils/helper";
-
-const ReactApexChart = dynamic(() => import("react-apexcharts"), {
-  ssr: false,
-});
 
 const LineChart = ({
   labels,
