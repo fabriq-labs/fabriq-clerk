@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   Row,
   Col,
@@ -19,6 +20,7 @@ import {
   formatNumber,
   formationTimezone,
   getQuarterFromDate,
+  getQuarterMonths,
 } from "@/utils/helper";
 import moment from "moment";
 import {
@@ -80,7 +82,9 @@ export default function Authors() {
   const [selectedBreakdownValue, setSelectedBreakdownValue] = useState<any>("");
   const [breakdownDataObject, setBreakDownDataObject] = useState<any>({});
   const [tableVistitorData, setTableVisitorData] = useState<any>([]);
-  const { authorId } = useParams();
+  const { authorId }: any = useParams();
+  const author_id = decodeURIComponent(authorId);
+
   let siteDetails: any = {
     id: 36,
     site_id: "wral.com",
@@ -115,7 +119,7 @@ export default function Authors() {
         operation: "getAuthorRealTimeList",
         variables: {
           period_date,
-          author_id: authorId,
+          author_id: author_id,
           site_id: siteDetails?.site_id,
         },
       })
@@ -152,12 +156,6 @@ export default function Authors() {
         setIsError(true);
       });
   };
-  // useEffect(() => {
-  //     const state = location.state;
-  //     if (state?.image) {
-  //       setImageIndex(state.image);
-  //     }
-  //   }, []);
 
   useEffect(() => {
     if (authorCurrentChartResponse && authorAverageChartResponse) {
@@ -239,16 +237,135 @@ export default function Authors() {
     const partial_period_date = `${year}-${value
       ?.toString()
       .padStart(2, "0")}%`;
+
+    axios
+      .post("/api/author", {
+        operation: "getAuthorMonthlyDetails",
+        variables: {
+          site_id: siteDetails?.site_id,
+          author_id,
+          period_month: parseInt(value),
+          period_year: year,
+          partial_period_date,
+        },
+      })
+      .then((res: any) => {
+        if (res?.data?.data) {
+          setHeaderData(res?.data?.data?.AuthorsMonthly?.[0]);
+          setDataArray(res?.data?.data?.AuthorsMonthly);
+          trafficSourceFormat(res?.data?.data?.AuthorsMonthly?.[0], "monthly");
+          let topMediumFormat = formatTopMedium(
+            res?.data?.data?.AuthorTopMediumMonthly
+          );
+
+          setSiteAvg(res?.data?.data?.SiteAvg?.[0]);
+          setAuthorsMedium(topMediumFormat);
+          setHistoricalChartResponse(res?.data?.data);
+          convertDistribution(
+            res?.data?.data?.AuthorsMonthly,
+            "city_distribution"
+          );
+          generateDataMonthly(res?.data?.data);
+          setTableLoader(false);
+        } else {
+          setLoader(false);
+          setIsError(true);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+        setIsError(true);
+      });
   };
 
   const getQuarterlyData = (value: any, year: any) => {
     setTableLoader(true);
     setIsError(false);
+
+    const currentQuarterMonths = getQuarterMonths(value);
+    axios
+      .post("/api/author", {
+        operation: "getAuthorQuarterDetails",
+        variables: {
+          site_id: siteDetails?.site_id,
+          author_id,
+          period_quater: parseInt(value),
+          period_year: year,
+          period_month: currentQuarterMonths,
+        },
+      })
+      .then((res: any) => {
+        if (res?.data?.data) {
+          setHeaderData(res?.data?.data?.AuthorsQuaterly?.[0]);
+          setDataArray(res?.data?.data?.AuthorsQuaterly);
+          trafficSourceFormat(
+            res?.data?.data?.AuthorsQuaterly?.[0],
+            "quarterly"
+          );
+          setHistoricalChartResponse(res?.data?.data);
+          let topMediumFormat = formatTopMedium(
+            res?.data?.data?.AuthorsTopMediumQuaterly
+          );
+
+          setSiteAvg(res?.data?.data?.SiteAvg?.[0]);
+          setAuthorsMedium(topMediumFormat);
+          convertDistribution(
+            res?.data?.data?.AuthorsQuaterly,
+            "city_distribution"
+          );
+          generateDataForQuarterChart(res?.data?.data, value);
+          setTableLoader(false);
+        } else {
+          setTableLoader(false);
+          setIsError(true);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+        setIsError(true);
+      });
   };
 
   const getYearlyData = (value: any) => {
     setTableLoader(true);
     setIsError(false);
+
+    axios
+      .post("/api/author", {
+        operation: "getAuthorYearDetails",
+        variables: {
+          site_id: siteDetails?.site_id,
+          author_id,
+          period_year: parseInt(value),
+        },
+      })
+      .then((res) => {
+        if (res?.data?.data) {
+          setHeaderData(res?.data?.data?.AuthorsYearly?.[0]);
+          setDataArray(res?.data?.data?.AuthorsYearly);
+          trafficSourceFormat(res?.data?.data?.AuthorsYearly?.[0], "yearly");
+          let topMediumFormat = formatTopMedium(
+            res?.data?.data?.AuthorsTopMediumYearly
+          );
+
+          setSiteAvg(res?.data?.data?.SiteAvg?.[0]);
+          setAuthorsMedium(topMediumFormat);
+          setHistoricalChartResponse(res?.data?.data);
+          convertDistribution(
+            res?.data?.data?.AuthorsYearly,
+            "city_distribution"
+          );
+          generateDataForYearChart(res?.data?.data, parseInt(value));
+          setTableLoader(false);
+        } else {
+          setTableLoader(false);
+          setIsError(true);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+        setIsError(true);
+      });
   };
 
   const generateLineChartData = (chartData: any) => {
@@ -259,7 +376,7 @@ export default function Authors() {
     return labels;
   };
 
-  const generateDataMonthly = (data: any, val: any) => {
+  const generateDataMonthly = (data: any, val?: any) => {
     const chartData = data?.AuthorsDaily;
     const labels = generateLineChartData(chartData);
     const chartOption = val || selectedChartValue;
@@ -276,28 +393,28 @@ export default function Authors() {
       };
     };
 
-    let chartSeriesFormat = {
+    let chartSeriesFormat: any = {
       series: [],
       label: labels,
     };
 
-    // switch (chartOption) {
-    //     case "users":
-    //         chartSeriesFormat.series = [getSeriesConfig("Readers", "users")];
-    //         break;
-    //     default:
-    //         chartSeriesFormat.series = [
-    //             getSeriesConfig("Page Views", "page_views")
-    //         ];
-    // }
+    switch (chartOption) {
+      case "users":
+        chartSeriesFormat.series = [getSeriesConfig("Readers", "users")];
+        break;
+      default:
+        chartSeriesFormat.series = [
+          getSeriesConfig("Page Views", "page_views"),
+        ];
+    }
 
-    // setAuthorChartData(chartSeriesFormat);
+    setAuthorChartData(chartSeriesFormat);
   };
 
   const generateDataForQuarterChart = (
     data: any,
     quarter: number,
-    value: string
+    value?: string
   ) => {
     const list = data?.AuthorsMonthly;
     if (list?.length > 0) {
@@ -307,6 +424,8 @@ export default function Authors() {
         return month;
       });
 
+      console.log("labels", labels);
+
       let selectedItem = "";
       if (value) {
         selectedItem = value;
@@ -314,7 +433,7 @@ export default function Authors() {
         selectedItem = selectedChartValue;
       }
 
-      const outputArray = labels.map((label: any) => {
+      const outputArray = labels?.map((label: any) => {
         const day = parseInt(label);
         const dataItem = list?.find(
           (item: { period_month: number }) => item?.period_month === day
@@ -438,11 +557,7 @@ export default function Authors() {
     return formattedData;
   };
 
-  const generateDataForYearChart = (
-    data: { AuthorsMonthly: any; AuthorsYearly: string | any[] },
-    year: any,
-    value: string
-  ) => {
+  const generateDataForYearChart = (data: any, year: any, value?: string) => {
     const list = data?.AuthorsMonthly;
     const labels = Array.from({ length: 12 }, (_, i) => {
       const month = i + 1;
@@ -790,13 +905,11 @@ export default function Authors() {
     if (segementValue === "monthly") {
       generateDataMonthly(historicalChartResponse, value);
     } else if (segementValue === "yearly") {
-      generateDataForYearChart(historicalChartResponse, selectedYear, value);
+      const year = selectedYear?.getFullYear();
+      generateDataForYearChart(historicalChartResponse, year, value);
     } else if (segementValue === "quarterly") {
-      generateDataForQuarterChart(
-        historicalChartResponse,
-        selectedQuarter,
-        value
-      );
+      const quarter = getQuarterFromDate(selectedQuarter);
+      generateDataForQuarterChart(historicalChartResponse, quarter, value);
     } else {
       realtimeChartDataFormat(value);
     }
@@ -1021,8 +1134,12 @@ export default function Authors() {
         <div className="author-content">
           <div style={{ display: "flex", marginTop: 25 }}>
             <div className="back-image" onClick={handleClickBack}>
-              <img src="/images/back.png" alt="back" width={30} height={30} />
+              <ArrowLeftOutlined
+                style={{ cursor: "pointer" }}
+                onClick={handleClickBack}
+              />
             </div>
+
             <div className="article-segement-wrapper">
               <Radio.Group
                 onChange={handleChangeSegement}
@@ -1036,7 +1153,7 @@ export default function Authors() {
               </Radio.Group>
             </div>
             {segementValue === "real-time" && (
-              <div className="article-DatepickerComponent">
+              <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedDate}
                   showDatePicker
@@ -1045,7 +1162,7 @@ export default function Authors() {
               </div>
             )}
             {segementValue === "monthly" && (
-              <div className="article-DatepickerComponent">
+              <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedMonth}
                   onChange={handleMonthChange}
@@ -1055,7 +1172,7 @@ export default function Authors() {
               </div>
             )}
             {segementValue === "quarterly" && (
-              <div className="article-DatepickerComponent">
+              <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedQuarter}
                   onChange={handleQuarterlyChange}
@@ -1065,7 +1182,7 @@ export default function Authors() {
               </div>
             )}
             {segementValue === "yearly" && (
-              <div className="article-DatepickerComponent">
+              <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedYear}
                   onChange={handleYearChange}
@@ -1100,7 +1217,9 @@ export default function Authors() {
               </div>
               {tableLoader ? (
                 <>
-                  <Skeleton />
+                  <div className="loader-cotainer">
+                    <div className="loader"></div>
+                  </div>
                 </>
               ) : (
                 <>

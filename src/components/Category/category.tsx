@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Skeleton, Tooltip } from "antd";
 import moment from "moment";
+import Image from "next/image";
 
 import { formationTimezone } from "@/utils/helper";
+import OpenLink from "../../assets/open-link.webp";
+import AvatarImage from "../../assets/image-7.png";
 
 const HeaderContainer = (props: any) => {
   const { title, value, loader, tooltip }: any = props;
@@ -149,13 +152,8 @@ const Category = (props: any) => {
             view === "author" ? "heading-image" : "heading-image-article"
           }
         >
-          <img
-            src={
-              view === "author"
-                ? headerData?.image_url ||
-                  `/images/avatars/image-${imageIndex + 1}.png`
-                : ImageValue
-            }
+          <Image
+            src={AvatarImage || ImageValue}
             style={{ width: "100px" }}
             alt="logo"
             className={
@@ -205,8 +203,8 @@ const Category = (props: any) => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <img
-                    src={"/images/open-link.webp"}
+                  <Image
+                    src={OpenLink}
                     alt="link"
                     style={{
                       width: "12px",
