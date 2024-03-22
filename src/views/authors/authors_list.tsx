@@ -854,7 +854,7 @@ export default function AuthorList() {
 
             const req = {
                 site_id: siteDetails?.site_id,
-                period_month: parseInt(value),
+                period_quarter: parseInt(value),
                 period_year: year,
                 offset: offset,
                 startOfQuarter: startOfQuarter,
@@ -900,7 +900,7 @@ export default function AuthorList() {
         try {
             const req = {
                 site_id: siteDetails?.site_id,
-                period_month: parseInt(value),
+                period_year: parseInt(value),
                 offset: offset,
                 startOfYear: startOfYear,
                 startOfNextYear: startOfNextYear
