@@ -50,6 +50,7 @@ import {
   mapAuthorData,
   mapCategoryData,
 } from "@utils/helper";
+import Link from "next/link";
 
 // Format Number
 function formatNumber(value: any) {
@@ -157,8 +158,7 @@ const AuthorChartContainer = React.memo(({ id, seriobj }: any) => {
 
 // Table content
 const ArticleTableCard = (props: any) => {
-  const { dataSource, articleSeries, handleClickTitle, siteLink, chartLoader } =
-    props;
+  const { dataSource, articleSeries, siteLink, chartLoader } = props;
   return (
     <div className="article-table-card-wrapper">
       <div className="article-table-header">
@@ -249,20 +249,13 @@ const ArticleTableCard = (props: any) => {
                         <span>{formationTimezone(record?.published_date)}</span>
                         <span>
                           {" "}
-                          {/* <Link
-                            to={`/content/author/${record?.author_id}`}
-                            className="overview-author-div-author"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleClickTitle("author")}
-                          >
-                            {record?.author}
-                          </Link> */}
-                          <div
+                          <Link
+                            href={`/author/${record?.author_id}`}
                             className="overview-author-div-author"
                             style={{ cursor: "pointer" }}
                           >
                             {record?.author}
-                          </div>
+                          </Link>
                         </span>
                         <span>{record?.category}</span>
                         <span className="link-text">
@@ -321,7 +314,7 @@ const ArticleTableCard = (props: any) => {
 };
 
 const AuthorTableCard = (props: any) => {
-  const { dataSource, authorSeries, handleClickTitle } = props;
+  const { dataSource, authorSeries } = props;
   return (
     <div className="author-table-card-wrapper">
       <div className="author-table-header">
@@ -386,21 +379,13 @@ const AuthorTableCard = (props: any) => {
                       {index + 1}
                     </span>
                     <div className="column-container">
-                      {/* <Link
+                      <Link
                         className="column-title"
-                        to={`/content/author/${record?.id}`}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleClickTitle("author")}
-                      >
-                        {record.title}
-                      </Link> */}
-                      <div
-                        className="column-title"
+                        href={`/author/${record?.id}`}
                         style={{ cursor: "pointer" }}
                       >
-                        {" "}
                         {record.title}
-                      </div>
+                      </Link>
                       <div className="column-row">
                         <span>Articles Published : {record.article_count}</span>
                       </div>
@@ -527,7 +512,7 @@ const CategoryTableCard = (props: any) => {
   );
 };
 
-const VideoTableCard = ({ dataSource, siteLink, handleClickTitle }: any) => {
+const VideoTableCard = ({ dataSource, siteLink }: any) => {
   return (
     <div className="video-table-card-wrapper">
       <div className="video-table-header">
@@ -1591,7 +1576,6 @@ const OverviewPage = () => {
                       children: (
                         <ArticleTableCard
                           chartLoader={chartLoader}
-                          // handleClickTitle={handleClickTitle}
                           dataSource={data}
                           articleSeries={articleSeries}
                           siteLink={siteLink}
@@ -1605,7 +1589,6 @@ const OverviewPage = () => {
                         <AuthorTableCard
                           dataSource={authorData}
                           authorSeries={authorSeries}
-                          // handleClickTitle={handleClickTitle}
                         />
                       ),
                     },
@@ -1624,7 +1607,6 @@ const OverviewPage = () => {
                       key: "4",
                       children: (
                         <VideoTableCard
-                          // handleClickTitle={handleClickTitle}
                           dataSource={videoList}
                           siteLink={siteLink}
                         />

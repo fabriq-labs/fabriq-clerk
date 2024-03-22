@@ -136,7 +136,7 @@ export const mapCategoryData = (overviewTagsHour: any) => {
     title: data?.category,
     user: data?.users?.toLocaleString(),
     page_views: data?.page_views?.toLocaleString(),
-    ad_revenue: `$${Math.floor(Math.random() * 100) + 1}`
+    ad_revenue: `$${Math.floor(Math.random() * 100) + 1}`,
   }));
 };
 
@@ -265,3 +265,20 @@ export const dummylabels = [
   "10:00 pm",
   "11:00 pm",
 ];
+
+export const getQuarterFromDate = (date: any) => {
+  const month = date.getMonth() + 1;
+  return Math.ceil(month / 3);
+};
+
+export const getQuarterMonths = (quarter: any) => {
+  if (quarter < 1 || quarter > 4) {
+    throw new Error(
+      "Invalid quarter value. Please provide a value between 1 and 4."
+    );
+  }
+
+  const startMonth = 3 * (quarter - 1) + 1;
+
+  return [startMonth, startMonth + 1, startMonth + 2];
+};

@@ -1,7 +1,10 @@
 // Linechart
+"use client";
+
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
 import moment from "moment";
+import ReactApexChart from "react-apexcharts";
+
 
 import { formatNumber, getCurrentHour, formationTimezone } from "@utils/helper";
 
@@ -17,8 +20,6 @@ const LineChart = ({
   isArticle,
 }: any) => {
   const [seriesData, setSeriesData] = useState([]);
-
-  console.log("series", series);
 
   let period_date = formationTimezone(moment(), "YYYY-MM-DD");
   const formattedDate = selectedDate
