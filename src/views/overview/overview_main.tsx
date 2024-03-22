@@ -20,7 +20,6 @@ import moment from "moment";
 import GaugeChart from "react-gauge-chart";
 
 import { Label } from "@/components/ui/label";
-import Layout from "@components/layout";
 import Barchart from "@/components/chart/barchart";
 import LineChart from "@/components/chart/linechart";
 import LineChartTiny from "@/components/chart/linechart_tiny";
@@ -1348,302 +1347,298 @@ const OverviewPage = () => {
 
   // main render
   return (
-    <Layout>
-      <div className="overview-wrapper">
-        {isError ? (
-          <div className="overview-error-result">
-            <ErrorResult />
-          </div>
-        ) : loader ? (
-          <div className="loader-cotainer">
-            <div className="loader"></div>
-          </div>
-        ) : (
-          <Row gutter={[24, 24]}>
-            <Col span={5}>
-              <div className="overview-left-container">
-                <div className="custom-message">
-                  Traffic is{" "}
-                  <span className={`traffic ${result?.usersCategory}-div`}>
-                    {result?.usersCategory}
-                  </span>
-                  <br />
-                  Engagement is{" "}
-                  <span
-                    className={`engagement ${result?.recirculationCategory}-div`}
-                  >
-                    {" "}
-                    {result?.recirculationCategory}
-                  </span>
-                </div>
-                {buttonsData?.map((button, index) => (
-                  <div
-                    key={index}
-                    className="custom-collapse button-container"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-start",
-                      alignItems: "stretch",
-                    }}
-                  >
-                    <>
-                      <div className="collapse-header-overview">
-                        <div className="header-content-overview">
-                          {button.icon && (
-                            <div className="icon-container">
-                              <Image
-                                src={button.icon}
-                                alt="Icon"
-                                className="icon"
-                              />
-                            </div>
-                          )}
-                          <Tooltip title={button.tooltipText}>
-                            <span>
-                              <Label className="header-text-overview">
-                                {button.label}
-                              </Label>
-                            </span>
-                          </Tooltip>
-                        </div>
-                        <div className="label-container-overview">
-                          {button.value}
-                          {button?.avgValue && button?.avgValue !== "0.00" && (
-                            <Tag
-                              color={
-                                button?.avgStatus === "decreased"
-                                  ? "red"
-                                  : "green"
-                              }
-                              className="additional-info"
-                            >
-                              {button?.avgValue.includes("-")
-                                ? button?.avgValue.substring(1)
-                                : button?.avgValue}
-                              %
-                              <Image
-                                src={
-                                  button?.avgStatus === "decreased"
-                                    ? DownArrowLogo
-                                    : UpArrowLogo
-                                }
-                                alt=""
-                                className="img-arrow"
-                                width={12}
-                                height={12}
-                              />
-                            </Tag>
-                          )}
-                        </div>
+    <div className="overview-wrapper">
+      {isError ? (
+        <div className="overview-error-result">
+          <ErrorResult />
+        </div>
+      ) : loader ? (
+        <div className="loader-cotainer">
+          <div className="loader"></div>
+        </div>
+      ) : (
+        <Row gutter={[24, 24]}>
+          <Col span={5}>
+            <div className="overview-left-container">
+              <div className="custom-message">
+                Traffic is{" "}
+                <span className={`traffic ${result?.usersCategory}-div`}>
+                  {result?.usersCategory}
+                </span>
+                <br />
+                Engagement is{" "}
+                <span
+                  className={`engagement ${result?.recirculationCategory}-div`}
+                >
+                  {" "}
+                  {result?.recirculationCategory}
+                </span>
+              </div>
+              {buttonsData?.map((button, index) => (
+                <div
+                  key={index}
+                  className="custom-collapse button-container"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "stretch",
+                  }}
+                >
+                  <>
+                    <div className="collapse-header-overview">
+                      <div className="header-content-overview">
+                        {button.icon && (
+                          <div className="icon-container">
+                            <Image
+                              src={button.icon}
+                              alt="Icon"
+                              className="icon"
+                            />
+                          </div>
+                        )}
+                        <Tooltip title={button.tooltipText}>
+                          <span>
+                            <Label className="header-text-overview">
+                              {button.label}
+                            </Label>
+                          </span>
+                        </Tooltip>
                       </div>
-                    </>
-                    {button?.isChart && (
-                      <div className="chart-container">
-                        <div className="chart-wrapper relative">
-                          <Chart
-                            id="page_views"
-                            value={overallListData?.page_views || 0}
-                            maxValue={
-                              highAndLowValues?.aggregate?.max?.page_views
+                      <div className="label-container-overview">
+                        {button.value}
+                        {button?.avgValue && button?.avgValue !== "0.00" && (
+                          <Tag
+                            color={
+                              button?.avgStatus === "decreased"
+                                ? "red"
+                                : "green"
                             }
-                          />
+                            className="additional-info"
+                          >
+                            {button?.avgValue.includes("-")
+                              ? button?.avgValue.substring(1)
+                              : button?.avgValue}
+                            %
+                            <Image
+                              src={
+                                button?.avgStatus === "decreased"
+                                  ? DownArrowLogo
+                                  : UpArrowLogo
+                              }
+                              alt=""
+                              className="img-arrow"
+                              width={12}
+                              height={12}
+                            />
+                          </Tag>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                  {button?.isChart && (
+                    <div className="chart-container">
+                      <div className="chart-wrapper relative">
+                        <Chart
+                          id="page_views"
+                          value={overallListData?.page_views || 0}
+                          maxValue={
+                            highAndLowValues?.aggregate?.max?.page_views
+                          }
+                        />
+                      </div>
+                      <div className="absolute-values">
+                        <div className="low">
+                          <span className="val-div">
+                            {format(
+                              highAndLowValues?.aggregate?.min?.page_views
+                            )}
+                          </span>
+                          <br />
+                          30 Day Low{" "}
                         </div>
-                        <div className="absolute-values">
-                          <div className="low">
-                            <span className="val-div">
-                              {format(
-                                highAndLowValues?.aggregate?.min?.page_views
-                              )}
-                            </span>
-                            <br />
-                            30 Day Low{" "}
-                          </div>
-                          <div className="max">
-                            <span className="val-div">
-                              {format(
-                                highAndLowValues?.aggregate?.max?.page_views
-                              )}
-                            </span>
-                            <br /> 30 Day High{" "}
-                          </div>
+                        <div className="max">
+                          <span className="val-div">
+                            {format(
+                              highAndLowValues?.aggregate?.max?.page_views
+                            )}
+                          </span>
+                          <br /> 30 Day High{" "}
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="custom-collapse">
+                <div
+                  className={`collapse-header-overview bottom-section ${
+                    collapsed ? "collapsed" : ""
+                  }`}
+                  onClick={() => toggleCollapsed("first")}
+                >
+                  <div className="header-content-overview">
+                    <Image
+                      src={WorldwideLogo}
+                      alt="Icon"
+                      height={16}
+                      width={16}
+                      className="header-image"
+                    />
+                    <Tooltip
+                      title={"Geographical location of the website's audience."}
+                    >
+                      <span className="header-text-overview">Geography</span>
+                    </Tooltip>
                   </div>
-                ))}
-                <div className="custom-collapse">
-                  <div
-                    className={`collapse-header-overview bottom-section ${
-                      collapsed ? "collapsed" : ""
-                    }`}
-                    onClick={() => toggleCollapsed("first")}
-                  >
-                    <div className="header-content-overview">
-                      <Image
-                        src={WorldwideLogo}
-                        alt="Icon"
-                        height={16}
-                        width={16}
-                        className="header-image"
-                      />
-                      <Tooltip
-                        title={
-                          "Geographical location of the website's audience."
+                  <div>
+                    <Image
+                      src={collapsed ? UpArrow : DownArrow}
+                      alt="Icon"
+                      height={16}
+                      width={16}
+                    />
+                  </div>
+                </div>
+                {collapsed && (
+                  <div className="scrollable-table">
+                    <Table
+                      dataSource={cityRows}
+                      className="geography-table"
+                      columns={columnForGeography}
+                      pagination={false}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="custom-collapse-overview">
+                <div
+                  className={`collapse-header-overview bottom-section ${
+                    collapsedSecond ? "collapsed" : ""
+                  }`}
+                  onClick={() => toggleCollapsed("second")}
+                >
+                  <div className="header-content">
+                    <Image
+                      src={Referral}
+                      alt="Icon"
+                      height={16}
+                      width={16}
+                      className="header-image"
+                    />
+                    <span className="header-text-overview">
+                      Top 5 Referral Sources
+                    </span>
+                  </div>
+                  <div>
+                    <Image
+                      src={collapsedSecond ? UpArrow : DownArrow}
+                      alt="Icon"
+                      height={16}
+                      width={16}
+                    />
+                  </div>
+                </div>
+                {collapsedSecond && (
+                  <Barchart
+                    labels={referrerSeries?.labels}
+                    series={referrerSeries?.series || []}
+                  />
+                )}
+              </div>
+            </div>
+          </Col>
+          <Col span={19}>
+            <Row>
+              <Col span={24}>
+                <div className="overview-chart-content">
+                  <div className="overview-chart-header">
+                    <div className="overview-chart-select">
+                      <Select
+                        onChange={handleChangeChart}
+                        value={selectedChartValue}
+                        style={{ width: "100%" }}
+                        getPopupContainer={(triggerNode) =>
+                          triggerNode?.parentNode || document.body
                         }
                       >
-                        <span className="header-text-overview">Geography</span>
-                      </Tooltip>
-                    </div>
-                    <div>
-                      <Image
-                        src={collapsed ? UpArrow : DownArrow}
-                        alt="Icon"
-                        height={16}
-                        width={16}
-                      />
+                        <Select.Option value="page_views">
+                          Page Views
+                        </Select.Option>
+                        <Select.Option value="users">Readers</Select.Option>
+                      </Select>
                     </div>
                   </div>
-                  {collapsed && (
-                    <div className="scrollable-table">
-                      <Table
-                        dataSource={cityRows}
-                        className="geography-table"
-                        columns={columnForGeography}
-                        pagination={false}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="custom-collapse-overview">
-                  <div
-                    className={`collapse-header-overview bottom-section ${
-                      collapsedSecond ? "collapsed" : ""
-                    }`}
-                    onClick={() => toggleCollapsed("second")}
-                  >
-                    <div className="header-content">
-                      <Image
-                        src={Referral}
-                        alt="Icon"
-                        height={16}
-                        width={16}
-                        className="header-image"
-                      />
-                      <span className="header-text-overview">
-                        Top 5 Referral Sources
-                      </span>
-                    </div>
-                    <div>
-                      <Image
-                        src={collapsedSecond ? UpArrow : DownArrow}
-                        alt="Icon"
-                        height={16}
-                        width={16}
-                      />
-                    </div>
-                  </div>
-                  {collapsedSecond && (
-                    <Barchart
-                      labels={referrerSeries?.labels}
-                      series={referrerSeries?.series || []}
-                    />
-                  )}
-                </div>
-              </div>
-            </Col>
-            <Col span={19}>
-              <Row>
-                <Col span={24}>
-                  <div className="overview-chart-content">
-                    <div className="overview-chart-header">
-                      <div className="overview-chart-select">
-                        <Select
-                          onChange={handleChangeChart}
-                          value={selectedChartValue}
-                          style={{ width: "100%" }}
-                          getPopupContainer={(triggerNode) =>
-                            triggerNode?.parentNode || document.body
-                          }
-                        >
-                          <Select.Option value="page_views">
-                            Page Views
-                          </Select.Option>
-                          <Select.Option value="users">Readers</Select.Option>
-                        </Select>
-                      </div>
-                    </div>
-                    <LineChart
-                      labels={timeLabels}
-                      series={overViewChartData?.series}
-                      colors={["#7F56D9", "#A3E0FF"]}
-                      height={300}
-                      multipleYaxis={false}
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={24}>
-                  <Tabs
-                    type="card"
-                    className="overview-tabs"
-                    items={[
-                      {
-                        label: "Top Articles",
-                        key: "1",
-                        children: (
-                          <ArticleTableCard
-                            chartLoader={chartLoader}
-                            // handleClickTitle={handleClickTitle}
-                            dataSource={data}
-                            articleSeries={articleSeries}
-                            siteLink={siteLink}
-                          />
-                        ),
-                      },
-                      {
-                        label: "Top Authors",
-                        key: "2",
-                        children: (
-                          <AuthorTableCard
-                            dataSource={authorData}
-                            authorSeries={authorSeries}
-                            // handleClickTitle={handleClickTitle}
-                          />
-                        ),
-                      },
-                      {
-                        label: "Top Category",
-                        key: "3",
-                        children: (
-                          <CategoryTableCard
-                            dataSource={categoryData}
-                            categorySeries={categorySeries}
-                          />
-                        ),
-                      },
-                      {
-                        label: "Top Videos",
-                        key: "4",
-                        children: (
-                          <VideoTableCard
-                            // handleClickTitle={handleClickTitle}
-                            dataSource={videoList}
-                            siteLink={siteLink}
-                          />
-                        ),
-                      },
-                    ]}
+                  <LineChart
+                    labels={timeLabels}
+                    series={overViewChartData?.series}
+                    colors={["#7F56D9", "#A3E0FF"]}
+                    height={300}
+                    multipleYaxis={false}
                   />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        )}
-      </div>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Tabs
+                  type="card"
+                  className="overview-tabs"
+                  items={[
+                    {
+                      label: "Top Articles",
+                      key: "1",
+                      children: (
+                        <ArticleTableCard
+                          chartLoader={chartLoader}
+                          // handleClickTitle={handleClickTitle}
+                          dataSource={data}
+                          articleSeries={articleSeries}
+                          siteLink={siteLink}
+                        />
+                      ),
+                    },
+                    {
+                      label: "Top Authors",
+                      key: "2",
+                      children: (
+                        <AuthorTableCard
+                          dataSource={authorData}
+                          authorSeries={authorSeries}
+                          // handleClickTitle={handleClickTitle}
+                        />
+                      ),
+                    },
+                    {
+                      label: "Top Category",
+                      key: "3",
+                      children: (
+                        <CategoryTableCard
+                          dataSource={categoryData}
+                          categorySeries={categorySeries}
+                        />
+                      ),
+                    },
+                    {
+                      label: "Top Videos",
+                      key: "4",
+                      children: (
+                        <VideoTableCard
+                          // handleClickTitle={handleClickTitle}
+                          dataSource={videoList}
+                          siteLink={siteLink}
+                        />
+                      ),
+                    },
+                  ]}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      )}
       {contextHolder}
-    </Layout>
+    </div>
   );
 };
 

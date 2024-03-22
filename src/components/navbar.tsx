@@ -87,6 +87,19 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/">
+                  <span
+                    className={`tab ${
+                      isActive("/") ? "active" : ""
+                    } transition`}
+                  >
+                    Overview
+                  </span>
+                </Link>
+              </li>
+            </Protect>
             <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
@@ -124,22 +137,8 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
-            <Protect permission="org:media:all">
-              <li>
-                <Link href="/overview">
-                  <span
-                    className={`tab ${
-                      isActive("/overview") ? "active" : ""
-                    } transition`}
-                  >
-                    Overview
-                  </span>
-                </Link>
-              </li>
-            </Protect>
           </ul>
         </nav>
-
         <div className="flex items-center gap-4">
           <Dropdown menu={{ items, onClick }}>
             <span className={`tab ${isActiveSetup ? "active" : ""} transition`}>
