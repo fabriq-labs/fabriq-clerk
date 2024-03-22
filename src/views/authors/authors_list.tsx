@@ -8,7 +8,7 @@ import { formationTimezone, getQuarterFromDate } from "@/utils/helper";
 import moment from "moment";
 import LineChartTiny from "@/components/charts/tiny_line_chart";
 import { DatepickerComponent } from "@/components/authors/date_picker";
-import ErrorResult from "@/components/ErrorResult/error_result";
+import ErrorResult from "@/components/error_result";
 import { formatDuration } from "@/utils/format_duration";
 import Link from "next/link";
 import Image from "next/image";
@@ -395,7 +395,7 @@ export const AuthorTableCard = ({
                                         openItem(index);
                                     }}
                                 >
-                                    <Image 
+                                    <Image
                                         src={
                                             childrenOpen === index
                                                 ? Upload
@@ -518,12 +518,12 @@ const ExpandedRow = ({
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                <Image src={OpenLink} 
-                                alt="link"
-                                style={{
-                                    width: "12px",
-                                    height: "12px"
-                                }} />
+                                <Image src={OpenLink}
+                                    alt="link"
+                                    style={{
+                                        width: "12px",
+                                        height: "12px"
+                                    }} />
                                 <img
                                     src={"/images/open-link.webp"}
                                     alt="link"
@@ -589,14 +589,18 @@ const ExpandedRow = ({
     return (
         <div className="author-article-wrapper">
             {loading ? (
-                <Skeleton active />
+                <div className="loader-cotainer">
+                    <div className="loader"></div>
+                </div>
             ) : (
                 authorDetails?.length > 0 && (
                     <Table
                         columns={columns}
                         dataSource={authorDetails}
                         loading={{
-                            indicator: <Skeleton active paragraph={{ rows: 0 }} />,
+                            indicator: <div className="loader-cotainer">
+                                <div className="loader"></div>
+                            </div>,
                             spinning: tableLoader
                         }}
                         pagination={{
@@ -760,23 +764,23 @@ export default function AuthorList() {
             const values = await axios.post("/api/author", {
                 operation: "getArticlesListMonthly",
                 variables: {
-                    site_id:siteDetails?.site_id,
-                    period_date:period_date,
-                    partical_period_date:offset,
-                    offset:`${period_date}%`,
+                    site_id: siteDetails?.site_id,
+                    period_date: period_date,
+                    partical_period_date: offset,
+                    offset: `${period_date}%`,
                 },
             });
 
-          if (values?.data?.data?.Authors) {
-            const result = values?.data?.data?.Authors;
+            if (values?.data?.data?.Authors) {
+                const result = values?.data?.data?.Authors;
 
-            const authorIds = result?.map((item:any) => item?.author_id);
-            setOffsetValue(offset);
-            getLast30DaysForAuthor(result, authorIds);
-          }
+                const authorIds = result?.map((item: any) => item?.author_id);
+                setOffsetValue(offset);
+                getLast30DaysForAuthor(result, authorIds);
+            }
         } catch (err) {
-          setLoader(false);
-        //   notification.error(err?.message);
+            setLoader(false);
+            //   notification.error(err?.message);
         }
     };
 
@@ -1245,7 +1249,9 @@ export default function AuthorList() {
                         <div className="author-list-table-wrapper">
                             {loader ? (
                                 <div className="center-div">
-                                    <Skeleton active />
+                                    <div className="loader-cotainer">
+                                        <div className="loader"></div>
+                                    </div>
                                 </div>
                             ) : isError ? (
                                 <div className="author-page-error-result">
