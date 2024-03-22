@@ -2,19 +2,27 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Row, Col, Button, Tooltip, Table, Skeleton, Empty, Radio, Pagination } from "antd";
-import { useRouter } from "next/navigation";
+import { Row, Col, Tooltip, Table, Skeleton, Empty, Radio, Pagination } from "antd";
 import Layout from "@components/layout";
-import { formatNumber, formationTimezone, getQuarterFromDate } from "@/utils/helper";
-import StackedBarChart from "@/components/chart/stackedBarChart";
+import { formationTimezone, getQuarterFromDate } from "@/utils/helper";
 import moment from "moment";
 import LineChartTiny from "@/components/charts/tiny_line_chart";
 import { DatepickerComponent } from "@/components/authors/date_picker";
 import ErrorResult from "@/components/ErrorResult/error_result";
 import { formatDuration } from "@/utils/format_duration";
 import Link from "next/link";
-
-let siteDetails: any = undefined
+import Image from "next/image";
+import Avatar from "../../assets/avatars/image-7.png";
+import Upload from "../../assets/upload.png";
+import DownArrow from "../../assets/down-arrow_nw.png";
+import OpenLink from "../../assets/open-link.webp";
+let siteDetails: any = {
+    id: 36,
+    site_id: "wral.com",
+    site_name: "Fabriq",
+    host_name: "https://fabriq.com",
+    collector_url: "wral.com/dt",
+}
 
 const generateData = (series: any, labels: any) => {
     const finalData = labels?.map((label: any, index: any) => ({
@@ -329,15 +337,7 @@ export const AuthorTableCard = ({
                                     </span>
                                     <div className="list-author-logo">
                                         {" "}
-                                        <img
-                                            src={
-                                                record?.image_url ||
-                                                `/images/avatars/image-${index + 1}.png`
-                                            }
-                                            alt="blog"
-                                            style={{ width: "70px" }}
-                                            className="author-logo-img"
-                                        />
+                                        <Image src={record?.image_url || Avatar} className="author-logo-img" alt="blog" style={{ width: "70px" }} />
                                     </div>
                                     <Link
                                         href={`/content/author/${record.author_id}`}
@@ -394,16 +394,15 @@ export const AuthorTableCard = ({
                                         openItem(index);
                                     }}
                                 >
-                                    <img
+                                    <Image 
                                         src={
                                             childrenOpen === index
-                                                ? "/images/upload.png"
-                                                : "/images/down-arrow_nw.png"
+                                                ? Upload
+                                                : DownArrow
                                         }
                                         alt="Icon"
                                         height={16}
-                                        width={16}
-                                    />
+                                        width={16} />
                                 </div>
                             </Col>
                         </Row>
@@ -518,14 +517,12 @@ const ExpandedRow = ({
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                <img
-                                    src={"/images/open-link.webp"}
-                                    alt="link"
-                                    style={{
-                                        width: "12px",
-                                        height: "12px"
-                                    }}
-                                />
+                                <Image src={OpenLink} 
+                                alt="link"
+                                style={{
+                                    width: "12px",
+                                    height: "12px"
+                                }} />
                             </a>
                         </div>
                     </div>
