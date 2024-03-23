@@ -18,6 +18,8 @@ const SegmentedChartSelector = ({
   handleYearChange,
   selectedChartValue,
   handleChangeChart,
+  handleChangeChartSingleSelect,
+  selectedChartValueForSingle
 }: any) => {
   return (
     <div className="flex">
@@ -67,18 +69,40 @@ const SegmentedChartSelector = ({
           </div>
         )}
       </div>
-      <div className="article-page-chart-select">
-        <Select
-          onChange={handleChangeChart}
-          value={selectedChartValue}
-          style={{ width: "100%" }}
-          getPopupContainer={(triggerNode) =>
-            triggerNode?.parentNode || document.body
-          }
-        >
-          <Select.Option value="page_views">Page Views</Select.Option>
-          <Select.Option value="users">Readers</Select.Option>
-        </Select>
+      <div className="article-page-chart-select-audience">
+        {segementValue === "daily" || segementValue === "monthly" ? (
+          <Select
+            onChange={handleChangeChart}
+            mode="multiple"
+            className="multi-select"
+            value={selectedChartValue}
+            getPopupContainer={(triggerNode) =>
+              triggerNode?.parentNode || document.body
+            }
+          >
+            <Select.Option value="users">Readers</Select.Option>
+            <Select.Option value="new_users">New Readers</Select.Option>
+            <Select.Option
+              value="churned_users"
+              disabled={segementValue === "daily" ? true : false}
+            >
+              Churned Readers
+            </Select.Option>
+          </Select>
+        ) : (
+          <Select
+            onChange={handleChangeChartSingleSelect}
+            style={{ width: "150px" }}
+            value={selectedChartValueForSingle}
+            getPopupContainer={(triggerNode) =>
+              triggerNode?.parentNode || document.body
+            }
+          >
+            <Select.Option value="users">Readers</Select.Option>
+            <Select.Option value="new_users">New Readers</Select.Option>
+            <Select.Option value="churned_users">Churned Readers</Select.Option>
+          </Select>
+        )}
       </div>
     </div>
   );

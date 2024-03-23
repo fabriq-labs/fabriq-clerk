@@ -115,7 +115,7 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
-            {/* <Protect permission="org:media:all">
+            <Protect permission="org:media:all">
               <li>
                 <Link href="/audience">
                   <span
@@ -127,7 +127,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            </Protect> */}
+            </Protect>
             <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">

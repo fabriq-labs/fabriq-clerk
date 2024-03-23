@@ -449,3 +449,9 @@ body::-webkit-scrollbar {
   background-color: #fafafa;
   height: 20px;
 }
+
+.cohert-chart {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}

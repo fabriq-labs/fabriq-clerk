@@ -282,3 +282,17 @@ export const getQuarterMonths = (quarter: any) => {
 
   return [startMonth, startMonth + 1, startMonth + 2];
 };
+
+export const getAllMonthNumbersForYear = (year: any) => {
+  if (year < 1) {
+    throw new Error("Invalid year value. Please provide a valid year.");
+  }
+
+  const allMonths = [];
+
+  for (let month = 1; month <= 12; month++) {
+    allMonths.push(month);
+  }
+
+  return allMonths;
+};
