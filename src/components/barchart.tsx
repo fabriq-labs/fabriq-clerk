@@ -1,7 +1,8 @@
 // BarChart
 import { formatNumber } from "@/utils/helper";
 import React from "react";
-import ReactApexChart from "react-apexcharts";
+
+const ReactApexChart = React.lazy(() => import("react-apexcharts"));
 
 const BarChart = ({
   labels,
