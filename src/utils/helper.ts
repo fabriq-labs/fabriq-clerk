@@ -296,3 +296,55 @@ export const getAllMonthNumbersForYear = (year: any) => {
 
   return allMonths;
 };
+
+export const mapRevenueData = (revenueList: any) => {
+  if (revenueList?.length > 0) {
+    return revenueList?.map((data: any) => ({
+      id: data?.ad_unit_id_2,
+      name: data?.ad_unit_2,
+      impression: data?.total_impressions?.toLocaleString() || 0,
+      fillRate: data?.total_fill_rate?.toFixed(2) || 0,
+      eCPM: formatNumber(data?.total_average_ecpm) || 0,
+      adRevenue: formatNumber(data?.total_revenue) || 0,
+      period_month: data?.period_month,
+      period_quarter: data?.period_quarter,
+      period_year: data?.period_year,
+      series: data?.series,
+      labels: data?.labels
+    }));
+  }
+};
+
+export const mapRevenueDataForSubList = (revenueList: any) => {
+  if (revenueList?.length > 0) {
+    return revenueList?.map((data: any) => ({
+      id: data?.ad_unit_id_3,
+      name: data?.ad_unit_3,
+      impression: data?.total_impressions?.toLocaleString() || 0,
+      fillRate: `${data?.total_fill_rate?.toFixed(2) || 0} %`,
+      eCPM: `$${formatNumber(data?.total_average_ecpm) || 0}`,
+      adRevenue: `$${formatNumber(data?.total_revenue) || 0}`,
+      series: data?.series,
+      labels: data?.labels
+    }));
+  }
+};
+
+export function getMonthName(monthNumber: any) {
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  return monthNames[monthNumber - 1] || "";
+}

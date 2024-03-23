@@ -128,6 +128,19 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/revenue">
+                  <span
+                    className={`tab ${
+                      isActive("/revenue") ? "active" : ""
+                    } transition`}
+                  >
+                    Revenue
+                  </span>
+                </Link>
+              </li>
+            </Protect>
             <Protect permission="org:feature:protected">
               <li>
                 <Link href="/pipeline">
