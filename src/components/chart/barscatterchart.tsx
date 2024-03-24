@@ -1,7 +1,7 @@
 import React from "react";
-import ReactApexChart from "react-apexcharts";
+// import ReactApexChart from "react-apexcharts";
 
-// const ReactApexChart = React.lazy(() => import("react-apexcharts"));
+const ReactApexChart = React.lazy(() => import("react-apexcharts"));
 
 import { formatNumber } from "@/utils/helper";
 
