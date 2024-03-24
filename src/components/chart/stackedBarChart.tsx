@@ -1,7 +1,8 @@
 // BarChart
 import { formatNumber } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
+
+const ReactApexChart = React.lazy(() => import("react-apexcharts"));
 
 const StackedBarChart = ({
   series,
@@ -147,7 +148,7 @@ const StackedBarChart = ({
           itemMargin: {
             vertical: 5,
           },
-          formatter: function (seriesName, opts) {
+          formatter: function (seriesName: any, opts: any) {
             return customLegendLabels[opts.seriesIndex];
           },
         },

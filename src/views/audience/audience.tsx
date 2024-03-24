@@ -16,6 +16,7 @@ import LineChart from "@/components/chart/linechart";
 import BarChart from "@/components/barchart";
 import Barchart from "@/components/chart/barscatterchart";
 import CohortGraph from "@/components/chart/cohort_chart";
+import StackedBarChart from "@/components/chart/stackedBarChart";
 
 import {
   formationTimezone,
@@ -141,6 +142,8 @@ export default function Audience() {
         generateDataDaily(data?.HourlyData, ["users", "new_users"]);
         generateResultWithHour(data?.HourlyData);
         setChartData(data?.HourlyData);
+        const activityResult: any = await getStackedData(result);
+        setUserActivity(activityResult);
         setCurrentInfo(result);
       }
 
@@ -204,11 +207,13 @@ export default function Audience() {
 
       if (data) {
         const result = data?.MonthlyData?.[0];
+        const activityResult: any = await getStackedData(result);
         generateData(data?.DailyData, ["users", "new_users", "churned_users"]);
         setChartData(data?.DailyData);
         generateResult(data?.DailyData);
         generateCohortData(data?.Last7DaysData);
         generateScatterChart(data?.Bucket);
+        setUserActivity(activityResult);
         setCurrentInfo(result);
       }
 
@@ -244,11 +249,12 @@ export default function Audience() {
       }
 
       const result = data?.QuaterlyData?.[0];
-
+      const activityResult: any = await getStackedData(result);
       setChartData(data?.MonthlyData);
       generateBarChartData(data?.MonthlyData);
       generateResultWithMonth(data?.MonthlyData);
       generateScatterChart(data?.Bucket);
+      setUserActivity(activityResult);
       setCurrentInfo(result);
 
       setLoader(false);
@@ -280,10 +286,12 @@ export default function Audience() {
       }
 
       const result = data?.YearlyData?.[0];
+      const activityResult: any = await getStackedData(result);
       setChartData(data?.MonthlyData);
       generateBarChartData(data?.MonthlyData);
       generateResultWithMonth(data?.MonthlyData);
       generateScatterChart(data?.Bucket);
+      setUserActivity(activityResult);
       setCurrentInfo(result);
 
       setLoader(false);
@@ -291,6 +299,44 @@ export default function Audience() {
       setLoader(false);
       setIsError(true);
     }
+  };
+
+  const getStackedData = (result: any) => {
+    let stackedData = result?.["user_activity"];
+
+    if (stackedData) {
+      if (typeof stackedData === "string") {
+        stackedData = JSON.parse(stackedData);
+      }
+
+      const total: any = Object.values(stackedData).reduce(
+        (acc: any, curr: any) => {
+          if (curr?.growth_percentage) {
+            return acc + curr.users;
+          } else {
+            return acc + curr;
+          }
+        },
+        0
+      );
+
+      const data = Object.keys(stackedData).map((name) => ({
+        name,
+        data: stackedData[name]?.growth_percentage
+          ? [parseFloat(((stackedData[name].users / total) * 100).toFixed(2))]
+          : [parseFloat(((stackedData[name] / total) * 100).toFixed(2))],
+        users: stackedData[name]?.growth_percentage
+          ? stackedData[name].users
+          : stackedData[name],
+        growth: stackedData[name]?.growth_percentage
+          ? stackedData[name].growth_percentage
+          : "",
+      }));
+
+      return data;
+    }
+
+    return [];
   };
 
   const generateResultWithMonth = (chartData: any) => {
@@ -1180,7 +1226,36 @@ export default function Audience() {
                 </div>
               </div>
             </div>
-            <Row gutter={[16, 16]} style={{ height: "100%" }}>
+            <Row>
+              <Col span={24}>
+                <div className="box-div">
+                  <BoxComponent title="User Activity">
+                    {userActivity?.length > 0 ? (
+                      <StackedBarChart
+                        series={userActivity}
+                        colors={generateColors(userActivity?.length)}
+                        max={100}
+                        legend={true}
+                        height={100}
+                        isAudience
+                        secondTooltipLabels={userActivity?.map(
+                          (item: any) => item?.growth
+                        )}
+                        tooltipLabels={userActivity?.map(
+                          (item: any) => item?.users
+                        )}
+                        legendLabels={userActivity?.map(
+                          (item: any) => item?.name
+                        )}
+                      />
+                    ) : (
+                      <Empty description="We don’t have enough data generated to show meaningful insights here" />
+                    )}
+                  </BoxComponent>
+                </div>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]} style={{ height: "100%", marginTop: 15 }}>
               <div className="flex-container-audience">
                 <Col span={12}>
                   <div className="box-div">
