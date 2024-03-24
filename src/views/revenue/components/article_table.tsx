@@ -10,12 +10,7 @@ import DownArrow from "../../../assets/down-arrow_nw.png";
 import LineChartTiny from "@/components/chart/linechart_tiny";
 import ExpandedRow from "./expend_row";
 
-import {
-  mapRevenueData,
-  getQuarterFromDate,
-  getQuarterMonths,
-  getMonthName,
-} from "@utils/helper";
+import { getQuarterMonths, getMonthName } from "@utils/helper";
 
 const generateData = (series: any, labels: any) => {
   const finalData = labels?.map((label: any, index: any) => ({
@@ -127,30 +122,33 @@ const ArticleTableCard = (props: any) => {
     period_year: any,
     sortOption: any
   ) => {
-    // try {
-    //   setTableLoader(true);
-    //   const {
-    //     data: { data, errors },
-    //   } = await RevenueApi.get_sub_list_yearly(
-    //     ad_unit_id_2,
-    //     limit,
-    //     offset,
-    //     period_year,
-    //     sortOption
-    //   );
-    //   if (errors) {
-    //     throw errors;
-    //   }
-    //   getTableChartSeriesYearly(data?.TableList, period_year);
-    //   setTotalCount(data?.totalCount?.aggregate?.count);
-    //   setSubList(data?.TableList);
-    //   setTableLoader(false);
-    //   if (loading) setLoading(false);
-    // } catch (error) {
-    //   notification.error("Error fetching sub list details");
-    //   setTableLoader(false);
-    //   if (loading) setLoading(false);
-    // }
+    try {
+      setTableLoader(true);
+      const {
+        data: { data, errors },
+      } = await axios.post("/api/revenue", {
+        operation: "getYearlySubList",
+        variables: {
+          ad_unit_id_2,
+          limit,
+          offset,
+          period_year,
+          sortOption,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+      getTableChartSeriesYearly(data?.TableList, period_year);
+      setTotalCount(data?.totalCount?.aggregate?.count);
+      setSubList(data?.TableList);
+      setTableLoader(false);
+      if (loading) setLoading(false);
+    } catch (error) {
+      setTableLoader(false);
+      if (loading) setLoading(false);
+    }
   };
 
   const getTableChartSeries = async (
@@ -286,57 +284,63 @@ const ArticleTableCard = (props: any) => {
   };
 
   const getTableChartSeriesYearly = async (result: any, year: any) => {
-    // let ids = result?.map((item) => item?.ad_unit_id_3);
-    // if (ids?.length > 0) {
-    //   ids = ids.filter((item) => item !== "-");
-    // }
-    // if (!tableLoader) {
-    //   setTableLoader(true);
-    // }
-    // try {
-    //   setChartLoader(true);
-    //   const { data, errors } = await RevenueApi.get_sub_chart_yearly(ids, year);
-    //   if (errors) {
-    //     throw errors;
-    //   }
-    //   let obj = {};
-    //   if (data?.data?.ChartInfo?.length > 0) {
-    //     data.data.ChartInfo.forEach((item) => {
-    //       const ad_unit_id_3 = item?.ad_unit_id_3;
-    //       if (!obj[ad_unit_id_3]) {
-    //         obj[ad_unit_id_3] = {
-    //           series: [
-    //             {
-    //               name: "Revenue",
-    //               data: [],
-    //             },
-    //           ],
-    //           labels: [],
-    //         };
-    //       }
-    //       const monthName = getMonthName(item?.period_month);
-    //       obj[ad_unit_id_3].labels.push(`${monthName} ${year}`);
-    //       obj[ad_unit_id_3].series[0].data.push(item?.total_revenue);
-    //     });
-    //   }
-    //   let updatedResult = result?.map((itemObj) => {
-    //     const ad_unit_id_3 = itemObj?.ad_unit_id_3;
-    //     const item = { ...itemObj };
-    //     if (obj[ad_unit_id_3]) {
-    //       item.series = obj[ad_unit_id_3].series;
-    //       item.labels = obj[ad_unit_id_3].labels;
-    //     }
-    //     return item;
-    //   });
-    //   setSubList(updatedResult);
-    //   setTableLoader(false);
-    //   setChartLoader(false);
-    //   if (loading) setLoading(false);
-    // } catch (err) {
-    //   setTableLoader(false);
-    //   setChartLoader(false);
-    //   notification.error("Failed to fetch chart list");
-    // }
+    let ids = result?.map((item: any) => item?.ad_unit_id_3);
+    if (ids?.length > 0) {
+      ids = ids.filter((item: any) => item !== "-");
+    }
+    if (!tableLoader) {
+      setTableLoader(true);
+    }
+    try {
+      setChartLoader(true);
+      const { data, errors }: any = await await axios.post("/api/revenue", {
+        operation: "getYearlySubListChart",
+        variables: {
+          ad_unit_id_3: ids,
+          period_year: year,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+      let obj: any = {};
+      if (data?.data?.ChartInfo?.length > 0) {
+        data.data.ChartInfo.forEach((item: any) => {
+          const ad_unit_id_3 = item?.ad_unit_id_3;
+          if (!obj[ad_unit_id_3]) {
+            obj[ad_unit_id_3] = {
+              series: [
+                {
+                  name: "Revenue",
+                  data: [],
+                },
+              ],
+              labels: [],
+            };
+          }
+          const monthName = getMonthName(item?.period_month);
+          obj[ad_unit_id_3].labels.push(`${monthName} ${year}`);
+          obj[ad_unit_id_3].series[0].data.push(item?.total_revenue);
+        });
+      }
+      let updatedResult = result?.map((itemObj: any) => {
+        const ad_unit_id_3 = itemObj?.ad_unit_id_3;
+        const item = { ...itemObj };
+        if (obj[ad_unit_id_3]) {
+          item.series = obj[ad_unit_id_3].series;
+          item.labels = obj[ad_unit_id_3].labels;
+        }
+        return item;
+      });
+      setSubList(updatedResult);
+      setTableLoader(false);
+      setChartLoader(false);
+      if (loading) setLoading(false);
+    } catch (err) {
+      setTableLoader(false);
+      setChartLoader(false);
+    }
   };
 
   const openItem = (index: any) => {

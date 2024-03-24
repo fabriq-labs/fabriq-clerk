@@ -18,6 +18,14 @@ import {
   ADVERTISER_QUARTERLY,
   get_overall_data_quarterly,
   GET_SUB_LIST_QUARTERLY,
+  REVENUE_ANALYTICS_YEARLY,
+  OVERALLDATA_YEARLY,
+  get_main_list_yearly,
+  GET_MAIN_LIST_CHART_YEARLY,
+  ADVERTISER_YEARLY,
+  get_overall_data_yearly,
+  GET_SUB_LIST_YEARLY,
+  GET_SUB_LIST_CHART_YEARLY,
 } from "./graphql";
 
 // Example function for making a GraphQL call
@@ -113,6 +121,41 @@ export async function POST(req: NextRequest) {
         break;
       case "getQuaterlySubListChart":
         result = await makeGraphQLCall(GET_SUB_LIST_CHART_QUARTERLY, variables);
+        break;
+      case "getRevenueYearly":
+        result = await makeGraphQLCall(REVENUE_ANALYTICS_YEARLY, variables);
+        break;
+      case "getRevenueYearlyOverall":
+        result = await makeGraphQLCall(OVERALLDATA_YEARLY, variables);
+        break;
+      case "getYearlyMainList":
+        const year_query = get_main_list_yearly(variables?.filterParams);
+        result = await makeGraphQLCall(year_query, {
+          offset: variables?.offset,
+          period_year: variables?.period_year,
+          sortOrder: variables?.sortOrder,
+        });
+        break;
+      case "getRevenueYearlyMainChart":
+        result = await makeGraphQLCall(GET_MAIN_LIST_CHART_YEARLY, variables);
+        break;
+      case "getAdvertiserYearly":
+        result = await makeGraphQLCall(ADVERTISER_YEARLY, variables);
+        break;
+      case "getOverallFilterYearly":
+        const queryfilterYearly = get_overall_data_yearly(
+          variables?.filterConditons
+        );
+
+        result = await makeGraphQLCall(queryfilterYearly, {
+          period_year: variables?.period_year,
+        });
+        break;
+      case "getYearlySubList":
+        result = await makeGraphQLCall(GET_SUB_LIST_YEARLY, variables);
+        break;
+      case "getYearlySubListChart":
+        result = await makeGraphQLCall(GET_SUB_LIST_CHART_YEARLY, variables);
         break;
       default:
         return NextResponse.json(

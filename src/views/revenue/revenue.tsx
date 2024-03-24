@@ -30,6 +30,7 @@ import {
   getQuarterFromDate,
   getQuarterMonths,
   getMonthName,
+  getAllMonthNumbersForYear,
 } from "@utils/helper";
 
 export default function RevenuePage() {
@@ -43,7 +44,7 @@ export default function RevenuePage() {
   const [chartData, setChartData] = useState({});
   const [chartLoader, setChartLoader] = useState(false);
   const [selectedMonth, setSelectedMonth]: any = useState(null);
-  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedYear, setSelectedYear]: any = useState(null);
   const [selectedQuarter, setSelectedQuarter] = useState(new Date());
   const [isError, setIsError] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
@@ -105,8 +106,8 @@ export default function RevenuePage() {
         const quarter = getQuarterFromDate(selectedQuarter);
         getMainListForQuarterly(currentpage, quarter, year, filterParams);
       } else if (segementValue === "yearly") {
-        // const year = selectedYear?.getFullYear();
-        // getMainListForYearly(currentpage, year, filterParams);
+        const year = selectedYear?.getFullYear();
+        getMainListForYearly(currentpage, year, filterParams);
       }
     }
   }, [sortEnabled, selectedSort, sortDirection]);
@@ -221,6 +222,55 @@ export default function RevenuePage() {
     }
   };
 
+  const getRevenueYearly = async (value: any) => {
+    setChartLoader(true);
+    setIsError(false);
+    try {
+      const [
+        { data: chartDataResponse, errors: chartErrors },
+        { data: overviewData, errors: overviewErrors },
+      ]: any = await Promise.all([
+        axios.post("/api/revenue", {
+          operation: "getRevenueYearly",
+          variables: {
+            period_year: value,
+          },
+        }),
+        axios.post("/api/revenue", {
+          operation: "getRevenueYearlyOverall",
+          variables: {
+            period_year: value,
+          },
+        }),
+      ]);
+
+      if (chartErrors) {
+        throw chartErrors;
+      }
+
+      if (chartDataResponse) {
+        setChartData(chartDataResponse?.data?.ChartData);
+        generateBarChartData(chartDataResponse?.data?.ChartData);
+      }
+
+      if (overviewErrors) {
+        throw overviewErrors;
+      }
+
+      if (overviewData) {
+        setOverallData(overviewData?.data?.OverViewInfo?.[0]);
+      }
+
+      getfilterData();
+      getMainListForYearly(null, value);
+      getAdvertiserYearly(value);
+      setChartLoader(false);
+    } catch (err) {
+      setChartLoader(false);
+      setIsError(true);
+    }
+  };
+
   const getMainList = async (
     page: any,
     period_month: any,
@@ -297,6 +347,46 @@ export default function RevenuePage() {
 
         setTableListData(result);
         getTableChartSeriesQuarterly(result, period_quarter, period_year);
+        setTotalCount(data?.totalCount?.aggregate?.count);
+        setOffsetValue(offset);
+        setTableLoader(false);
+      }
+    } catch (err) {
+      setTableLoader(false);
+    }
+  };
+
+  const getMainListForYearly = async (
+    page: any,
+    period_year: any,
+    filterParams?: any
+  ) => {
+    setTableLoader(true);
+
+    const limitPerPage = 10;
+    const offset = limitPerPage * ((page || currentpage) - 1);
+
+    try {
+      const {
+        data: { data, errors },
+      } = await axios.post("/api/revenue", {
+        operation: "getYearlyMainList",
+        variables: {
+          offset,
+          period_year,
+          sortOrder: sortDirection,
+          filterParams,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+
+      if (data?.TableList) {
+        const result = data?.TableList;
+        setTableListData(result);
+        getTableChartSeriesYearly(result, period_year);
         setTotalCount(data?.totalCount?.aggregate?.count);
         setOffsetValue(offset);
         setTableLoader(false);
@@ -440,6 +530,75 @@ export default function RevenuePage() {
     }
   };
 
+  const getTableChartSeriesYearly = async (result: any, year: any) => {
+    const ids = result?.map((item: any) => item?.ad_unit_id_2);
+
+    if (!tableLoader) {
+      setTableLoader(true);
+    }
+
+    const allAbbreviatedMonths = getAllMonthNumbersForYear(year);
+
+    try {
+      setMiniChartLoader(true);
+      const { data, errors }: any = await axios.post("/api/revenue", {
+        operation: "getRevenueYearlyMainChart",
+        variables: {
+          ad_unit_id_2: ids,
+          period_month: allAbbreviatedMonths,
+          period_year: year,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+
+      let obj: any = {};
+      if (data?.data?.ChartInfo?.length > 0) {
+        data.data.ChartInfo.forEach((item: any) => {
+          const ad_unit_id_2 = item?.ad_unit_id_2;
+
+          if (!obj[ad_unit_id_2]) {
+            obj[ad_unit_id_2] = {
+              series: [
+                {
+                  name: "Revenue",
+                  data: [],
+                },
+              ],
+              labels: [],
+            };
+          }
+
+          const monthName = getMonthName(item?.period_month);
+
+          obj[ad_unit_id_2].labels.push(`${monthName} ${year}`);
+          obj[ad_unit_id_2].series[0].data.push(item?.total_revenue);
+        });
+      }
+
+      let updatedResult = result?.map((itemObj: any) => {
+        const ad_unit_id_2 = itemObj?.ad_unit_id_2;
+        const item = { ...itemObj };
+
+        if (obj[ad_unit_id_2]) {
+          item.series = obj[ad_unit_id_2].series;
+          item.labels = obj[ad_unit_id_2].labels;
+        }
+
+        return item;
+      });
+
+      setTableLoader(false);
+      setMiniChartLoader(false);
+      setTableListData(updatedResult);
+    } catch (err) {
+      setTableLoader(false);
+      setMiniChartLoader(false);
+    }
+  };
+
   const getAdvertiserMonthly = async (period_month: any, year: any) => {
     try {
       setLoader(true);
@@ -475,6 +634,31 @@ export default function RevenuePage() {
         operation: "getAdvertiserQuaterly",
         variables: {
           period_quarter,
+          period_year: year,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+
+      if (data) {
+        getStackedData(data);
+      }
+    } catch (err) {
+      setLoader(false);
+      setTableLoader(false);
+    }
+  };
+
+  const getAdvertiserYearly = async (year: any) => {
+    try {
+      setLoader(true);
+      const {
+        data: { data, errors },
+      } = await axios.post("/api/revenue", {
+        operation: "getAdvertiserYearly",
+        variables: {
           period_year: year,
         },
       });
@@ -594,6 +778,53 @@ export default function RevenuePage() {
     }
   };
 
+  const getfilterInfoYearly = async (year: any, filterVal: any) => {
+    try {
+      let filterParams = null;
+      if (selectedFilter === "campaign_type") {
+        filterParams = {
+          filterKey: selectedFilter,
+          filterValue: selectedFilterValue === "direct" ? "-" : "",
+        };
+      } else if (selectedFilter === "ad_partner") {
+        filterParams = {
+          filterKey: selectedFilter,
+          filterValue: filterVal || selectedFilterValue,
+        };
+      }
+
+      const [{ data: overviewData, errors: overviewErrors }]: any =
+        await Promise.all([
+          filterVal
+            ? axios.post("/api/revenue", {
+                operation: "getOverallFilterYearly",
+                variables: {
+                  period_year: year,
+                  filterConditons: filterParams,
+                },
+              })
+            : axios.post("/api/revenue", {
+                operation: "getRevenueYearlyOverall",
+                variables: {
+                  period_year: year,
+                },
+              }),
+        ]);
+
+      if (overviewErrors) {
+        throw overviewErrors;
+      }
+
+      if (overviewData) {
+        setOverallData(overviewData?.data?.OverViewInfo?.[0]);
+      }
+
+      getMainListForYearly(null, year, filterParams);
+    } catch (err) {
+      return;
+    }
+  };
+
   const generateDataForStacked = (stackedData: any, name: any) => {
     const totalSum = stackedData.reduce(
       (sum: any, item: any) => sum + item.total_revenue,
@@ -640,8 +871,8 @@ export default function RevenuePage() {
       const quarter = getQuarterFromDate(selectedQuarter);
       getfilterInfoQuarter(quarter, year, filterVal);
     } else if (segementValue === "yearly") {
-      // const year = selectedYear?.getFullYear();
-      // getfilterInfoYearly(year, filterVal);
+      const year = selectedYear?.getFullYear();
+      getfilterInfoYearly(year, filterVal);
     }
   };
 
@@ -878,8 +1109,8 @@ export default function RevenuePage() {
       const quarter = getQuarterFromDate(selectedQuarter);
       getMainListForQuarterly(value, quarter, year);
     } else if (segementValue === "yearly") {
-      // const year = selectedYear?.getFullYear();
-      // getMainListForYearly(value, year);
+      const year = selectedYear?.getFullYear();
+      getMainListForYearly(value, year);
     }
   };
 
@@ -960,7 +1191,7 @@ export default function RevenuePage() {
     handleClear();
     const selectedYear = date?.getFullYear();
     setSelectedYear(date);
-    // getRevenueYearly(selectedYear);
+    getRevenueYearly(selectedYear);
   };
 
   const handleChangeChart = (value: any) => {

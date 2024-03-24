@@ -310,7 +310,7 @@ export const mapRevenueData = (revenueList: any) => {
       period_quarter: data?.period_quarter,
       period_year: data?.period_year,
       series: data?.series,
-      labels: data?.labels
+      labels: data?.labels,
     }));
   }
 };
@@ -325,7 +325,7 @@ export const mapRevenueDataForSubList = (revenueList: any) => {
       eCPM: `$${formatNumber(data?.total_average_ecpm) || 0}`,
       adRevenue: `$${formatNumber(data?.total_revenue) || 0}`,
       series: data?.series,
-      labels: data?.labels
+      labels: data?.labels,
     }));
   }
 };
@@ -343,7 +343,7 @@ export function getMonthName(monthNumber: any) {
     "Sep",
     "Oct",
     "Nov",
-    "Dec"
+    "Dec",
   ];
 
   return monthNames[monthNumber - 1] || "";
