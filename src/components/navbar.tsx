@@ -59,6 +59,7 @@ export default function Navbar() {
   ];
   const explorePaths = ["/explore/[chatId]", "/explore"];
   const articlesPaths = ["/article", "/article/[articleId]"];
+  const authorsPath = ["/author/[authorId]", "/author"];
   const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
 
@@ -67,6 +68,7 @@ export default function Navbar() {
   const isActivePipeline = pipelinePaths?.some((path) => isActive(path));
   const isActiveSetup = setupPaths?.some((path) => isActive(path));
   const isArticlePath = articlesPaths?.some((path) => isActive(path));
+  const isActiveAuthor = authorsPath?.some((path) => isActive(path));
 
   return (
     <div className="navbar-container">
@@ -111,6 +113,45 @@ export default function Navbar() {
                     } transition`}
                   >
                     Article
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/author">
+                  <span
+                    className={`tab ${
+                      isActiveAuthor ? "active" : ""
+                    } transition`}
+                  >
+                    Author
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/audience">
+                  <span
+                    className={`tab ${
+                      isActive("/audience") ? "active" : ""
+                    } transition`}
+                  >
+                    Audience
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/revenue">
+                  <span
+                    className={`tab ${
+                      isActive("/revenue") ? "active" : ""
+                    } transition`}
+                  >
+                    Revenue
                   </span>
                 </Link>
               </li>

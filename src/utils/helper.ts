@@ -136,7 +136,7 @@ export const mapCategoryData = (overviewTagsHour: any) => {
     title: data?.category,
     user: data?.users?.toLocaleString(),
     page_views: data?.page_views?.toLocaleString(),
-    ad_revenue: `$${Math.floor(Math.random() * 100) + 1}`
+    ad_revenue: `$${Math.floor(Math.random() * 100) + 1}`,
   }));
 };
 
@@ -270,3 +270,81 @@ export const getQuarterFromDate = (date: any) => {
   const month = date.getMonth() + 1;
   return Math.ceil(month / 3);
 };
+
+export const getQuarterMonths = (quarter: any) => {
+  if (quarter < 1 || quarter > 4) {
+    throw new Error(
+      "Invalid quarter value. Please provide a value between 1 and 4."
+    );
+  }
+
+  const startMonth = 3 * (quarter - 1) + 1;
+
+  return [startMonth, startMonth + 1, startMonth + 2];
+};
+
+export const getAllMonthNumbersForYear = (year: any) => {
+  if (year < 1) {
+    throw new Error("Invalid year value. Please provide a valid year.");
+  }
+
+  const allMonths = [];
+
+  for (let month = 1; month <= 12; month++) {
+    allMonths.push(month);
+  }
+
+  return allMonths;
+};
+
+export const mapRevenueData = (revenueList: any) => {
+  if (revenueList?.length > 0) {
+    return revenueList?.map((data: any) => ({
+      id: data?.ad_unit_id_2,
+      name: data?.ad_unit_2,
+      impression: data?.total_impressions?.toLocaleString() || 0,
+      fillRate: data?.total_fill_rate?.toFixed(2) || 0,
+      eCPM: formatNumber(data?.total_average_ecpm) || 0,
+      adRevenue: formatNumber(data?.total_revenue) || 0,
+      period_month: data?.period_month,
+      period_quarter: data?.period_quarter,
+      period_year: data?.period_year,
+      series: data?.series,
+      labels: data?.labels,
+    }));
+  }
+};
+
+export const mapRevenueDataForSubList = (revenueList: any) => {
+  if (revenueList?.length > 0) {
+    return revenueList?.map((data: any) => ({
+      id: data?.ad_unit_id_3,
+      name: data?.ad_unit_3,
+      impression: data?.total_impressions?.toLocaleString() || 0,
+      fillRate: `${data?.total_fill_rate?.toFixed(2) || 0} %`,
+      eCPM: `$${formatNumber(data?.total_average_ecpm) || 0}`,
+      adRevenue: `$${formatNumber(data?.total_revenue) || 0}`,
+      series: data?.series,
+      labels: data?.labels,
+    }));
+  }
+};
+
+export function getMonthName(monthNumber: any) {
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return monthNames[monthNumber - 1] || "";
+}

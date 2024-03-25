@@ -1,7 +1,7 @@
-// Linechart
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
 import moment from "moment";
+
+const ReactApexChart = React.lazy(() => import("react-apexcharts"));
 
 import { formatNumber, getCurrentHour, formationTimezone } from "@utils/helper";
 
@@ -79,7 +79,7 @@ const LineChart = ({
           tickAmount: noTick ? labels?.length : labels?.length / 2,
           labels: {
             rotate: -0,
-            formatter: function (value) {
+            formatter: function (value: any) {
               if (typeof value === "string") {
                 const dateTimeParts = value?.split(" ");
                 if (dateTimeParts?.length === 4) {
@@ -111,8 +111,8 @@ const LineChart = ({
           x: {
             show: true,
             formatter: function (
-              value,
-              { series, seriesIndex, dataPointIndex }
+              value: any,
+              { series, seriesIndex, dataPointIndex }: any
             ) {
               const label = labels?.[dataPointIndex];
               return label;
@@ -120,13 +120,13 @@ const LineChart = ({
           },
           y: [
             {
-              formatter: function (val) {
+              formatter: function (val: any) {
                 const value = formatNumber(val);
                 return isRevenue ? `$${value}` : value;
               },
             },
             {
-              formatter: function (val) {
+              formatter: function (val: any) {
                 const value = formatNumber(val);
                 return isRevenue ? `$${value}` : value;
               },
@@ -137,7 +137,7 @@ const LineChart = ({
           ? [
               {
                 labels: {
-                  formatter: function (value) {
+                  formatter: function (value: any) {
                     if (value === 5e-324) {
                       return "0";
                     }
@@ -147,7 +147,7 @@ const LineChart = ({
               },
               {
                 labels: {
-                  formatter: function (value) {
+                  formatter: function (value: any) {
                     if (value === 5e-324) {
                       return "0";
                     }
@@ -160,7 +160,7 @@ const LineChart = ({
             ]
           : {
               labels: {
-                formatter: function (value) {
+                formatter: function (value: any) {
                   return formatNumber(value);
                 },
               },

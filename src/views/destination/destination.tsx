@@ -64,7 +64,7 @@ export default function Destination() {
             <div className="loader"></div>
           </div>
         ) : (
-          <div className="center-div">
+          <div className="destination-center-div">
             <div className="form-box">
               <div className="flex-center">
                 <LogoComponent destinationType={destination?.destinationType} />

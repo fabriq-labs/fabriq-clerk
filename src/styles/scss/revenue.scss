@@ -1,0 +1,265 @@
+.revenue-wrapper {
+  background-color: #f6f8f9;
+  min-height: 100%;
+  width: 100%;
+  padding: 20px 48px;
+
+  .expend-icon {
+    align-self: center;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+
+  .revenue-chart-full {
+    height: calc(100vh - 10rem);
+    overflow: hidden !important;
+    border-radius: 10px;
+    margin: 0 48px;
+    margin: 20px 35px;
+    transition: width 0.5s ease;
+    z-index: 9999;
+  }
+
+  .revenue-chart-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+
+    display: -webkit-flex; /* Safari */
+    -webkit-justify-content: flex-end; /* Safari */
+  }
+
+  .revenue-chart-select {
+    width: 200px;
+    position: relative;
+  }
+
+  .revenue-page-chart {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .revenue-chart-content {
+    background-color: #fff;
+    margin-top: 50px;
+  }
+
+  .revenue-referrers-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    padding-bottom: 0;
+    align-self: center;
+  }
+
+  .row-flex {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .revenue-buyer {
+    margin: 30px 2px 10px 2px !important;
+    padding: 10px;
+    background: #f2f2f1;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    border-radius: 10px;
+  }
+
+  .revenue-page-filter-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    background: #f2f2f1;
+    margin-top: 20px;
+  }
+
+  .revenue-page-filter-content {
+    display: flex;
+    padding: 20px;
+  }
+
+  .revenue-page-filter-title,
+  .revenue-page-filter-title-sort {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #3a3f3a;
+  }
+
+  .revenue-page-filter-title-sort {
+    align-self: center;
+    margin-right: 10px;
+  }
+
+  .revenue-page-filter-content {
+    display: flex;
+    padding: 20px;
+  }
+
+  .revenue-page-filter {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .revenue-filter-button {
+    margin-left: 20px;
+  }
+
+  .revenue-page-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .filter-content-wrapper {
+    padding: 20px 20px;
+    display: flex;
+  }
+
+  .filter-select {
+    width: 15%;
+    position: relative;
+  }
+
+  .filter-apply-button {
+    margin-left: 25px;
+  }
+
+  .revenue-page-list-count-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .count-view {
+    font-size: 45px;
+    font-weight: 600;
+    color: #7f56d9;
+  }
+
+  .count-prefix {
+    font-size: 28px;
+    font-weight: 500;
+    color: #737a73;
+  }
+
+  .revenue-count-view-wrapper {
+    border-radius: 10px;
+    padding: 20px 0;
+    background: #f2f2f1;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    text-align: center;
+  }
+
+  .revenue-count-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475467;
+  }
+
+  .revenue-list-table-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .revenue-table-card-wrapper {
+    width: 100%;
+  }
+
+  .revenue-table-header {
+    width: 100%;
+  }
+
+  .table-card-row {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .table-heading {
+    color: #475467;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .revenue-table-body {
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin: 10px 0;
+    padding: 5px 5px;
+    border-radius: 12px;
+  }
+
+  .list-view-chart-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .list-view-chart {
+    width: 100%;
+    height: 80px;
+  }
+
+  .expand-revenue {
+    width: 100%;
+    padding: 50px;
+  }
+
+  .page-no-data {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loader-cotainer.mini-list {
+    height: unset;
+    padding: 40px;
+  }
+
+  .loader-wrapper {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .list-article-title {
+    font-size: 16px;
+    align-self: center;
+    line-height: 20px;
+    font-weight: 600;
+    color: #3a3f3a;
+    cursor: pointer;
+    width: fit-content;
+    display: inline-block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+}
