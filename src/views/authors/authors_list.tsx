@@ -18,8 +18,7 @@ import DownArrow from "../../assets/down-arrow_nw.png";
 import OpenLink from "../../assets/open-link.webp";
 import { useRouter } from "next/navigation";
 
-const sites:any = localStorage.getItem("site_details")
-  let siteDetails: any = JSON.parse(sites);
+
 
 const generateData = (series: any, labels: any) => {
   const finalData = labels?.map((label: any, index: any) => ({
@@ -40,6 +39,8 @@ export const AuthorTableCard = ({
   offsetValue,
   segementValue,
 }: any) => {
+  const sites:any = localStorage.getItem("site_details")
+  let siteDetails: any = JSON.parse(sites);
   const [authorDetails, setAuthorDetails] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [tableLoader, setTableLoader] = useState<any>(false);
@@ -657,7 +658,7 @@ export default function AuthorList() {
   const [selectedDate, setSelectedDate] = useState<any>(new Date());
   const sites:any = localStorage.getItem("site_details")
   let siteInfo: any = JSON.parse(sites);
-
+  let siteDetails: any = JSON.parse(sites);
   const router = useRouter();
   useEffect(() => {
     getCachedList();
