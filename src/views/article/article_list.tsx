@@ -4,7 +4,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "@components/layout";
 import moment from "moment";
-import { Row, Col, Pagination, Button, DatePicker, Select, Radio } from "antd";
+import {
+  Row,
+  Col,
+  Pagination,
+  Button,
+  DatePicker,
+  Select,
+  Radio,
+  Empty,
+} from "antd";
 
 import {
   getQuarterFromDate,
@@ -1387,20 +1396,30 @@ export default function ArticleList() {
                 <div className="article-chart-content">
                   {segementValue === "real-time" ||
                   segementValue === "monthly" ? (
-                    <LineChart
-                      labels={
-                        segementValue === "monthly"
-                          ? overViewChartData?.label
-                          : timeLabels
-                      }
-                      selectedDate={selectedDate}
-                      isArticle
-                      series={overViewChartData?.series}
-                      colors={["#7F56D9", "#A3E0FF", "#e89de1"]}
-                      height={300}
-                      multipleYaxis={false}
-                    />
-                  ) : (
+                    overViewChartData?.series?.some(
+                      (series: any) => series?.data?.length > 0
+                    ) ? (
+                      <LineChart
+                        labels={
+                          segementValue === "monthly"
+                            ? overViewChartData?.label
+                            : timeLabels
+                        }
+                        selectedDate={selectedDate}
+                        isArticle
+                        series={overViewChartData?.series}
+                        colors={["#7F56D9", "#A3E0FF", "#e89de1"]}
+                        height={300}
+                        multipleYaxis={false}
+                      />
+                    ) : (
+                      <div style={{ padding: 20 }}>
+                        <Empty description="We don’t have enough data generated to show meaningful insights here" />
+                      </div>
+                    )
+                  ) : barchartResponse?.series?.some(
+                      (item: any) => item?.data?.length > 0
+                    ) ? (
                     <BarChart
                       labels={barchartResponse?.labels}
                       series={barchartResponse?.series}
@@ -1415,6 +1434,10 @@ export default function ArticleList() {
                       width={"30px"}
                       tickAmount={true}
                     />
+                  ) : (
+                    <div style={{ padding: 20 }}>
+                      <Empty description="We don’t have enough data generated to show meaningful insights here" />
+                    </div>
                   )}
                 </div>
               </div>
