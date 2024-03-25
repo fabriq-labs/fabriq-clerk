@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "@components/layout";
 import moment from "moment";
+import Image from "next/image";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Table, Radio, Select, Row, Col, Empty, Tooltip } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -22,6 +23,12 @@ import {
   formatNumber,
   getQuarterMonths,
 } from "@/utils/helper";
+
+import Direct from "../../assets/direct.png";
+import Referral from "../../assets/referral_new.png";
+import NetworkLogo from "../../assets/network.png";
+import Search from "../../assets/search.png";
+import MinimizeLogo from "../../assets/minimize.png";
 
 interface BarChartResponse {
   labels: string[];
@@ -85,7 +92,7 @@ function SocialCard({ mediumDistribution, socialTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <img src="/images/network.png" alt="social" width={24} height={24} />
+        <Image src={NetworkLogo} alt="social" width={24} height={24} />
         <div className="row-title">Social</div>
       </div>
       <div className="row2" style={{ color: "#172a95" }}>
@@ -126,7 +133,7 @@ function ReferralCard({ mediumDistribution, referalTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <img src="/images/referral.png" alt="referral" width={24} height={24} />
+        <Image src={Referral} alt="referral" width={24} height={24} />
         <div className="row-title">Referral</div>
       </div>
       <div className="row2" style={{ color: "#f8b633" }}>
@@ -163,7 +170,7 @@ function SearchCard({ mediumDistribution, searchTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <img src="/images/search.png" alt="search" width={24} height={24} />
+        <Image src={Search} alt="search" width={24} height={24} />
         <div className="row-title">Search</div>
       </div>
       <div className="row2" style={{ color: "#e63111" }}>
@@ -223,7 +230,7 @@ function InternalCard({ mediumDistribution, internalTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <img src="/images/minimize.png" alt="internal" width={24} height={24} />
+        <Image src={MinimizeLogo} alt="internal" width={24} height={24} />
         <div className="row-title">Internal</div>
       </div>
       <div className="row2" style={{ color: "#0add54" }}>
@@ -265,7 +272,7 @@ function DirectCard({ mediumDistribution }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <img src="/images/direct.png" alt="direct" width={24} height={24} />
+        <Image src={Direct} alt="direct" width={24} height={24} />
         <div className="row-title">Direct</div>
       </div>
       <div className="row2" style={{ color: "#7f9386" }}>
@@ -516,7 +523,7 @@ export default function ArticleDetails() {
     const topPostvariables = {
       parameters: {
         site_id: `"${siteInfo?.site_id}"`,
-        article_id: `${parseInt(articleId)}`,
+        article_id: `"${articleId}"`,
       },
       max_age: queryParamValue || 0,
       id: org_settings.article_details_query_id,
