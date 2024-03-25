@@ -51,4 +51,84 @@
     font-weight: 600;
     color: #7f56d9;
   }
+
+  .count-prefix {
+    font-size: 28px;
+    font-weight: 500;
+    color: #737a73;
+  }
+
+  .article-count-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475467;
+  }
+
+  .article-count-description {
+    font-size: 14px;
+    font-weight: 400;
+    color: #879eb0;
+  }
+
+  .article-page-list-count-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  /*  Filter Section */
+  .article-page-filter-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    background: #f2f2f1;
+    margin-top: 20px;
+  }
+
+  .article-page-filter {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .article-page-filter-title,
+  .article-page-filter-title-sort {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #3a3f3a;
+  }
+
+  .article-page-filter-content {
+    display: flex;
+    padding: 20px;
+  }
+
+  .article-filter-button {
+    margin-left: 20px;
+  }
+
+  .article-page-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .filter-content-wrapper {
+    padding: 20px 20px;
+    display: flex;
+  }
+
+  .filter-select {
+    width: 15%;
+    position: relative;
+  }
+
+  .filter-select-date {
+    width: 15%;
+  }
+
+  .filter-apply-button {
+    margin-left: 25px;
+  }
 }
