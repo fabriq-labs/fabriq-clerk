@@ -575,7 +575,6 @@ export default function ArticleDetails() {
       });
   };
 
-
   let timeOnPage = 0;
   if (segementValue === "real-time") {
     timeOnPage = trafficSourceData?.ArticleDaily?.[0]?.total_time_spent || 0;
@@ -651,6 +650,7 @@ export default function ArticleDetails() {
   const getResultFromJob = (data: any, topPostvariables: any) => {
     return fetchDataFromJob(data).then((res) => {
       if (res) {
+        topPostvariables.max_age = -1;
         return axios
           .post("/api/query_results", { data: topPostvariables })
           .then((result) => {
@@ -768,8 +768,6 @@ export default function ArticleDetails() {
     setScrollDepthData([]);
     getRealtimeDataWithQuery(formattedDate);
   };
-
-  
 
   const getRealtimeDataWithQuery = (date: any) => {
     setTableLoader(true);
@@ -1081,13 +1079,13 @@ export default function ArticleDetails() {
       const percentageDevice: any = {};
       const arrDevice: any = [];
       if (data && Object.keys(data)?.length > 0) {
-        for (const [category, value] of Object.entries(data)) {
+        for (const [category, value] of Object.entries<any>(data)) {
           percentageData[category] = (value / totalSum) * 100;
         }
       }
 
       if (data_Social && Object.keys(data_Social).length > 0) {
-        for (const [category, value] of Object.entries(data_Social)) {
+        for (const [category, value] of Object.entries<any>(data_Social)) {
           if (!percentageSocial[category]) {
             percentageSocial[category] = {};
           }
@@ -1097,7 +1095,7 @@ export default function ArticleDetails() {
       }
 
       if (data_Device && Object.keys(data_Device).length > 0) {
-        for (const [category, value] of Object.entries(data_Device)) {
+        for (const [category, value] of Object.entries<any>(data_Device)) {
           if (!percentageDevice[category]) {
             percentageDevice[category] = {};
           }
@@ -1278,7 +1276,7 @@ export default function ArticleDetails() {
       };
     };
 
-    let chartSeriesFormat = {
+    let chartSeriesFormat: any = {
       series: [],
       label: labels,
     };
@@ -1377,7 +1375,7 @@ export default function ArticleDetails() {
 
           // Sort the districts in descending order based on the values
           const sortedIndices = districtValuesArray
-            .map((_, index: any) => index)
+            .map((_: any, index: any) => index)
             .sort(
               (a: any, b: any) =>
                 districtValuesArray[b] - districtValuesArray[a]
