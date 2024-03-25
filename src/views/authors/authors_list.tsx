@@ -524,7 +524,7 @@ const ExpandedRow = ({
       render: (_text: any, record: any) => (
         <div className="author-article-title-wrapper">
           <Link
-            href={`/content/article/${record?.article_id}`}
+            href={`/article/${record?.article_id}`}
             className="author-article-title"
             onClick={() => handleClickArticle(record?.article_id)}
           >
@@ -659,6 +659,8 @@ export default function AuthorList() {
   const sites:any = localStorage.getItem("site_details")
   let siteInfo: any = JSON.parse(sites);
   let siteDetails: any = JSON.parse(sites);
+  const org_settingsVal:any = localStorage.getItem("org_settings")
+  const org_settings = JSON.parse(org_settingsVal)
   const router = useRouter();
   useEffect(() => {
     getCachedList();
@@ -721,7 +723,7 @@ export default function AuthorList() {
           site_id: `"${siteInfo?.site_id}"`,
         },
         max_age: -1,
-        id: 430,
+        id: org_settings.authors_realtime_query_id,
       };
 
       const values = await axios.post("/api/query_results", {

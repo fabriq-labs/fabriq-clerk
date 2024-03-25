@@ -458,7 +458,8 @@ export default function ArticleDetails() {
   const queryParams = Object.fromEntries(searchParams);
   const article_id = decodeURIComponent(articleId);
   const { Option } = Select;
-
+  const org_settingsVal:any = localStorage.getItem("org_settings")
+  const org_settings = JSON.parse(org_settingsVal)
   const siteInfo: any = {
     id: 36,
     site_id: "wral.com",
@@ -515,10 +516,10 @@ export default function ArticleDetails() {
     const topPostvariables = {
       parameters: {
         site_id: `"${siteInfo?.site_id}"`,
-        article_id: parseInt(articleId),
+        article_id: `${parseInt(articleId)}`,
       },
       max_age: queryParamValue || 0,
-      id: 431,
+      id: org_settings.article_details_query_id,
     };
 
     axios

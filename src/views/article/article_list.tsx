@@ -69,7 +69,8 @@ export default function ArticleList() {
   const [sortEnabled, setSortEnabled] = useState(false);
   const [countNo, setCountNo] = useState(0);
   let count = 0;
-
+  const org_settingsVal:any = localStorage.getItem("org_settings")
+  const org_settings = JSON.parse(org_settingsVal)
   const timeInterval = 30 * 60 * 1000;
 
   const siteDetails: any = {
@@ -82,13 +83,12 @@ export default function ArticleList() {
 
   useEffect(() => {
     const siteInfo = siteDetails.site_id;
-    const query_id = 427;
     const topPostvariables: any = {
       parameters: {
         site_id: `"${siteInfo}"`,
       },
       max_age: -1,
-      id: query_id,
+      id: org_settings.article_table_query_id,
     };
 
     axios
@@ -241,14 +241,13 @@ export default function ArticleList() {
     setChartLoader(true);
     setIsError(false);
 
-    const query_id = 429;
 
     const topPostvariables = {
       parameters: {
         site_id: `"${siteDetails?.site_id}"`,
       },
       max_age: -1,
-      id: query_id,
+      id: org_settings.article_chart_query_id,
     };
 
     axios
