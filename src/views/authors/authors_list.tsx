@@ -18,13 +18,8 @@ import DownArrow from "../../assets/down-arrow_nw.png";
 import OpenLink from "../../assets/open-link.webp";
 import { useRouter } from "next/navigation";
 
-let siteDetails: any = {
-  id: 36,
-  site_id: "wral.com",
-  site_name: "Fabriq",
-  host_name: "https://fabriq.com",
-  collector_url: "wral.com/dt",
-};
+const sites:any = localStorage.getItem("site_details")
+  let siteDetails: any = JSON.parse(sites);
 
 const generateData = (series: any, labels: any) => {
   const finalData = labels?.map((label: any, index: any) => ({
@@ -660,13 +655,8 @@ export default function AuthorList() {
   const [selectedYear, setSelectedYear] = useState<any>(null);
   const [selectedQuarter, setSelectedQuarter] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<any>(new Date());
-  const siteInfo: any = {
-    id: 36,
-    site_id: "wral.com",
-    site_name: "Fabriq",
-    host_name: "https://fabriq.com",
-    collector_url: "wral.com/dt",
-  };
+  const sites:any = localStorage.getItem("site_details")
+  let siteInfo: any = JSON.parse(sites);
 
   const router = useRouter();
   useEffect(() => {

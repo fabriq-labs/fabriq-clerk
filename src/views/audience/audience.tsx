@@ -97,13 +97,8 @@ export default function Audience() {
   });
   const [cohortData, setCohortData]: any = useState(null);
   const timeInterval = 30 * 60 * 1000;
-  let siteDetails: any = {
-    id: 36,
-    site_id: "wral.com",
-    site_name: "Fabriq",
-    host_name: "https://fabriq.com",
-    collector_url: "wral.com/dt",
-  };
+  const sites:any = localStorage.getItem("site_details")
+  let siteDetails: any = JSON.parse(sites);
 
   useEffect(() => {
     getRealtimeData();

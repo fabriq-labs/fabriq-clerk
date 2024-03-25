@@ -817,14 +817,9 @@ const OverviewPage = () => {
 
   const getOverallData = () => {
     setIsError(false);
-    const siteInfo: any = {
-      id: 36,
-      site_id: "wral.com",
-      site_name: "Fabriq",
-      host_name: "https://fabriq.com",
-      collector_url: "wral.com/dt",
-    };
-
+    const sites:any = localStorage.getItem("site_details")
+    const siteInfo: any = JSON.parse(sites);
+    
     setSiteLink(siteInfo?.host_name);
 
     if (siteInfo) {

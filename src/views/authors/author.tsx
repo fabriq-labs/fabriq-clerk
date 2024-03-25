@@ -77,13 +77,8 @@ export default function Authors() {
   const { authorId }: any = useParams();
   const author_id = decodeURIComponent(authorId);
 
-  let siteDetails: any = {
-    id: 36,
-    site_id: "wral.com",
-    site_name: "Fabriq",
-    host_name: "https://fabriq.com",
-    collector_url: "wral.com/dt",
-  };
+  const sites:any = localStorage.getItem("site_details")
+  let siteDetails: any = JSON.parse(sites);
   const time_interval = localStorage.getItem("time_interval");
   const timeInterval = time_interval ? parseInt(time_interval) : 30 * 60 * 1000;
 

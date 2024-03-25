@@ -4,7 +4,8 @@ import React from "react";
 import { UserButton, Protect, useAuth, useOrganization } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dropdown, MenuProps } from "antd";
+import { Dropdown, MenuProps, Space, Typography } from "antd";
+import { DownOutlined } from '@ant-design/icons';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -20,8 +21,21 @@ export default function Navbar() {
     return currentBasePath === basePath;
   };
 
-  const onClick: MenuProps["onClick"] = ({ key }: any) => {};
+ 
+  const onClick: MenuProps["onClick"] = ({ key }: any) => { };
+  const sitesValue:any = localStorage.getItem("sites") ? localStorage.getItem("sites") : ""
+  const sitesJson = JSON.parse(sitesValue);
+  const siteItems = sitesJson.map((item:any) => {
+    return {
+      key: item.site_id,
+      label: item.site_id,
+    }
+  })
 
+  const onselect = (e:any) => {
+    const  site =  sitesJson.filter((obj: any) => obj.site_id === e.key);
+    localStorage.setItem("site_details", JSON.stringify(site[0])) 
+  }
   const items: any = [
     {
       key: "1",
@@ -47,6 +61,27 @@ export default function Navbar() {
         <Link href={"/destination"}>
           <span className={`menu-item`}>Destination</span>
         </Link>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <Dropdown
+          className={`menu-item`}
+          menu={{
+            items:siteItems,
+            selectable: true,
+            defaultSelectedKeys: ['3'],
+            onClick:onselect
+          }}
+        >
+          <Typography.Link>
+            <Space>
+              Sites
+              {/* <DownOutlined /> */}
+            </Space>
+          </Typography.Link>
+        </Dropdown>
       ),
     },
   ].filter(Boolean);
@@ -80,9 +115,8 @@ export default function Navbar() {
               <li>
                 <Link href="/">
                   <span
-                    className={`${
-                      isActive("/") ? "tab active" : "tab"
-                    } transition`}
+                    className={`${isActive("/") ? "tab active" : "tab"
+                      } transition`}
                   >
                     Home
                   </span>
@@ -93,9 +127,8 @@ export default function Navbar() {
               <li>
                 <Link href="/">
                   <span
-                    className={`tab ${
-                      isActive("/") ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActive("/") ? "active" : ""
+                      } transition`}
                   >
                     Overview
                   </span>
@@ -106,9 +139,8 @@ export default function Navbar() {
               <li>
                 <Link href="/author">
                   <span
-                    className={`tab ${
-                      isActiveAuthor ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActiveAuthor ? "active" : ""
+                      } transition`}
                   >
                     Author
                   </span>
@@ -119,9 +151,8 @@ export default function Navbar() {
               <li>
                 <Link href="/audience">
                   <span
-                    className={`tab ${
-                      isActive("/audience") ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActive("/audience") ? "active" : ""
+                      } transition`}
                   >
                     Audience
                   </span>
@@ -132,9 +163,8 @@ export default function Navbar() {
               <li>
                 <Link href="/revenue">
                   <span
-                    className={`tab ${
-                      isActive("/revenue") ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActive("/revenue") ? "active" : ""
+                      } transition`}
                   >
                     Revenue
                   </span>
@@ -145,9 +175,8 @@ export default function Navbar() {
               <li>
                 <Link href="/pipeline">
                   <span
-                    className={`tab ${
-                      isActivePipeline ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActivePipeline ? "active" : ""
+                      } transition`}
                   >
                     Connection
                   </span>
@@ -158,9 +187,8 @@ export default function Navbar() {
               <li>
                 <Link href="/explore">
                   <span
-                    className={`tab ${
-                      isActiveExplore ? "active" : ""
-                    } transition`}
+                    className={`tab ${isActiveExplore ? "active" : ""
+                      } transition`}
                   >
                     Explore
                   </span>
