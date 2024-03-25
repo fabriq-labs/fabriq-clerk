@@ -1495,8 +1495,8 @@ const OverviewPage = () => {
                               }
                               alt=""
                               className="img-arrow"
-                              width={12}
-                              height={12}
+                              width={10}
+                              height={10}
                             />
                           </Tag>
                         )}
