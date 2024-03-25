@@ -10,6 +10,8 @@ import {
   getQuarterFromDate,
   formationTimezone,
   mapArticlesData,
+  getQuarterMonths,
+  getAllMonthNumbersForYear,
 } from "@/utils/helper";
 import ErrorResult from "@/components/error_result";
 import SegmentedChartSelector from "./components/article_list_segment";
@@ -36,10 +38,10 @@ export default function ArticleList() {
   const [selectedFilterValue, setSelectedFilterValue]: any = useState(null);
   const [visitorsData, setVisitorsData]: any = useState([]);
   const [tableListData, setTableListData] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedMonth, setSelectedMonth]: any = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedQuarter, setSelectedQuarter] = useState(null);
+  const [selectedYear, setSelectedYear]: any = useState(null);
+  const [selectedQuarter, setSelectedQuarter]: any = useState(null);
   const [barchartResponse, setBarChartResponse] = useState({
     labels: [],
     series: [],
@@ -274,15 +276,195 @@ export default function ArticleList() {
       });
   };
 
+  const getMonthlyData = (value: any, year: any) => {
+    setChartLoader(true);
+    setIsError(false);
+
+    const limitPerPage = 10;
+    const offset = limitPerPage * (currentpage - 1);
+
+    let filterParams = {
+      order_by: {
+        field: "page_views",
+        direction: "desc_nulls_last",
+      },
+    };
+
+    const partial_period_date = `${year}-${value
+      ?.toString()
+      .padStart(2, "0")}%`;
+
+    Promise.all([
+      axios.post("/api/article", {
+        operation: "getMonthlyVistors",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_month: parseInt(value),
+          period_year: year,
+          partial_period_date,
+        },
+      }),
+
+      axios.post("/api/article", {
+        operation: "getMonthlyTable",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_month: parseInt(value),
+          period_year: year,
+          filterParams,
+          offset,
+        },
+      }),
+    ])
+      .then((values) => {
+        if (values?.[0]?.data?.data && values?.[1]?.data?.data) {
+          setVisitorsData(values?.[0]?.data?.data?.monthly_visitors?.[0]);
+          getfilterData(values?.[0]?.data?.data?.TopPosts);
+          getTableChartSeries(values?.[1]?.data?.data?.monthly_data);
+          setTotalCount(
+            values?.[1]?.data?.data?.total_articles?.aggregate?.count
+          );
+          setOffsetValue(0);
+          setHistoricalChartResponse(values?.[0]?.data?.data);
+          generateDataMonthly(values?.[0]?.data?.data);
+          setChartLoader(false);
+        } else {
+          setIsError(true);
+          setChartLoader(false);
+        }
+      })
+      .catch(() => {
+        setChartLoader(false);
+        setIsError(true);
+      });
+  };
+
+  const getQuarterlyData = (value: any, year: any) => {
+    setChartLoader(true);
+    setIsError(false);
+
+    const limitPerPage = 10;
+    const offset = limitPerPage * (currentpage - 1);
+
+    let filterParams = {
+      order_by: {
+        field: "page_views",
+        direction: "desc_nulls_last",
+      },
+    };
+
+    const currentQuarterMonths = getQuarterMonths(value);
+    Promise.all([
+      axios.post("/api/article", {
+        operation: "getQuaterlyVistors",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_quater: parseInt(value),
+          period_year: year,
+          period_month: currentQuarterMonths,
+        },
+      }),
+      axios.post("/api/article", {
+        operation: "getQuaterlysort",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_quater: parseInt(value),
+          period_year: year,
+          filterParams,
+          offset,
+        },
+      }),
+    ])
+      .then((values) => {
+        if (values?.[0]?.data?.data && values?.[1]?.data?.data) {
+          setVisitorsData(
+            values?.[0]?.data?.data?.quarterly_visitors_list?.[0]
+          );
+          getfilterData(values?.[0]?.data?.data?.TopPosts);
+          setHistoricalChartResponse(values?.[0]?.data?.data);
+          generateDataForQuarterChart(values?.[0]?.data?.data, value);
+          getTableChartSeries(values?.[1]?.data?.data?.quarterly_data);
+          setTotalCount(
+            values?.[1]?.data?.data?.total_articles?.aggregate?.count
+          );
+          setOffsetValue(0);
+
+          setChartLoader(false);
+        } else {
+          setIsError(true);
+          setChartLoader(false);
+        }
+      })
+      .catch(() => {
+        setChartLoader(false);
+        setIsError(true);
+      });
+  };
+
+  const getYearlyData = (value: any) => {
+    setChartLoader(true);
+    setIsError(false);
+
+    const limitPerPage = 10;
+    const offset = limitPerPage * (currentpage - 1);
+
+    let filterParams = {
+      order_by: {
+        field: "page_views",
+        direction: "desc_nulls_last",
+      },
+    };
+
+    const allAbbreviatedMonths = getAllMonthNumbersForYear(value);
+    Promise.all([
+      axios.post("/api/article", {
+        operation: "getYearlyVistors",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_year: parseInt(value),
+          period_month: allAbbreviatedMonths,
+        },
+      }),
+      axios.post("/api/article", {
+        operation: "getYearlyTable",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_year: parseInt(value),
+          filterParams,
+          offset: offset,
+        },
+      }),
+    ])
+      .then((values) => {
+        if (values?.[0]?.data?.data && values?.[1]?.data?.data) {
+          setVisitorsData(values?.[0]?.data?.data?.yearly_list?.[0]);
+          getfilterData(values?.[0]?.data?.data?.TopPosts);
+          setHistoricalChartResponse(values?.[0]?.data?.data);
+          generateDataForYearChart(values?.[0]?.data?.data, parseInt(value));
+          getTableChartSeries(values?.[1]?.data?.data?.yearly_data);
+          setTotalCount(
+            values?.[1]?.data?.data?.total_articles?.aggregate?.count
+          );
+          setOffsetValue(0);
+          setChartLoader(false);
+        } else {
+          setIsError(true);
+          setChartLoader(false);
+        }
+      })
+      .catch((err) => {
+        setChartLoader(false);
+        setIsError(true);
+      });
+  };
+
   const getTableChartSeries = async (
     result: any,
-    realTime: any,
+    realTime?: any,
     isLoader = true
   ) => {
     let real_time_date = moment(selectedDate).format("YYYY-MM-DD");
-    const overviewIds = result?.map((item: any) => {
-      return item?.article?.article_id;
-    });
+    const overviewIds = result.map((item: any) => item?.article?.article_id);
 
     if (!tableLoader && isLoader) {
       setTableLoader(true);
@@ -295,10 +477,10 @@ export default function ArticleList() {
     const req = {
       period_date: real_time_date || formationTimezone(moment(), "YYYY-MM-DD"),
       site_id: siteDetails?.site_id,
-      article_id: overviewIds,
+      article_id: overviewIds.filter(
+        (item: any) => item !== null && item !== undefined
+      ),
     };
-
-    console.log("req", req);
 
     const res = realTime
       ? await axios.post("/api/article", {
@@ -395,6 +577,136 @@ export default function ArticleList() {
     setTableListData(updatedResult);
   };
 
+  const generateDataForQuarterChart = (
+    data: any,
+    quarter: any,
+    value?: any
+  ) => {
+    const list = data?.quarterly_visitors;
+    if (list?.length > 0) {
+      const labels = Array.from({ length: 3 }, (_, i) => {
+        const startMonth = (quarter - 1) * 3 + 1;
+        const month = startMonth + i;
+        return month;
+      });
+
+      let selectedItem = "";
+      if (value) {
+        selectedItem = value;
+      } else {
+        selectedItem = selectedChartValue;
+      }
+
+      const outputArray = labels?.map((label: any) => {
+        const day = parseInt(label);
+        const dataItem = list?.find((item: any) => item?.period_month === day);
+
+        return [
+          day,
+          dataItem
+            ? selectedItem === "page_views"
+              ? dataItem.page_views
+              : dataItem.users
+            : 0,
+        ];
+      });
+
+      let series = [
+        {
+          name: selectedItem === "page_views" ? "Page Views" : "Readers",
+          data: outputArray,
+        },
+      ];
+
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const yValues = series?.[0]?.data?.map((entry) => entry?.[1]);
+      const monthLabels = labels?.map((number) => monthNames[number - 1]);
+      setBarChartResponse((prevState: any) => ({
+        ...prevState,
+        labels: monthLabels,
+        series: yValues,
+        name: selectedItem === "page_views" ? "Page Views" : "Readers",
+      }));
+    }
+  };
+
+  const generateDataForYearChart = (data: any, year: any, value?: any) => {
+    const list = data?.yearly_list_data;
+    if (list?.length > 0) {
+      const labels = Array.from({ length: 12 }, (_, i) => {
+        const month = i + 1;
+        return month;
+      });
+
+      let selectedItem = "";
+      if (value) {
+        selectedItem = value;
+      } else {
+        selectedItem = selectedChartValue;
+      }
+
+      const outputArray = labels?.map((label: any) => {
+        const day = parseInt(label);
+        const dataItem = list?.find(
+          (item: any) =>
+            item?.period_year === year && item?.period_month === day
+        );
+
+        return [
+          day,
+          dataItem
+            ? selectedItem === "page_views"
+              ? dataItem.page_views
+              : dataItem.users
+            : 0,
+        ];
+      });
+
+      let series = [
+        {
+          name: selectedItem === "page_views" ? "Page Views" : "Readers",
+          data: outputArray,
+        },
+      ];
+
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const yValues = series?.[0]?.data?.map((entry) => entry?.[1]);
+      const monthLabels = labels?.map((number) => monthNames[number - 1]);
+      setBarChartResponse((prevState: any) => ({
+        ...prevState,
+        labels: monthLabels,
+        series: yValues,
+        name: selectedItem === "page_views" ? "Page Views" : "Readers",
+      }));
+    }
+  };
+
   const handleRealTimeSortAndFilter = (
     sortValue: any,
     filterValue: any,
@@ -402,7 +714,7 @@ export default function ArticleList() {
     segmentFilterValue = false,
     realtimeData?: any
   ) => {
-    let real_time_date = moment("2024-01-22" || selectedDate).format(
+    let real_time_date = moment(realtimeData || selectedDate).format(
       "YYYY-MM-DD"
     );
     const limitPerPage = 10;
@@ -452,6 +764,203 @@ export default function ArticleList() {
       .catch(() => {
         setTableLoader(false);
       });
+  };
+
+  const handleMonthlySortAndFilter = (
+    sortValue: any,
+    filterValue: any,
+    page?: any
+  ) => {
+    const filterField =
+      selectedFilter === "author"
+        ? "name"
+        : selectedFilter === "category"
+        ? "category"
+        : "published_date";
+
+    const limitPerPage = 10;
+    const offset = limitPerPage * ((page || currentpage) - 1);
+
+    const sortKey = sortValue || selectedSort;
+    let filterParams = {
+      order_by: {
+        field: sortKey,
+        direction: sortKey === "users" ? sortDirection : pageViewssortDirection,
+      },
+      filter_field: filterField,
+      filter_value: filterValue || selectedFilterValue,
+    };
+
+    const month = selectedMonth.getMonth() + 1;
+    const currentYear = selectedMonth.getFullYear();
+
+    axios
+      .post("/api/article", {
+        operation: "getMonthlyTable",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_month: month,
+          period_year: currentYear,
+          filterParams,
+          offset,
+        },
+      })
+      .then((res: any) => {
+        if (res) {
+          const data = res?.data?.data?.monthly_data;
+          setOffsetValue(offset);
+          if (!page)
+            setTotalCount(res?.data?.data?.total_articles?.aggregate?.count);
+          getTableChartSeries(data);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+      });
+  };
+
+  const handleQuarterlySortAndFilter = (
+    sortValue: any,
+    filterValue: any,
+    page?: any
+  ) => {
+    const filterField =
+      selectedFilter === "author"
+        ? "name"
+        : selectedFilter === "category"
+        ? "category"
+        : "published_date";
+    const sortKey = sortValue || selectedSort;
+    const limitPerPage = 10;
+    const offset = limitPerPage * ((page || currentpage) - 1);
+
+    let filterParams = {
+      order_by: {
+        field: sortKey,
+        direction: sortKey === "users" ? sortDirection : pageViewssortDirection,
+      },
+      filter_field: filterField,
+      filter_value: filterValue || selectedFilterValue,
+    };
+
+    const year = selectedQuarter?.getFullYear();
+    const quarter = getQuarterFromDate(selectedQuarter);
+    axios
+      .post("/api/article", {
+        operation: "getQuaterlysort",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_quater: quarter,
+          period_year: year,
+          filterParams,
+          offset,
+        },
+      })
+      .then((res: any) => {
+        if (res) {
+          const quarterly_data = res?.data?.data?.quarterly_data;
+          setOffsetValue(offset);
+          if (!page)
+            setTotalCount(res?.data?.data?.total_articles?.aggregate?.count);
+          getTableChartSeries(quarterly_data);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+      });
+  };
+
+  const handleYearlySortAndFilter = (
+    sortValue: any,
+    filterValue: any,
+    page?: any
+  ) => {
+    const filterField =
+      selectedFilter === "author"
+        ? "name"
+        : selectedFilter === "category"
+        ? "category"
+        : "published_date";
+    const sortKey = sortValue || selectedSort;
+    const limitPerPage = 10;
+    const offset = limitPerPage * ((page || currentpage) - 1);
+
+    let filterParams = {
+      order_by: {
+        field: sortKey,
+        direction: sortKey === "users" ? sortDirection : pageViewssortDirection,
+      },
+      filter_field: filterField,
+      filter_value: filterValue || selectedFilterValue,
+    };
+
+    const year = selectedYear?.getFullYear();
+
+    axios
+      .post("/api/article", {
+        operation: "getYearlyTable",
+        variables: {
+          site_id: siteDetails?.site_id,
+          period_year: year,
+          filterParams,
+          offset: offset,
+        },
+      })
+      .then((res: any) => {
+        if (res) {
+          const yearly_data = res?.data?.data?.yearly_data;
+          setOffsetValue(offset);
+          if (!page)
+            setTotalCount(res?.data?.data?.total_articles?.aggregate?.count);
+          getTableChartSeries(yearly_data);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+      });
+  };
+
+  const generateLineChartData = (chartData: any) => {
+    const labels = chartData.map((data: any) =>
+      moment(data?.period_date).format("MMM DD")
+    );
+
+    return labels;
+  };
+
+  const generateDataMonthly = (data: any, val?: any) => {
+    const chartData = data?.monthly_visitor_daily;
+    const labels = generateLineChartData(chartData);
+    const chartOption = val || selectedChartValue;
+
+    const getSeriesConfig = (name: any, key: any) => {
+      const series = chartData?.map((data: any) => data?.[key]);
+      return {
+        name,
+        type: "line",
+        data: series.filter(
+          (value: any) => value !== undefined && value !== null
+        ),
+        yaxis: "line-y-axis",
+      };
+    };
+
+    let chartSeriesFormat: any = {
+      series: [],
+      label: labels,
+    };
+
+    switch (chartOption) {
+      case "users":
+        chartSeriesFormat.series = [getSeriesConfig("Readers", "users")];
+        break;
+      default:
+        chartSeriesFormat.series = [
+          getSeriesConfig("Page Views", "page_views"),
+        ];
+    }
+
+    setOverViewChartData(chartSeriesFormat);
   };
 
   const formattedLabels = (labels: any) => {
@@ -626,21 +1135,8 @@ export default function ArticleList() {
     }));
     setVisitorsData([]);
     setTableListData([]);
-    // getMonthlyData(month, year);
+    getMonthlyData(month, year);
     setSelectedMonth(date);
-  };
-
-  const handleYearChange = (date: any) => {
-    const year = date?.getFullYear();
-    setBarChartResponse((prevState: any) => ({
-      ...prevState,
-      labels: [],
-      series: [],
-    }));
-    setVisitorsData([]);
-    setTableListData([]);
-    // getYearlyData(year);
-    setSelectedYear(date);
   };
 
   const handleQuarterlyChange = (date: any) => {
@@ -653,23 +1149,36 @@ export default function ArticleList() {
     }));
     setVisitorsData([]);
     setTableListData([]);
-    // getQuarterlyData(quarter, selectedYear);
+    getQuarterlyData(quarter, selectedYear);
     setSelectedQuarter(date);
+  };
+
+  const handleYearChange = (date: any) => {
+    const year = date?.getFullYear();
+    setBarChartResponse((prevState: any) => ({
+      ...prevState,
+      labels: [],
+      series: [],
+    }));
+    setVisitorsData([]);
+    setTableListData([]);
+    getYearlyData(year);
+    setSelectedYear(date);
   };
 
   const handleChangeChart = (value: any) => {
     setSelectedChartValue(value);
     if (segementValue === "monthly") {
-      // generateDataMonthly(historicalChartResponse, value);
-    } else if (segementValue === "yearly") {
-      // const year = selectedYear?.getFullYear();
-      // generateDataForYearChart(historicalChartResponse, year, value);
+      generateDataMonthly(historicalChartResponse, value);
     } else if (segementValue === "quarterly") {
       const quarter = getQuarterFromDate(selectedQuarter);
-      // generateDataForQuarterChart(historicalChartResponse, quarter, value);
+      generateDataForQuarterChart(historicalChartResponse, quarter, value);
+    } else if (segementValue === "yearly") {
+      const year = selectedYear?.getFullYear();
+      generateDataForYearChart(historicalChartResponse, year, value);
+    } else {
+      chartData(value);
     }
-
-    chartData(value);
   };
 
   const handleChangePagination = (value: any) => {
@@ -677,11 +1186,11 @@ export default function ArticleList() {
 
     setTableLoader(true);
     if (segementValue === "monthly") {
-      // handleMonthlySortAndFilter(null, null, value);
+      handleMonthlySortAndFilter(null, null, value);
     } else if (segementValue === "quarterly") {
-      // handleQuarterlySortAndFilter(null, null, value);
+      handleQuarterlySortAndFilter(null, null, value);
     } else if (segementValue === "yearly") {
-      // handleYearlySortAndFilter(null, null, value);
+      handleYearlySortAndFilter(null, null, value);
     } else {
       handleRealTimeSortAndFilter(null, null, value);
     }
@@ -724,11 +1233,11 @@ export default function ArticleList() {
 
     if (filterVal) {
       if (segementValue === "monthly") {
-        // handleMonthlySortAndFilter(null, filterVal);
+        handleMonthlySortAndFilter(null, filterVal);
       } else if (segementValue === "quarterly") {
-        // handleQuarterlySortAndFilter(null, filterVal);
+        handleQuarterlySortAndFilter(null, filterVal);
       } else if (segementValue === "yearly") {
-        // handleYearlySortAndFilter(null, filterVal);
+        handleYearlySortAndFilter(null, filterVal);
       } else {
         handleRealTimeSortAndFilter(null, filterVal);
       }
@@ -751,11 +1260,11 @@ export default function ArticleList() {
     setSortEnabled(false);
 
     if (segementValueFinal === "monthly") {
-      // handleMonthlySortAndFilter(value, null);
+      handleMonthlySortAndFilter(value, null);
     } else if (segementValueFinal === "yearly") {
-      // handleYearlySortAndFilter(value, null);
+      handleYearlySortAndFilter(value, null);
     } else if (segementValueFinal === "quarterly") {
-      // handleQuarterlySortAndFilter(value, null);
+      handleQuarterlySortAndFilter(value, null);
     } else {
       handleRealTimeSortAndFilter(
         value,
