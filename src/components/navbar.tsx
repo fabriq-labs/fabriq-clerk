@@ -93,6 +93,7 @@ export default function Navbar() {
     "/pipeline/create",
   ];
   const explorePaths = ["/explore/[chatId]", "/explore"];
+  const articlesPaths = ["/article/[articleId]","/article"];
   const authorsPath = ["/author/[authorId]", "/author"];
   const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
@@ -101,6 +102,7 @@ export default function Navbar() {
   const isActiveChat = chatPaths?.some((path) => isActive(path));
   const isActivePipeline = pipelinePaths?.some((path) => isActive(path));
   const isActiveSetup = setupPaths?.some((path) => isActive(path));
+  const isArticlePath = articlesPaths?.some((path) => isActive(path));
   const isActiveAuthor = authorsPath?.some((path) => isActive(path));
 
   return (
@@ -131,6 +133,19 @@ export default function Navbar() {
                       } transition`}
                   >
                     Overview
+                  </span>
+                </Link>
+              </li>
+            </Protect>
+            <Protect permission="org:media:all">
+              <li>
+                <Link href="/article">
+                  <span
+                    className={`tab ${
+                      isArticlePath ? "active" : ""
+                    } transition`}
+                  >
+                    Article
                   </span>
                 </Link>
               </li>

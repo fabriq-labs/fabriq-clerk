@@ -18,6 +18,7 @@ import {
 } from "antd";
 import moment from "moment";
 import GaugeChart from "react-gauge-chart";
+import Link from "next/link";
 
 import { Label } from "@/components/ui/label";
 import Barchart from "@/components/chart/barchart";
@@ -50,7 +51,7 @@ import {
   mapAuthorData,
   mapCategoryData,
 } from "@utils/helper";
-import Link from "next/link";
+
 
 // Format Number
 function formatNumber(value: any) {

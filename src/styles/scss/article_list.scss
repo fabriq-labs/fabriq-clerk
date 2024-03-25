@@ -1,0 +1,319 @@
+.article-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f2f3f4;
+
+  .article-page-content {
+    padding: 20px 48px;
+  }
+
+  .article-datepicker {
+    margin-left: 50px;
+    width: 200px;
+    display: flex;
+    position: relative;
+  }
+
+  .article-page-chart-select {
+    width: 200px;
+  }
+
+  .article-page-error-result {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .article-chart-content {
+    background-color: #fff;
+    margin-top: 50px;
+  }
+
+  .article-page-chart {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  /* Article Count wrapper */
+  .article-count-view-wrapper {
+    border-radius: 10px;
+    padding: 20px 0;
+    background: #f2f2f1;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    text-align: center;
+  }
+
+  .count-view {
+    font-size: 45px;
+    font-weight: 600;
+    color: #7f56d9;
+  }
+
+  .count-prefix {
+    font-size: 28px;
+    font-weight: 500;
+    color: #737a73;
+  }
+
+  .article-count-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475467;
+  }
+
+  .article-count-description {
+    font-size: 14px;
+    font-weight: 400;
+    color: #879eb0;
+  }
+
+  .article-page-list-count-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  /*  Filter Section */
+  .article-page-filter-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px 2px #c5cddd;
+    background: #f2f2f1;
+    margin-top: 20px;
+  }
+
+  .article-page-filter {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .article-page-filter-title,
+  .article-page-filter-title-sort {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #3a3f3a;
+  }
+
+  .article-page-filter-content {
+    display: flex;
+    padding: 20px;
+  }
+
+  .article-filter-button {
+    margin-left: 20px;
+  }
+
+  .article-page-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .filter-content-wrapper {
+    padding: 20px 20px;
+    display: flex;
+  }
+
+  .filter-select {
+    width: 15%;
+    position: relative;
+  }
+
+  .filter-select-date {
+    width: 15%;
+  }
+
+  .filter-apply-button {
+    margin-left: 25px;
+  }
+
+  .loader-wrapper {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .article-list-table-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .article-table-card-wrapper {
+    width: 100%;
+  }
+
+  .article-table-header {
+    width: 100%;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .table-heading {
+    color: #475467;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+  }
+
+  .title-hed {
+    display: flex;
+  }
+
+  .table-card-row {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .article-table-body {
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin: 10px 0;
+    padding: 5px 5px;
+    border-radius: 12px;
+  }
+
+  .list-article-key {
+    font-size: 14px;
+    font-weight: 600;
+    color: #737a73;
+    margin-right: 15px;
+    word-break: normal;
+    margin-top: 5px;
+  }
+
+  .list-article-title {
+    font-size: 16px;
+    align-self: center;
+    line-height: 20px;
+    font-weight: 600;
+    color: #3a3f3a;
+    cursor: pointer;
+    width: fit-content;
+    display: inline-block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  .list-article-category-details {
+    margin-top: 10px;
+    display: flex;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    color: #737a73;
+  }
+
+  .list-article-author-name,
+  .list-article-category-name {
+    margin-left: 20px;
+    text-transform: capitalize;
+  }
+
+  .link-text-article-page {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    margin-left: 20px;
+  }
+
+  .list-view-chart-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .list-view-chart {
+    width: 100%;
+    height: 100px;
+  }
+
+  .list-view-minutes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .list-minutes-vistor {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+
+  .list-view-count {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .list-value {
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 600;
+    color: #3a3f3a;
+    margin-right: 6px;
+  }
+
+  .list-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #3a3f3a;
+    margin-top: 2px;
+  }
+
+  .list-vistors-view {
+    width: 18%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .list-total-vistors {
+    font-size: 24px;
+    line-height: 26px;
+    font-weight: 600;
+    color: #3a3f3a;
+    text-align: center;
+    margin-left: -20px;
+  }
+
+  .page-no-data {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .anticon {
+    vertical-align: unset;
+  }
+  
+  .svg {
+    vertical-align: unset;
+  }
+}
