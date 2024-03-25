@@ -468,10 +468,8 @@ export default function ArticleDetails() {
   };
 
   const timeInterval = 30 * 60 * 1000;
-  //   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(updateActiveTab("article"));
     const intervalId = setInterval(() => {
       getArticleDetails();
     }, timeInterval);
@@ -517,7 +515,7 @@ export default function ArticleDetails() {
     const topPostvariables = {
       parameters: {
         site_id: `"${siteInfo?.site_id}"`,
-        article_id: `"${21247272}"`,
+        article_id: parseInt(articleId),
       },
       max_age: queryParamValue || 0,
       id: 431,
