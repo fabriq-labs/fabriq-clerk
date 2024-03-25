@@ -30,21 +30,22 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const FunnelRechart = ({ data = [] }) => {
+const FunnelRechart = ({ data = [] }: any) => {
+  const label: any = {
+    position: "center",
+    fontSize: 14,
+    fill: "#000",
+    fontWeight: 600
+  }
   return (
     <FunnelChart width={400} height={200}>
       <Funnel
         dataKey="value"
         data={data}
         isAnimationActive={false}
-        label={{
-          position: "center",
-          fontSize: 14,
-          fill: "#000",
-          fontWeight: 600
-        }}
-        neckWidth={50}
-        neckHeight={25}
+        // label={label}
+        // neckWidth={50}
+        // neckHeight={25}
         fill="#cce4f5"
       />
       <Tooltip content={<CustomTooltip />} />
