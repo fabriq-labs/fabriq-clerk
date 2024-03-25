@@ -58,7 +58,7 @@ export default function Navbar() {
     "/pipeline/create",
   ];
   const explorePaths = ["/explore/[chatId]", "/explore"];
-  const articlesPaths = ["/article", "/article/[articleId]"];
+  const articlesPaths = ["/article/[articleId]","/article"];
   const authorsPath = ["/author/[authorId]", "/author"];
   const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];

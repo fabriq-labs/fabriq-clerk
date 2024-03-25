@@ -1,7 +1,14 @@
 import axios from "../content_graphql";
 import { NextRequest, NextResponse } from "next/server";
 
-import { REALTIMEVISTOR } from "./grpahql";
+import {
+  REALTIMEVISTOR,
+  GET_MONTHLY_DATA,
+  GET_YEARLY_DATA,
+  GET_QUARTERLY_DATA,
+  ARTICLE_LIST,
+  ARTICLE_DETAILS,
+} from "./graphql";
 
 // Example function for making a GraphQL call
 const makeGraphQLCall = async (query: any, variables: any) => {
@@ -22,6 +29,18 @@ export async function POST(req: NextRequest) {
     const { operation, variables } = request;
     let result;
     switch (operation) {
+      case "getArticleMonthlyDetails":
+        result = await makeGraphQLCall(GET_MONTHLY_DATA, variables);
+        break;
+      case "getArticleQuarterlyDetails":
+        result = await makeGraphQLCall(GET_QUARTERLY_DATA, variables);
+        break;
+      case "getArticleYearlyDetails":
+        result = await makeGraphQLCall(GET_YEARLY_DATA, variables);
+        break;
+      case "getArticleDetails":
+        result = await makeGraphQLCall(ARTICLE_DETAILS, variables);
+        break;
       case "getRealtimeArticleList":
         result = await makeGraphQLCall(REALTIMEVISTOR, variables);
         break;
