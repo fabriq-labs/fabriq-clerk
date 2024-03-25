@@ -114,7 +114,7 @@ const Chart = ({ id, value, maxValue }: any) => {
 
 const ArticleChartContainer = React.memo(
   ({ id, seriobj, chartLoader }: any) => {
-    const currentMonth = moment("2024-01-22").format("MMM D");
+    const currentMonth = moment().format("MMM D");
 
     const updatedLabels = seriobj?.[id]?.labels.map(
       (label: any) => `${currentMonth}, ${label}`
@@ -957,8 +957,11 @@ const OverviewPage = () => {
 
     if (overviewIds?.length > 0) {
       setChartLoader(true);
+      const real_time =
+        localStorage.getItem("real_time_date") ||
+        formationTimezone(moment(), "YYYY-MM-DD");
       const req = {
-        period_date: "2024-01-22",
+        period_date: real_time,
         site_id: siteDetails?.site_id,
         article_id: overviewIds,
       };
@@ -1397,7 +1400,7 @@ const OverviewPage = () => {
     },
   ];
 
-  const currentMonth = moment("2024-01-22").format("MMM D");
+  const currentMonth = moment().format("MMM D");
   const timeLabels = overViewChartData?.label?.map((item: any) => {
     const formattedTime = moment().hour(item).minute(0).format("h:mm a");
     return `${currentMonth}, ${formattedTime}`;

@@ -117,10 +117,7 @@ export default function Audience() {
 
   const getRealtimeData = async (date?: any) => {
     setLoader(true);
-    const currentDate = "2024-01-22";
-    const real_time = currentDate
-      ? currentDate
-      : date || formationTimezone(moment(), "YYYY-MM-DD");
+    const real_time =  date || formationTimezone(moment(), "YYYY-MM-DD");
     try {
       const req = {
         site_id: siteDetails?.site_id,

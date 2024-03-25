@@ -954,7 +954,7 @@ export default function AuthorList() {
   };
 
   const getLast24HoursForAuthor = async (result: any, authorIds: any) => {
-    const real_time = "2024-01-22" || formationTimezone(moment(), "YYYY-MM-DD");
+    const real_time =  formationTimezone(moment(), "YYYY-MM-DD");
     if (authorIds?.length > 0) {
       const req = {
         period_date: real_time,
@@ -1018,10 +1018,8 @@ export default function AuthorList() {
 
   const getLast30DaysForAuthor = async (result: any, authorIds: any) => {
     if (authorIds?.length > 0) {
-      let real_time_date = "2024-01-22";
       const req = {
-        period_date:
-          real_time_date || formationTimezone(moment(), "YYYY-MM-DD"),
+        period_date: formationTimezone(moment(), "YYYY-MM-DD"),
         site_id: siteDetails?.site_id,
         author_id: authorIds,
       };

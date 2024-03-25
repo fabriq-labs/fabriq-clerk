@@ -53,7 +53,7 @@ export default function Authors() {
   const [selectedYear, setSelectedYear] = useState<any>(null);
   const [selectedQuarter, setSelectedQuarter] = useState<any>(null);
   const [siteAvg, setSiteAvg] = useState<any>({});
-  const [selectedDate, setSelectedDate] = useState<any>(new Date("2024-01-22"));
+  const [selectedDate, setSelectedDate] = useState<any>(new Date());
   const [authorCurrentChartResponse, setAuthorCurrentChartResponse] =
     useState<any>([]);
   const [authorAverageChartResponse, setAuthorAverageChartResponse] =
@@ -105,7 +105,7 @@ export default function Authors() {
     setTableLoader(true);
     setIsError(false);
     let period_date =
-      "2024-01-22" || date || formationTimezone(moment(), "YYYY-MM-DD");
+       date || formationTimezone(moment(), "YYYY-MM-DD");
 
     axios
       .post("/api/author", {
