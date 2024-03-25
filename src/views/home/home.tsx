@@ -30,6 +30,19 @@ export default function HomePage() {
       .catch((err) => {
         throw err;
       });
+      axios
+      .post("/api/organization", {
+        operation:"getOrgSettings"
+      })
+      .then((result) => {
+        let resultData = result?.data;
+        
+        localStorage.setItem("org_settings", resultData?.data?.organizations[0]?.settings)
+
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
   useEffect(() => {
    

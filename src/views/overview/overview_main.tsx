@@ -756,6 +756,8 @@ const OverviewPage = () => {
   const [categorySeries, setCategorySeries] = useState({});
   const [videoList, setVideoList] = useState([]);
 
+  const org_settingsVal:any = localStorage.getItem("org_settings")
+  const org_settings = JSON.parse(org_settingsVal)
   const timeInterval = 30 * 60 * 1000;
 
   useEffect(() => {
@@ -823,12 +825,14 @@ const OverviewPage = () => {
     setSiteLink(siteInfo?.host_name);
 
     if (siteInfo) {
+      console.log("org_settings", org_settings);
+      
       const topPostvariables = {
         parameters: {
           site_id: `"${siteInfo?.site_id}"`,
         },
         max_age: -1,
-        id: 426,
+        id: org_settings.overview_query_id,
       };
 
       setLoader(true);

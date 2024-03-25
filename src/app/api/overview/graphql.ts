@@ -69,7 +69,13 @@ export const GET_LAST_24HOURS_DATA = (period_date: any) => {
 
   return query;
 };
-
+export const GET_ORG_INFO = `
+  query($id: Int!) {
+    organizations(where: {id: {_eq: $id}}) {
+      settings
+    }
+  }
+`;
 export const GET_LAST_24HOURS_DATA_BASED_ON_CATEGORY = (period_date: any) => {
   const twentyFourHoursAgo = periodDateFormation(
     period_date,
@@ -97,6 +103,7 @@ export const GET_LAST_24HOURS_DATA_BASED_ON_CATEGORY = (period_date: any) => {
       }
     }
   `;
+  
 
   return query;
 };
