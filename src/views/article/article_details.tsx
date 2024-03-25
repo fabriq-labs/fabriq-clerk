@@ -670,7 +670,7 @@ export default function ArticleDetails() {
   let articleAuthorName = articleDetails?.author;
 
   const handleClickBack = () => {
-    router.push("/content/article");
+    router.push("/article");
   };
 
   const genreateScrollDepth = (scrollRes: any) => {
