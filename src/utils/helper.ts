@@ -98,6 +98,29 @@ export const Reactenv = {
     process.env.NEXT_PUBLIC_CONTENT_ENTITY_PREFIX || "",
 };
 
+export const mapArticlesData = (articles: any) => {
+  if (articles?.length > 0) {
+    return articles?.map((data: any) => ({
+      id: data?.article?.article_id,
+      title: data?.article?.title,
+      author: data?.article?.authors?.name,
+      published_date: data?.article?.published_date,
+      total_time_spent: data?.total_time_spent,
+      average_time_spent: data?.average_time_spent,
+      category: data?.article?.category,
+      users: data?.users?.toLocaleString(),
+      page_views: data?.page_views?.toLocaleString(),
+      recirculation: `${data?.recirculation || 0} %`,
+      scrolldepth: `${data?.scroll_depth_percentage || 0} %`,
+      ad_revenue: `$${Math.floor(Math.random() * 100) + 1}`,
+      series: data?.series,
+      valid_play_views: data?.valid_play_views,
+      labels: data?.labels
+    }));
+  }
+};
+
+
 export const mapArticleData = (topPostToday: any) => {
   return topPostToday?.map((data: any) => ({
     id: data?.article?.article_id,

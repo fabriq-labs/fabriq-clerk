@@ -6,13 +6,18 @@ import Layout from "@components/layout";
 import moment from "moment";
 import { Row, Col, Pagination, Button, DatePicker, Select, Radio } from "antd";
 
-import { getQuarterFromDate, formationTimezone } from "@/utils/helper";
+import {
+  getQuarterFromDate,
+  formationTimezone,
+  mapArticlesData,
+} from "@/utils/helper";
 import ErrorResult from "@/components/error_result";
 import SegmentedChartSelector from "./components/article_list_segment";
 
 import LineChart from "@/components/chart/linechart";
 import BarChart from "@/components/barchart";
 import ArticleCountView from "./components/article_count";
+import ArticleTableCard from "./components/article_table";
 
 export default function ArticleList() {
   const [minichartLoader, setMiniChartLoader] = useState(false);
@@ -128,6 +133,12 @@ export default function ArticleList() {
       filterFunction(true);
     }
   }, [closeFilter, selectedFilter, selectedFilterValue]);
+
+  useEffect(() => {
+    if (sortEnabled) {
+      get_TableData_Sort(selectedSort);
+    }
+  }, [sortEnabled, selectedSort, sortDirection, pageViewssortDirection]);
 
   function timeRange(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -268,132 +279,179 @@ export default function ArticleList() {
     realTime: any,
     isLoader = true
   ) => {
-    // let real_time_date = moment(selectedDate).format("YYYY-MM-DD");
-    // const overviewIds = result?.map((item) => {
-    //   return item?.article?.article_id;
-    // });
+    let real_time_date = moment(selectedDate).format("YYYY-MM-DD");
+    const overviewIds = result?.map((item: any) => {
+      return item?.article?.article_id;
+    });
 
-    // if (!tableLoader && isLoader) {
-    //   setTableLoader(true);
-    // }
+    if (!tableLoader && isLoader) {
+      setTableLoader(true);
+    }
 
-    // if (realTime) {
-    //   setMiniChartLoader(true);
-    // }
+    if (realTime) {
+      setMiniChartLoader(true);
+    }
 
-    // const req = {
-    //   period_date: real_time_date || formationTimezone(moment(), "YYYY-MM-DD"),
-    //   site_id: siteDetails?.site_id,
-    //   article_id: overviewIds
-    // };
+    const req = {
+      period_date: real_time_date || formationTimezone(moment(), "YYYY-MM-DD"),
+      site_id: siteDetails?.site_id,
+      article_id: overviewIds,
+    };
 
-    // const res = realTime
-    //   ? await Overview.getLast30Days(req)
-    //   : await Overview.getLast30DaysArticle(req);
+    console.log("req", req);
 
-    // let obj = {};
+    const res = realTime
+      ? await axios.post("/api/article", {
+          operation: "getLast30Days",
+          variables: req,
+        })
+      : await axios.post("/api/article", {
+          operation: "getLast30DaysArticle",
+          variables: req,
+        });
 
-    // const lableValue = Array.from({ length: 24 }, (_, i) => i);
-    // if (res?.data?.data?.last30DaysData?.length > 0) {
-    //   res.data.data.last30DaysData.forEach((articleItem) => {
-    //     const article_id = articleItem?.article?.article_id;
+    let obj: any = {};
 
-    //     if (!obj[article_id]) {
-    //       obj[article_id] = {
-    //         series: [
-    //           {
-    //             name: "Page Views",
-    //             data: realTime ? lableValue?.map(() => 0) : []
-    //           }
-    //         ],
-    //         labels: []
-    //       };
-    //     }
+    const lableValue = Array.from({ length: 24 }, (_, i) => i);
+    if (res?.data?.data?.last30DaysData?.length > 0) {
+      res.data.data.last30DaysData.forEach((articleItem: any) => {
+        const article_id = articleItem?.article?.article_id;
 
-    //     if (realTime) {
-    //       obj[article_id].labels = lableValue?.map((item) =>
-    //         moment(item, "H").format("MMM D, h:mm a")
-    //       );
+        if (!obj[article_id]) {
+          obj[article_id] = {
+            series: [
+              {
+                name: "Page Views",
+                data: realTime ? lableValue?.map(() => 0) : [],
+              },
+            ],
+            labels: [],
+          };
+        }
 
-    //       const hourIndex = lableValue.indexOf(articleItem?.hour);
-    //       if (hourIndex !== -1) {
-    //         obj[article_id].series[0].data[hourIndex] = articleItem?.page_views;
-    //       }
-    //     } else {
-    //       let dateFormat = moment(articleItem.period_date).format("MMM DD");
-    //       obj[article_id].labels.push(dateFormat);
-    //       obj[article_id].series[0].data.push(articleItem?.page_views);
-    //     }
-    //   });
-    // }
+        if (realTime) {
+          obj[article_id].labels = lableValue?.map((item) =>
+            moment(item, "H").format("MMM D, h:mm a")
+          );
 
-    // // Loop through result to add series property based on author_id
-    // let updatedResult = result?.map((authorItem) => {
-    //   const article_id = authorItem?.article?.article_id;
-    //   const item = { ...authorItem };
+          const hourIndex = lableValue.indexOf(articleItem?.hour);
+          if (hourIndex !== -1) {
+            obj[article_id].series[0].data[hourIndex] = articleItem?.page_views;
+          }
+        } else {
+          let dateFormat = moment(articleItem.period_date).format("MMM DD");
+          obj[article_id].labels.push(dateFormat);
+          obj[article_id].series[0].data.push(articleItem?.page_views);
+        }
+      });
+    }
 
-    //   if (obj[article_id]) {
-    //     item.series = obj[article_id].series;
-    //     item.labels = obj[article_id].labels;
-    //   }
+    // Loop through result to add series property based on author_id
+    let updatedResult = result?.map((authorItem: any) => {
+      const article_id = authorItem?.article?.article_id;
+      const item = { ...authorItem };
 
-    //   return item;
-    // });
+      if (obj[article_id]) {
+        item.series = obj[article_id].series;
+        item.labels = obj[article_id].labels;
+      }
 
-    // updatedResult = updatedResult?.map((post) => {
-    //   if (post?.scroll_depth) {
-    //     const scrollDepthData = post.scroll_depth;
+      return item;
+    });
 
-    //     const total_calc =
-    //       (scrollDepthData?.["crossed_10_users"] || 0) * 10 +
-    //       (scrollDepthData?.["crossed_20_users"] || 0) * 20 +
-    //       (scrollDepthData?.["crossed_30_users"] || 0) * 30 +
-    //       (scrollDepthData?.["crossed_40_users"] || 0) * 40 +
-    //       (scrollDepthData?.["crossed_50_users"] || 0) * 50 +
-    //       (scrollDepthData?.["crossed_60_users"] || 0) * 60 +
-    //       (scrollDepthData?.["crossed_70_users"] || 0) * 70 +
-    //       (scrollDepthData?.["crossed_80_users"] || 0) * 80 +
-    //       (scrollDepthData?.["crossed_90_users"] || 0) * 90 +
-    //       (scrollDepthData?.["crossed_100_users"] || 0) * 100;
+    updatedResult = updatedResult?.map((post: any) => {
+      const scrollDepthData = post?.scroll_depth || {};
 
-    //     // Calculate the total scroll depth percentage for the current post
-    //     const total_scroll_depth_percentage =
-    //       (scrollDepthData?.["crossed_10_users"] || 0) +
-    //       (scrollDepthData?.["crossed_20_users"] || 0) +
-    //       (scrollDepthData?.["crossed_30_users"] || 0) +
-    //       (scrollDepthData?.["crossed_40_users"] || 0) +
-    //       (scrollDepthData?.["crossed_50_users"] || 0) +
-    //       (scrollDepthData?.["crossed_60_users"] || 0) +
-    //       (scrollDepthData?.["crossed_70_users"] || 0) +
-    //       (scrollDepthData?.["crossed_80_users"] || 0) +
-    //       (scrollDepthData?.["crossed_90_users"] || 0) +
-    //       (scrollDepthData?.["crossed_100_users"] || 0);
+      const total_calc = Object.entries(scrollDepthData).reduce(
+        (total, [key, value]: any) => {
+          const percentage = parseFloat(key.replace("crossed_", "")); // Extract percentage from key
+          return total + (value || 0) * percentage;
+        },
+        0
+      );
 
-    //     // Calculate the average combined scroll depth percentage for the current post
-    //     const avg_combined_percentage =
-    //       total_calc / total_scroll_depth_percentage;
+      const total_scroll_depth_percentage: any = Object.values(
+        scrollDepthData
+      ).reduce((total: any, value: any) => {
+        return total + (value || 0);
+      }, 0);
 
-    //     // Convert avg_combined_percentage to a number
-    //     const scroll_depth_percentage = parseFloat(
-    //       avg_combined_percentage.toFixed(2)
-    //     );
+      const avg_combined_percentage =
+        total_scroll_depth_percentage > 0
+          ? total_calc / total_scroll_depth_percentage
+          : 0;
 
-    //     // Add scroll_depth_percentage to the current post object
-    //     return {
-    //       ...post,
-    //       scroll_depth_percentage
-    //     };
-    //   } else {
-    //     // If scrollDepthData is null, return the original post object
-    //     return post;
-    //   }
-    // });
+      // Add scroll_depth_percentage to the current post object
+      return {
+        ...post,
+        scroll_depth_percentage: parseFloat(avg_combined_percentage.toFixed(2)),
+      };
+    });
 
-    // if (realTime) {
-    //   setMiniChartLoader(false);
-    // }
+    if (realTime) {
+      setMiniChartLoader(false);
+    }
     setTableLoader(false);
-    // setTableListData(updatedResult);
+    setTableListData(updatedResult);
+  };
+
+  const handleRealTimeSortAndFilter = (
+    sortValue: any,
+    filterValue: any,
+    page?: any,
+    segmentFilterValue = false,
+    realtimeData?: any
+  ) => {
+    let real_time_date = moment("2024-01-22" || selectedDate).format(
+      "YYYY-MM-DD"
+    );
+    const limitPerPage = 10;
+    const offset = limitPerPage * ((page || currentpage) - 1);
+
+    const filterField =
+      selectedFilter === "author"
+        ? "name"
+        : selectedFilter === "category"
+        ? "category"
+        : "published_date";
+
+    const sortKey = sortValue || selectedSort;
+    let filterParams = {
+      order_by: {
+        field: sortKey,
+        direction: sortKey === "users" ? sortDirection : pageViewssortDirection,
+      },
+      filter_field: filterField,
+      filter_value:
+        filterValue || (segmentFilterValue ? null : selectedFilterValue),
+    };
+
+    let period_date = real_time_date
+      ? real_time_date
+      : formationTimezone(moment(), "YYYY-MM-DD");
+
+    axios
+      .post("/api/article", {
+        operation: "getRealTimeFilter",
+        variables: {
+          period_date,
+          site_id: siteDetails.site_id,
+          filterParams,
+          offset,
+        },
+      })
+      .then((res: any) => {
+        if (res) {
+          const atomicDataList = res?.data?.data?.real_time_sort;
+          setOffsetValue(offset);
+          if (!page)
+            setTotalCount(res?.data?.data?.total_articles?.aggregate?.count);
+          getTableChartSeries(atomicDataList, true);
+        }
+      })
+      .catch(() => {
+        setTableLoader(false);
+      });
   };
 
   const formattedLabels = (labels: any) => {
@@ -554,7 +612,7 @@ export default function ArticleList() {
 
     const val = segement || segementValue;
     getRealtimeDataFromQuery(formattedDate);
-    // get_TableData_Sort(selectedSort, val, isSegmentTrue, formattedDate);
+    get_TableData_Sort(selectedSort, val, isSegmentTrue, formattedDate);
   };
 
   const handleMonthChange = (date: any) => {
@@ -588,28 +646,28 @@ export default function ArticleList() {
   const handleQuarterlyChange = (date: any) => {
     const selectedYear = date?.getFullYear();
     const quarter = getQuarterFromDate(date);
-    // setBarChartResponse((prevState: any) => ({
-    //   ...prevState,
-    //   labels: [],
-    //   series: [],
-    // }));
+    setBarChartResponse((prevState: any) => ({
+      ...prevState,
+      labels: [],
+      series: [],
+    }));
     setVisitorsData([]);
-    // setTableListData([]);
+    setTableListData([]);
     // getQuarterlyData(quarter, selectedYear);
     setSelectedQuarter(date);
   };
 
   const handleChangeChart = (value: any) => {
     setSelectedChartValue(value);
-    // if (segementValue === "monthly") {
-    //   generateDataMonthly(historicalChartResponse, value);
-    // } else if (segementValue === "yearly") {
-    //   const year = selectedYear?.getFullYear();
-    //   generateDataForYearChart(historicalChartResponse, year, value);
-    // } else if (segementValue === "quarterly") {
-    //   const quarter = getQuarterFromDate(selectedQuarter);
-    //   generateDataForQuarterChart(historicalChartResponse, quarter, value);
-    // }
+    if (segementValue === "monthly") {
+      // generateDataMonthly(historicalChartResponse, value);
+    } else if (segementValue === "yearly") {
+      // const year = selectedYear?.getFullYear();
+      // generateDataForYearChart(historicalChartResponse, year, value);
+    } else if (segementValue === "quarterly") {
+      const quarter = getQuarterFromDate(selectedQuarter);
+      // generateDataForQuarterChart(historicalChartResponse, quarter, value);
+    }
 
     chartData(value);
   };
@@ -625,7 +683,7 @@ export default function ArticleList() {
     } else if (segementValue === "yearly") {
       // handleYearlySortAndFilter(null, null, value);
     } else {
-      // handleRealTimeSortAndFilter(null, null, value);
+      handleRealTimeSortAndFilter(null, null, value);
     }
   };
 
@@ -672,12 +730,40 @@ export default function ArticleList() {
       } else if (segementValue === "yearly") {
         // handleYearlySortAndFilter(null, filterVal);
       } else {
-        // handleRealTimeSortAndFilter(null, filterVal);
+        handleRealTimeSortAndFilter(null, filterVal);
       }
     } else {
       setSelectedFilterValue(null);
-      // get_TableData_Sort(selectedSort);
+      get_TableData_Sort(selectedSort);
       setTableLoader(false);
+    }
+  };
+
+  const get_TableData_Sort = (
+    value: any,
+    segement?: any,
+    segmentFilterValue?: any,
+    realtimeData?: any
+  ) => {
+    let segementValueFinal = segement || segementValue;
+
+    setTableLoader(true);
+    setSortEnabled(false);
+
+    if (segementValueFinal === "monthly") {
+      // handleMonthlySortAndFilter(value, null);
+    } else if (segementValueFinal === "yearly") {
+      // handleYearlySortAndFilter(value, null);
+    } else if (segementValueFinal === "quarterly") {
+      // handleQuarterlySortAndFilter(value, null);
+    } else {
+      handleRealTimeSortAndFilter(
+        value,
+        null,
+        null,
+        segmentFilterValue,
+        realtimeData
+      );
     }
   };
 
@@ -688,6 +774,16 @@ export default function ArticleList() {
     let dateFormat: any = dateString.replace(/\//g, "-");
     setSelectedFilterValue(`${dateFormat}%`);
   }
+
+  const handleChangeSort = (value: any, direction: any) => {
+    setSelectedSort(value);
+    setSortEnabled(true);
+    if (value === "users") {
+      setSortDirection(direction);
+    } else {
+      setPageViewsSortDirection(direction);
+    }
+  };
 
   const getfilterData = (data: any) => {
     let filterData = data;
@@ -739,6 +835,12 @@ export default function ArticleList() {
   let children =
     selectedFilter === "author" ? filterData?.author : filterData?.tag;
   const dateFormat = "YYYY/MM/DD";
+
+  let title = "Page Views: 30 Days";
+  if (segementValue === "real-time") {
+    title = "Page Views: 24 Hours";
+  }
+  const data = mapArticlesData(tableListData);
 
   return (
     <Layout>
@@ -868,6 +970,7 @@ export default function ArticleList() {
                       defaultCurrent={1}
                       disabled={tableLoader}
                       current={currentpage}
+                      showSizeChanger={false}
                       total={totalCount}
                       onChange={handleChangePagination}
                     />
@@ -921,6 +1024,20 @@ export default function ArticleList() {
                     </div>
                   </div>
                 )}
+              </div>
+              <div className="article-list-table-wrapper">
+                <ArticleTableCard
+                  dataSource={data}
+                  segementValue={segementValue}
+                  loader={tableLoader}
+                  offsetValue={offsetValue}
+                  title={title}
+                  minichartLoader={minichartLoader}
+                  siteLink={siteDetails?.host_name}
+                  sortDirection={sortDirection}
+                  pageViewssortDirection={pageViewssortDirection}
+                  handleChangeSort={handleChangeSort}
+                />
               </div>
             </>
           )}

@@ -1,8 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tooltip, Empty, Row, Col } from "antd";
 import Link from "next/link";
+import Image from "next/image";
+import moment from "moment";
+import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
 
 import LineChartTiny from "@/components/chart/linechart_tiny";
+import { formatDuration } from "@/utils/format_duration";
+import { formationTimezone, formatNumber as format } from "@/utils/helper";
+
+import OpenLink from "../../../assets/open-link.webp";
+
+const formatDurationCategory = (value: any) => {
+  let formattedDuration;
+  const duration = moment.duration(value, "seconds");
+  formattedDuration = formatDuration(duration, "14px", "15px");
+  return formattedDuration;
+};
+
+const generateData = (series: any, labels: any) => {
+  const finalData = labels?.map((label: any, index: any) => ({
+    name: label,
+    pageViews: series?.[0]?.data?.[index] || 0,
+  }));
+
+  return finalData;
+};
 
 const ArticleTableCard = (props: any) => {
   const {
@@ -38,10 +61,11 @@ const ArticleTableCard = (props: any) => {
                 display: "flex",
                 flexDirection: "column",
                 float: "right",
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <Icon
-                type="caret-up"
+              <CaretUpOutlined
                 style={{
                   fontSize: 12,
                   marginLeft: 4,
@@ -54,8 +78,7 @@ const ArticleTableCard = (props: any) => {
                   }
                 }}
               />
-              <Icon
-                type="caret-down"
+              <CaretDownOutlined
                 style={{
                   fontSize: 12,
                   marginLeft: 4,
@@ -77,10 +100,11 @@ const ArticleTableCard = (props: any) => {
                 display: "flex",
                 flexDirection: "column",
                 float: "right",
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <Icon
-                type="caret-up"
+              <CaretUpOutlined
                 style={{
                   fontSize: 12,
                   marginLeft: 4,
@@ -96,8 +120,7 @@ const ArticleTableCard = (props: any) => {
                   }
                 }}
               />
-              <Icon
-                type="caret-down"
+              <CaretDownOutlined
                 style={{
                   fontSize: 12,
                   marginLeft: 4,
@@ -140,19 +163,21 @@ const ArticleTableCard = (props: any) => {
       </div>
       {loader ? (
         <div className="loader-wrapper">
-          <Skeleton />
+          <div className="loader-cotainer mini-list">
+            <div className="loader"></div>
+          </div>
         </div>
       ) : dataSource?.length > 0 ? (
         dataSource?.map((record: any, index: any) => (
           <div className="article-table-body">
             <Row gutter={[16, 16]} className="table-card-row">
               <Col span={8}>
-                <div style={{ display: "flex" }}>
+                <div className="flex">
                   <span className="list-article-key">
                     {offsetValue + index + 1}
                   </span>
                   <div className="list-article-content">
-                    <div style={{ display: "flex" }}>
+                    <div className="flex">
                       <Link
                         href={
                           segementValue === "real-time"
@@ -186,8 +211,8 @@ const ArticleTableCard = (props: any) => {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <img
-                            src={"/images/open-link.webp"}
+                          <Image
+                            src={OpenLink}
                             alt="link"
                             style={{
                               width: "12px",
@@ -207,7 +232,6 @@ const ArticleTableCard = (props: any) => {
                 <div className="list-view-chart-wrapper">
                   <div
                     className="list-view-chart"
-                    style={{ width: "100%", height: "100px" }}
                   >
                     <LineChartTiny
                       data={generateData(record?.series, record?.labels)}
