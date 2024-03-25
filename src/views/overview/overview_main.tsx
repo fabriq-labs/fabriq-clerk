@@ -226,24 +226,15 @@ const ArticleTableCard = (props: any) => {
                         className="column-title"
                         style={{ cursor: "pointer" }}
                       >
-                        {/* <Link
-                          href={`/content/article/${record?.id}?max_age=-1`}
-                          className="overview-title"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleClickTitle("article")}
-                        >
-                          <Tooltip title={record.title}>
-                            {record?.title}
-                          </Tooltip>
-                        </Link> */}
-                        <div
+                        <Link
+                          href={`/article/${record?.id}?max_age=-1`}
                           className="overview-title"
                           style={{ cursor: "pointer" }}
                         >
                           <Tooltip title={record.title}>
                             {record?.title}
                           </Tooltip>
-                        </div>
+                        </Link>
                       </div>
                       <div className="column-row">
                         {" "}
@@ -568,24 +559,15 @@ const VideoTableCard = ({ dataSource, siteLink }: any) => {
                         {index + 1}
                       </span>
                       <div className="column-container">
-                        {/* <Link
-                          to={`/content/article/${record?.article?.article_id}?max_age=-1`}
-                          className="overview-title"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleClickTitle("article")}
-                        >
-                          <Tooltip title={record?.article?.title}>
-                            {record?.article?.title}
-                          </Tooltip>
-                        </Link> */}
-                        <div
+                        <Link
+                          href={`/article/${record?.article?.article_id}?max_age=-1`}
                           className="overview-title"
                           style={{ cursor: "pointer" }}
                         >
                           <Tooltip title={record?.article?.title}>
                             {record?.article?.title}
                           </Tooltip>
-                        </div>
+                        </Link>
                         <div className="column-row">
                           <span>
                             Published on{" "}
@@ -756,7 +738,6 @@ const OverviewPage = () => {
   const [overviewTagsHour, setoverviewTagsHour] = useState([]);
   const [categorySeries, setCategorySeries] = useState({});
   const [videoList, setVideoList] = useState([]);
-
   const org_settingsVal:any = localStorage.getItem("org_settings")
   const org_settings = JSON.parse(org_settingsVal)
   const timeInterval = 30 * 60 * 1000;
@@ -826,8 +807,6 @@ const OverviewPage = () => {
     setSiteLink(siteInfo?.host_name);
 
     if (siteInfo) {
-      console.log("org_settings", org_settings);
-      
       const topPostvariables = {
         parameters: {
           site_id: `"${siteInfo?.site_id}"`,
@@ -1495,8 +1474,8 @@ const OverviewPage = () => {
                               }
                               alt=""
                               className="img-arrow"
-                              width={10}
-                              height={10}
+                              width={12}
+                              height={12}
                             />
                           </Tag>
                         )}

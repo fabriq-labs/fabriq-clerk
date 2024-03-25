@@ -41,7 +41,7 @@ async function sendMessage(userInput: string) {
   const aiState = getMutableAIState<typeof AI>();
   const params = {
     query: userInput,
-    data_source_id: 122,
+    data_source_id: 121,
     id: 12,
     is_sql: true,
   };
