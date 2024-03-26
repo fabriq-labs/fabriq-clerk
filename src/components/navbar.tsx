@@ -83,7 +83,7 @@ export default function Navbar() {
                 <Link href="/">
                   <span
                     className={`${
-                      isActive("/home") ? "tab active" : "tab"
+                      isActive("/") ? "tab active" : "tab"
                     } transition`}
                   >
                     Home
