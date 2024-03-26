@@ -1146,9 +1146,10 @@ export default function Audience() {
           </div>
         ) : (
           <>
+          {console.log("chartSeries", chartSeries)}
             <div className="article-page-chart">
               <div className="article-chart-content">
-                {segementValue === "monthly" || segementValue === "daily" ? (
+                {segementValue === "monthly" || segementValue === "real-time" ? (
                   chartSeries?.series?.some(
                     (series: any) => series?.data?.length > 0
                   ) ? (
@@ -1304,7 +1305,7 @@ export default function Audience() {
                 </div>
               </Col>
             </Row>
-            {segementValue !== "daily" && (
+            {segementValue !== "real-time" && (
               <Row gutter={[16, 16]} style={{ height: "100%", marginTop: 15 }}>
                 <div className="flex-container-audience">
                   <Col span={12}>

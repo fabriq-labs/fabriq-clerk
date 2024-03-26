@@ -19,6 +19,7 @@ export const USER_ANALYTICS_DAILY = `
         churned_users
         churned_percent
         loggedin_and_visitor_ratio
+        user_activity
     }
 
     HourlyData: ${Reactenv.content_analytics_entity_prefix}user_analytics_hourly(where: {site_id: {_eq: $site_id}, period_date: {_eq: $period_date}}) {
@@ -58,6 +59,7 @@ export const USER_ANALYTICS_MONTHLY = `
         anonymous_frequency_buckets
         churned_users
         churned_percent
+        user_activity
     }
 
     DailyData: ${Reactenv.content_analytics_entity_prefix}user_analytics_daily(where: {site_id: {_eq: $site_id}, period_date: {_like: $partial_period_date}}) {
@@ -127,6 +129,7 @@ export const USER_ANALYTICS_QUATERLY = `
         client_wise_split
         category_list
         loggedin_and_visitor_ratio
+        user_activity
     }
 
     MonthlyData: ${Reactenv.content_analytics_entity_prefix}user_analytics_monthly(where: {site_id: {_eq: $site_id}, period_month: {_in: $period_month}, period_year: {_eq: $period_year}}) {
@@ -176,6 +179,7 @@ export const USER_ANALYTICS_YEARLY = `
         client_wise_split
         category_list
         loggedin_and_visitor_ratio
+        user_activity
     }
 
     MonthlyData: ${Reactenv.content_analytics_entity_prefix}user_analytics_monthly(where: {site_id: {_eq: $site_id}, period_month: {_in: $period_month}, period_year: {_eq: $monthly_year}}) {

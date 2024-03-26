@@ -1,7 +1,9 @@
 import React from "react";
-// import ReactApexChart from "react-apexcharts";
+import dynamic from "next/dynamic";
 
-const ReactApexChart = React.lazy(() => import("react-apexcharts"));
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 import { formatNumber } from "@/utils/helper";
 
@@ -96,6 +98,7 @@ class ScatterChart extends React.Component<any, any> {
           options={this.state.options}
           series={this.state.series}
           type="bar"
+          width={"100%"}
           height={350}
         />
       </div>

@@ -455,3 +455,56 @@ body::-webkit-scrollbar {
   height: 100%;
   padding: 10px;
 }
+
+.tooltip-label {
+  font-weight: 700;
+}
+
+.arrow_box {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.gray-text {
+  color: gray;
+}
+
+.label-container-overview.stacked-div {
+  color: #7f56d9;
+  line-height: 1.333;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-self: center;
+}
+
+.additional-info.stacked-div{
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  align-self: center;
+  margin-right: 0 !important;
+  border-color: transparent !important;
+  display: flex;
+}
+
+.img-arrow {
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  align-self: center;
+}
+
+.green-sec {
+  color: #87d068;
+  background: #f6ffed;
+}
+
+.red-sec {
+  color: #f5222d;
+  background: #fff1f0;
+}

@@ -71,15 +71,15 @@ const StackedBarChart = ({
               <div class="tooltip-label">
                 ${w?.globals?.seriesNames[seriesIndex]}
               </div>
-              <div class ="label-container-overview">
+              <div class="label-container-overview stacked-div">
               ${formatNumber(tooltipLabels?.[seriesIndex])} 
               ${
                 secondTooltipLabels?.[seriesIndex]
                   ? !secondTooltipLabels?.[seriesIndex].includes("-")
-                    ? `<span class="ant-tag ant-tag-green additional-info">
+                    ? `<span class="ant-tag ant-tag-green additional-info stacked-div green-sec">
                       ${secondTooltipLabels?.[seriesIndex]}%<img src="/images/up-arrow_new.png" alt="" class="img-arrow" width="14" height="14">
                     </span>`
-                    : `<span class="ant-tag ant-tag-red additional-info">
+                    : `<span class="ant-tag ant-tag-red additional-info stacked-div red-sec">
                       ${secondTooltipLabels?.[seriesIndex].substring(
                         1
                       )}%<img src="/images/down-arrow_new.png" alt="" class="img-arrow" width="14" height="14">

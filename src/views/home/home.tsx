@@ -14,46 +14,46 @@ export default function HomePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const canManage = has && has({ permission: "org:feature:protected" });
-  const getSites = () => {
-    axios
-      .post("/api/sites", {})
-      .then((result) => {
-        let resultData = result?.data;
-        localStorage.setItem("sites", JSON.stringify(resultData));
-        localStorage.setItem("site_details", JSON.stringify(resultData[0]))
-          if (canManage) {
-            router.push("/pipeline");
-          }
-          setLoading(false);
-        return resultData;
-      })
-      .catch((err) => {
-        throw err;
-      });
-      axios
-      .post("/api/organization", {
-        operation:"getOrgSettings"
-      })
-      .then((result) => {
-        let resultData = result?.data;
-        
-        localStorage.setItem("org_settings", resultData?.data?.organizations[0]?.settings)
 
-      })
-      .catch((err) => {
-        throw err;
+  const getSites = async () => {
+    try {
+      const sitesResult = await axios.post("/api/sites", {});
+      const orgSettingsResult = await axios.post("/api/organization", {
+        operation: "getOrgSettings",
       });
-  }
+  
+      const sitesData = sitesResult.data;
+      const orgSettingsData = orgSettingsResult.data;
+  
+      localStorage.setItem("sites", JSON.stringify(sitesData));
+      localStorage.setItem("site_details", JSON.stringify(sitesData[0]));
+  
+      localStorage.setItem(
+        "org_settings",
+        orgSettingsData?.data?.organizations[0]?.settings
+      );
+  
+      if (canManage) {
+        router.push("/pipeline");
+      }
+      
+      setLoading(false);
+  
+      return sitesData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  };
+  
   useEffect(() => {
-   
-    getSites()
+    getSites();
   }, [canManage]);
 
   if (loading) {
     return null;
   }
 
-  
   return (
     <Layout>
       <Protect permission="org:demo:all">
