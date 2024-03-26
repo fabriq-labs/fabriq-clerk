@@ -35,14 +35,22 @@ export default function HomePage() {
           "org_settings",
           orgSettingsData?.data?.organizations[0]?.settings
         );
+        if (canManage) {
+          router.push("/pipeline");
+        }
+        
+        setLoading(false);
         return sitesData;
       }
-      
-      if (canManage) {
-        router.push("/pipeline");
+      else {
+        if (canManage) {
+          router.push("/pipeline");
+        }
+        
+        setLoading(false);
       }
       
-      setLoading(false);
+      
   
       setError(false);
       

@@ -1417,6 +1417,8 @@ const OverviewPage = () => {
                           <div className="icon-container">
                             <Image
                               src={button.icon}
+                              width={16}
+                              height={16}
                               alt="Icon"
                               className="icon"
                             />
