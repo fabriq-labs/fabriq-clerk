@@ -5,8 +5,6 @@ import moment from "moment";
 import Image from "next/image";
 
 import { formationTimezone } from "@/utils/helper";
-import OpenLink from "../../assets/open-link.webp";
-import AvatarImage from "../../assets/image-7.png";
 
 const HeaderContainer = (props: any) => {
   const { title, value, loader, tooltip }: any = props;
@@ -153,8 +151,14 @@ const Category = (props: any) => {
           }
         >
           <Image
-            src={AvatarImage || ImageValue}
-            style={{ width: "100px" }}
+            src={
+              view === "author"
+                ? headerData?.image_url ||
+                  `/images/avatars/image-${imageIndex + 1}.png`
+                : ImageValue
+            }
+            width={100}
+            height={100}
             alt="logo"
             className={
               view === "author" ? "author-logo-img" : "article-logo-img"
@@ -204,11 +208,11 @@ const Category = (props: any) => {
                   rel="noreferrer"
                 >
                   <Image
-                    src={OpenLink}
+                    src={"/images/open-link.webp"}
                     alt="link"
+                    width={12}
+                    height={12}
                     style={{
-                      width: "12px",
-                      height: "12px",
                       marginBottom: "2px",
                     }}
                   />

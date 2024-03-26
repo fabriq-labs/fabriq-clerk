@@ -1,40 +1,33 @@
-import AppointmentLogo from "../../assets/medical-appointment.png";
-import AdviceLogo from "../../assets/advice.png";
-import MedicalTeamLogo from "../../assets/medical-team.png";
-import BudgetLogo from "../../assets/budget.png";
-import AmbulanceLogo from "../../assets/ambulance.png";
-import BedLogo from "../../assets/hospital-bed.png";
-
 export const cardData = [
   {
     title: "Appointments",
     content: { avg: 14.45, total: 480, status: "decreased" },
-    image: AppointmentLogo,
+    image: "/images/medical-appointment.png",
   },
   {
     title: "Total Patients",
     content: { avg: 20.34, total: 250, status: "increased" },
-    image: AdviceLogo,
+    image: "/images/advice.png",
   },
   {
     title: "Total Doctors",
     content: { avg: 33.5, total: 88, status: "decreased" },
-    image: MedicalTeamLogo,
+    image: "/images/medical-team.png",
   },
   {
     title: "Revenue",
     content: { avg: 10, total: 342567, status: "increased" },
-    image: BudgetLogo,
+    image: "/images/budget.png",
   },
   {
     title: "Ambulance",
     content: { avg: 10, total: 32, status: "increased" },
-    image: AmbulanceLogo,
+    image: "/images/ambulance.png",
   },
   {
     title: "Total Beds",
     content: { avg: 10, total: 86, status: "increased" },
-    image: BedLogo,
+    image: "/images/hospital-bed.png",
   },
 ];
 
@@ -81,7 +74,6 @@ export const data = [
   },
 ];
 
-
 export const healthData = [
   { name: "Critical Conditions", value: 15 },
   { name: "Serious Cases", value: 30 },
@@ -90,7 +82,6 @@ export const healthData = [
   { name: "Post-Surgery", value: 12 },
   { name: "Chronic Disease", value: 40 },
 ];
-
 
 export const tableData = [
   {
@@ -244,7 +235,7 @@ export const weeklyIncome = [
   { date: "2024-02-18", earnings: 28080 },
   { date: "2024-02-19", earnings: 18904 },
   { date: "2024-02-20", earnings: 23290 },
-  { date: "2024-02-21", earnings: 34490 }
+  { date: "2024-02-21", earnings: 34490 },
 ];
 
 export const appointments = [
@@ -259,7 +250,6 @@ export const appointments = [
   { patient: "Ivy Harris", time: "11:15 AM" },
   { patient: "Jack Turner", time: "15:20 PM" },
 ];
-
 
 export const formatNumber = (value: number) => {
   if (value >= 1000000) {
@@ -277,5 +267,3 @@ export const emergencyRoomData = {
   availableBeds: 28,
   averageWaitTime: 15,
 };
-
-

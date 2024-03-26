@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,22 +11,15 @@ import RedshiftDestination from "./redshift";
 
 import Layout from "../../components/layout";
 
-// assets
-import PostgresLogo from "../../assets/db_logos/pg.png";
-import RedshiftLogo from "../../assets/db_logos/redshift.png";
-import BigqueryLogo from "../../assets/db_logos/bigquery.png";
-
 const LogoComponent = ({ destinationType }: any) => {
-  if (destinationType === "redshift") {
-    return <Image src={RedshiftLogo} alt="db-logo" width={60} height={60} />;
-  }
-  if (destinationType === "postgres") {
-    return <Image src={PostgresLogo} alt="db-logo" width={60} height={60} />;
-  }
-  if (destinationType === "bigquery") {
-    return <Image src={BigqueryLogo} alt="db-logo" width={60} height={60} />;
-  }
-  return null;
+  return (
+    <Image
+      src={`/images/db_logos/${destinationType}.png`}
+      alt="db-logo"
+      width={60}
+      height={60}
+    />
+  );
 };
 
 export default function Destination() {

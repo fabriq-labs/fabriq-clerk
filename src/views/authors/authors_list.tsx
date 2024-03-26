@@ -3,20 +3,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Row, Col, Tooltip, Table, Empty, Radio, Pagination } from "antd";
-import Layout from "@components/layout";
-import { formationTimezone, getQuarterFromDate } from "@/utils/helper";
 import moment from "moment";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import LineChartTiny from "@/components/charts/tiny_line_chart";
 import { DatepickerComponent } from "@/components/authors/date_picker";
 import ErrorResult from "@/components/error_result";
 import { formatDuration } from "@/utils/format_duration";
-import Link from "next/link";
-import Image from "next/image";
-import Avatar from "../../assets/avatars/image-7.png";
-import Upload from "../../assets/upload.png";
-import DownArrow from "../../assets/down-arrow_nw.png";
-import OpenLink from "../../assets/open-link.webp";
-import { useRouter } from "next/navigation";
+import Layout from "@components/layout";
+import { formationTimezone, getQuarterFromDate } from "@/utils/helper";
 
 let siteDetails: any = {
   id: 36,
@@ -363,10 +360,13 @@ export const AuthorTableCard = ({
                   <div className="list-author-logo">
                     {" "}
                     <Image
-                      src={record?.image_url || Avatar}
-                      className="author-logo-img"
+                      src={
+                        record?.image_url ||
+                        `/images/avatars/image-${index + 1}.png`
+                      }
                       alt="blog"
-                      style={{ width: "70px" }}
+                      width={70}
+                      height={70}
                     />
                   </div>
                   <Link
@@ -426,7 +426,11 @@ export const AuthorTableCard = ({
                   }}
                 >
                   <Image
-                    src={childrenOpen === index ? Upload : DownArrow}
+                    src={
+                      childrenOpen === index
+                        ? "/images/upload.png"
+                        : "/images/down-arrow_nw.png"
+                    }
                     alt="Icon"
                     height={16}
                     width={16}
@@ -547,12 +551,10 @@ const ExpandedRow = ({
                 rel="noreferrer"
               >
                 <Image
-                  src={OpenLink}
+                  src={"/images/open-link.webp"}
                   alt="link"
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                  }}
+                  width={12}
+                  height={12}
                 />
               </a>
             </div>
@@ -1086,7 +1088,7 @@ export default function AuthorList() {
   };
 
   const handleClickArticle = (id: any) => {
-    // router.push(`/article/${id}`);
+    router.push(`/article/${id}`);
   };
 
   const handleMonthChange = (date: any) => {

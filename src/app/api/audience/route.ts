@@ -1,4 +1,4 @@
-import axios from "../axios_graphql";
+import axios from "../content_graphql";
 import { NextRequest, NextResponse } from "next/server";
 
 import {
@@ -11,7 +11,7 @@ import {
 // Example function for making a GraphQL call
 const makeGraphQLCall = async (query: any, variables: any) => {
   try {
-    const response = await axios.post("console/v1/graphql", {
+    const response = await axios.post("/v1/graphql", {
       query,
       variables,
     });

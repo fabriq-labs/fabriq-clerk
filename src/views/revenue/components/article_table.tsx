@@ -5,8 +5,6 @@ import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
 
-import UpArrow from "../../../assets/upload.png";
-import DownArrow from "../../../assets/down-arrow_nw.png";
 import LineChartTiny from "@/components/chart/linechart_tiny";
 import ExpandedRow from "./expend_row";
 
@@ -481,7 +479,7 @@ const ArticleTableCard = (props: any) => {
                   }}
                 >
                   <Image
-                    src={childrenOpen === index ? UpArrow : DownArrow}
+                    src={childrenOpen === index ? "/images/upload.png" : "/images/down-arrow_nw.png"}
                     alt="Icon"
                     height={16}
                     width={16}

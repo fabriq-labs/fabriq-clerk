@@ -9,8 +9,6 @@ import LineChartTiny from "@/components/chart/linechart_tiny";
 import { formatDuration } from "@/utils/format_duration";
 import { formationTimezone, formatNumber as format } from "@/utils/helper";
 
-import OpenLink from "../../../assets/open-link.webp";
-
 const formatDurationCategory = (value: any) => {
   let formattedDuration;
   const duration = moment.duration(value, "seconds");
@@ -62,7 +60,7 @@ const ArticleTableCard = (props: any) => {
                 flexDirection: "column",
                 float: "right",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               <CaretUpOutlined
@@ -101,7 +99,7 @@ const ArticleTableCard = (props: any) => {
                 flexDirection: "column",
                 float: "right",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               <CaretUpOutlined
@@ -212,12 +210,10 @@ const ArticleTableCard = (props: any) => {
                           rel="noreferrer"
                         >
                           <Image
-                            src={OpenLink}
+                            src={"/images/open-link.webp"}
                             alt="link"
-                            style={{
-                              width: "12px",
-                              height: "12px",
-                            }}
+                            width={12}
+                            height={12}
                           />
                         </a>
                       </span>
@@ -230,9 +226,7 @@ const ArticleTableCard = (props: any) => {
               </Col>
               <Col span={3}>
                 <div className="list-view-chart-wrapper">
-                  <div
-                    className="list-view-chart"
-                  >
+                  <div className="list-view-chart">
                     <LineChartTiny
                       data={generateData(record?.series, record?.labels)}
                       dataKey={"pageViews"}
