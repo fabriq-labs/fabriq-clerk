@@ -16,25 +16,28 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const canManage = has && has({ permission: "org:feature:protected" });
-
+  const mediaOrg = has && has({ permission: "org:media:all" });
   const getSites = async () => {
     try {
-      const sitesResult = await axios.get("/api/sites");
-      const orgSettingsResult = await axios.post("/api/organization", {
-        operation: "getOrgSettings",
-      });
-  
-      const sitesData = sitesResult.data;
-      const orgSettingsData = orgSettingsResult.data;
-  
-      localStorage.setItem("sites", JSON.stringify(sitesData));
-      localStorage.setItem("site_details", JSON.stringify(sitesData[0]));
-  
-      localStorage.setItem(
-        "org_settings",
-        orgSettingsData?.data?.organizations[0]?.settings
-      );
-  
+      if (mediaOrg){
+        const sitesResult = await axios.get("/api/sites");
+        const orgSettingsResult = await axios.post("/api/organization", {
+          operation: "getOrgSettings",
+        });
+    
+        const sitesData = sitesResult.data;
+        const orgSettingsData = orgSettingsResult.data;
+    
+        localStorage.setItem("sites", JSON.stringify(sitesData));
+        localStorage.setItem("site_details", JSON.stringify(sitesData[0]));
+    
+        localStorage.setItem(
+          "org_settings",
+          orgSettingsData?.data?.organizations[0]?.settings
+        );
+        return sitesData;
+      }
+      
       if (canManage) {
         router.push("/pipeline");
       }
@@ -42,7 +45,7 @@ export default function HomePage() {
       setLoading(false);
   
       setError(false);
-      return sitesData;
+      
     } catch (error) {
       console.error("Error fetching data:", error);
       setLoading(false);
