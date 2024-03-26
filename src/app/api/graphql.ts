@@ -121,6 +121,15 @@ async function create_user(data: any) {
   return do_graphql(query, variables);
 }
 
+export const user_create_query = `mutation insert_users($name: String, $email: String, $api_key: String, $org_id: Int, $updated_at: timestamptz, $created_at: timestamptz) {
+  insert_users(objects: {name: $name, email: $email, api_key: $api_key, home_db_slug: "", org_id: $org_id, updated_at: $updated_at, created_at: $created_at}) {
+    returning {
+      name
+      id
+    }
+  }
+}`;
+
 async function delete_user(user_id: any) {
   const query = `mutation delete_users($id: Int) {
     delete_users(where: {id: $id}) {
@@ -137,9 +146,4 @@ async function delete_user(user_id: any) {
   return do_graphql(query, variables);
 }
 
-export {
-  get_pipeline_deep,
-  update_external_id,
-  delete_user,
-  create_user,
-};
+export { get_pipeline_deep, update_external_id, delete_user, create_user };
