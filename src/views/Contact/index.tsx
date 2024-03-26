@@ -145,11 +145,11 @@ export const Contact = () => {
                       onChange={(e) => handleChangeSearch(e)}
                     />
                   </div>
-                  {haveCreatePermission && (
+                  {/* {haveCreatePermission && ( */}
                     <Link href="/contact/create">
                       <span className="contact-add-button">Add Contact</span>
                     </Link>
-                  )}
+                  {/* )} */}
                 </div>
                 <div className="contact-body">
                   <Table

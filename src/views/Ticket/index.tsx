@@ -26,7 +26,7 @@ export const Ticket = () => {
   const [userFilter, setUserFilter] = useState(null);
   const [priorityFilter, setPriorityFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
-  const [userList, setUserList]:any = useState(null);
+  const [userList, setUserList]: any = useState(null);
   const router = useRouter();
   const pathname = usePathname();
   const { orgRole }: any = useAuth();
@@ -121,7 +121,7 @@ export const Ticket = () => {
       dataIndex: "assignee",
       key: "assignee",
       render: (assigneeId: any) => mapAssigneeIdToName(assigneeId),
-      width: "10%"
+      width: "10%",
     },
     {
       title: "Priority",
@@ -305,11 +305,11 @@ export const Ticket = () => {
                       />
                     </div>
                   </div>
-                  {haveCreatePermission && (
+                  {/* {haveCreatePermission && ( */}
                     <Link href="/ticket/create">
                       <span className="contact-add-button">Add Ticket</span>
                     </Link>
-                  )}
+                  {/* )} */}
                 </div>
                 <div className="contact-body">
                   <Table

@@ -140,7 +140,7 @@ const CreateCompany = () => {
   const [addAssociate, setAddAssociate]: any = useState({});
   const [contactList, setContactList] = useState([]);
   const [isModalEdited, setISModalEdited] = useState(null);
-  const [userList, setUserList]:any = useState(null);
+  const [userList, setUserList]: any = useState(null);
   const router = useRouter();
   const { id }: any = useParams();
   const [form] = Form.useForm();
@@ -189,6 +189,12 @@ const CreateCompany = () => {
             incorporation_date: initialValues.incorporation_date
               ? dayjs(initialValues.incorporation_date, "DD-MM-YYYY")
               : null,
+            agm_date: initialValues.agm_date
+              ? dayjs(initialValues.agm_date, "YYYY-MM-DD")
+              : null,
+            balancesheet_date: initialValues.balancesheet_date
+              ? dayjs(initialValues.balancesheet_date, "YYYY-MM-DD")
+              : null,
           };
           form.setFieldsValue(formattedInitialValues);
           setAssociateData(res?.data?.data?.associate);
@@ -206,6 +212,9 @@ const CreateCompany = () => {
     Object.keys(values).forEach((key) => {
       if (key === "incorporation_date") {
         values[key] = values[key] && values[key].format("DD-MM-YYYY");
+      }
+      if (key === "agm_date" || key === "balancesheet_date") {
+        values[key] = values[key] && values[key].format("YYYY-MM-DD");
       } else if (typeof values[key] === "undefined") {
         // Handle optional fields with default values
         values[key] = null;
@@ -363,6 +372,15 @@ const CreateCompany = () => {
 
   const handleOk = () => {
     setModalConfirmLoading(true);
+    Object.keys(addAssociate).forEach((key) => {
+      if (key === "incorporation_date") {
+        addAssociate[key] =
+          addAssociate[key] && addAssociate[key].format("DD-MM-YYYY");
+      } else if (addAssociate[key] === "") {
+        // Handle optional fields with default values
+        addAssociate[key] = null;
+      }
+    });
     if (isModalEdited !== null) {
       let variables: any = {
         id: isModalEdited,
@@ -411,12 +429,16 @@ const CreateCompany = () => {
       share: associateData[key]?.share || "",
     }));
 
-  const companyListOptions =
+  const contactListOptions =
     contactList &&
     contactList.map(({ id, name }) => ({
       value: String(id),
       label: name || "Unknown",
     }));
+
+  console.log("associate", transformedData, associateData);
+
+  // console.log("contactListOptions", contactListOptions);
 
   return (
     <Layout>
@@ -617,6 +639,42 @@ const CreateCompany = () => {
               <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "50%" }}>
                   <Form.Item
+                    label="Last AGM Date"
+                    name="agm_date"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      format={"DD-MM-YYYY"}
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
+                    label="Date of Balance sheet"
+                    name="balancesheet_date"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      format={"DD-MM-YYYY"}
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
                     label="Tag"
                     name="tag"
                     rules={[
@@ -784,7 +842,7 @@ const CreateCompany = () => {
                   )
               }
               disabled={true}
-              options={companyListOptions}
+              options={contactListOptions}
               value={addAssociate && JSON.stringify(addAssociate?.contact_id)}
             />
           </div>
@@ -822,7 +880,7 @@ const CreateCompany = () => {
                 addAssociate?.appointment_date &&
                 Object.keys(addAssociate).length
                   ? dayjs(addAssociate?.appointment_date, "DD-MM-YYYY")
-                  : ""
+                  : null
               }
               disabled={true}
             />
@@ -839,7 +897,7 @@ const CreateCompany = () => {
                 addAssociate?.renewal_date &&
                 Object.keys(addAssociate).length
                   ? dayjs(addAssociate?.renewal_date, "DD-MM-YYYY")
-                  : ""
+                  : null
               }
               disabled={true}
             />

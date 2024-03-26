@@ -122,11 +122,11 @@ export const Trademark = () => {
                       onChange={(e) => handleChangeSearch(e)}
                     />
                   </div>
-                  {haveCreatePermission && (
+                  {/* {haveCreatePermission && ( */}
                     <Link href="/trademark/create">
                       <span className="contact-add-button">Add Trademark</span>
                     </Link>
-                  )}
+                  {/* )} */}
                 </div>
                 <div className="contact-body">
                   <Table

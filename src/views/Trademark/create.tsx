@@ -10,6 +10,14 @@ import dayjs from "dayjs";
 import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 
+const markTypeOptions: { value: any; label: React.ReactNode }[] = [
+  { value: "Word mark", label: "Word mark" },
+  {
+    value: "Logo",
+    label: "Logo",
+  }
+];
+
 const CreateTrademark = () => {
   const [loader, setLoader] = useState(false);
   const [addTrademark, setAddTrademark] = useState([]);
@@ -225,6 +233,7 @@ const CreateTrademark = () => {
                     <Select
                       placeholder="Please select a type"
                       options={companyList}
+                      showSearch
                       onChange={(value) =>
                         handleCompanyChange(value, companyData)
                       }
@@ -315,6 +324,52 @@ const CreateTrademark = () => {
                   >
                     <Input style={{ width: "100%" }} />
                   </Form.Item>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
+                    label="Mark"
+                    name="mark"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a mark "
+                      options={markTypeOptions}
+                    />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
+                    label="Trademark Number"
+                    name="number"
+                    rules={[{ required: false, message: "Please input!" }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
+                <div style={{ width: "50%" }}>
+                  <Form.Item
+                    label="Class"
+                    name="class"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "50%" }}>
                 </div>
               </div>
               <Form.Item

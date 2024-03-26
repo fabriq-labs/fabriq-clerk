@@ -17,7 +17,7 @@ export default function Navbar() {
   const { organization }: any = useOrganization();
   const pathname = usePathname();
 
-  const canManage = has && has({ permission: "org:feature:protected" });
+  // const canManage = has && has({ permission: "org:feature:protected" });
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -40,14 +40,12 @@ export default function Navbar() {
         </Link>
       ),
     },
-    canManage && {
+    {
       key: "2",
       label: (
-        <Protect permission="org:feature:protected">
-          <Link href="/organization-profile">
-            <span className={`menu-item`}>Organization Profile</span>
-          </Link>
-        </Protect>
+        <Link href={"/organization-profile"}>
+          <span className={`menu-item`}>Organization Profile</span>
+        </Link>
       ),
     },
   ].filter(Boolean);

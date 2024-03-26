@@ -22,7 +22,8 @@ export async function GET(
     // Get a cookie
     const token = cookies().get("__session")?.value;
     const decoded = decodeJwt(token);
-    const org_id = decoded?.org_id;
+    // const org_id = decoded?.org_id;
+    const org_id = "org_2eDgJQWGJ0biBmIlgS7hBnzOI9n";
   
     const apiResponse = await graphqlApi(GET_USER_BY_ID, {
       id: parseInt(id as string, 10),

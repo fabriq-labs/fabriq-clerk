@@ -155,11 +155,11 @@ const Company = () => {
                       onChange={(e) => handleChangeSearch(e)}
                     />
                   </div>
-                  {haveCreatePermission && (
+                  {/* {haveCreatePermission && ( */}
                     <Link href="/company/create">
                       <span className="contact-add-button">Add Company</span>
                     </Link>
-                  )}
+                  {/* )} */}
                 </div>
                 <div className="contact-body">
                   <Table

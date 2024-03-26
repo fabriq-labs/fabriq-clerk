@@ -7,6 +7,9 @@ query get_trademark($org_id: Int) {
     registered_date
     id
     brand_name
+    mark
+    number
+    class
     company {
       id
       name
@@ -16,8 +19,8 @@ query get_trademark($org_id: Int) {
 `;
 
 const INSERT_TRADEMARK = `
-mutation insert_trademark($brand_name: String, $company_id: Int, $contact_id: jsonb, $org_id: Int, $registered_date: date, $renewal_date: date, $tag: String) {
-  insert_trademark(objects: {brand_name: $brand_name, company_id: $company_id, contact_id: $contact_id, org_id: $org_id, registered_date: $registered_date, renewal_date: $renewal_date, tag: $tag}) {
+mutation insert_trademark($brand_name: String, $company_id: Int, $contact_id: jsonb, $org_id: Int, $registered_date: date, $renewal_date: date, $tag: String, $class: String, $mark: String, $number: String) {
+  insert_trademark(objects: {brand_name: $brand_name, company_id: $company_id, contact_id: $contact_id, org_id: $org_id, registered_date: $registered_date, renewal_date: $renewal_date, tag: $tag, class: $class, mark: $mark, number: $number}) {
     returning {
       id
       brand_name
@@ -39,7 +42,7 @@ mutation update_trademark($id: Int!, $set: trademark_set_input!) {
 
 const GET_TRADEMARK_BY_ID = `
 query get_trademark_by_id($org_id: Int, $id: Int) {
-  trademark:trademark(where: {org_id: {_eq: $org_id}, id: {_eq: $id}}) {
+  trademark: trademark(where: {org_id: {_eq: $org_id}, id: {_eq: $id}}) {
     company_id
     contact_id
     id
@@ -47,8 +50,11 @@ query get_trademark_by_id($org_id: Int, $id: Int) {
     renewal_date
     tag
     brand_name
+    number
+    mark
+    class
   }
-   company: company(where: {org_id: {_eq: $org_id}}) {
+  company: company(where: {org_id: {_eq: $org_id}}) {
     id
     name
     company {
