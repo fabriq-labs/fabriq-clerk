@@ -5,7 +5,7 @@ import { UserButton, Protect, useAuth, useOrganization } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dropdown, MenuProps, Space, Typography } from "antd";
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined } from "@ant-design/icons";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -21,21 +21,24 @@ export default function Navbar() {
     return currentBasePath === basePath;
   };
 
- 
-  const onClick: MenuProps["onClick"] = ({ key }: any) => { };
-  const sitesValue:any = localStorage.getItem("sites") ? localStorage.getItem("sites") : ""
-  const sitesJson = JSON.parse(sitesValue);
-  const siteItems = sitesJson.map((item:any) => {
-    return {
-      key: item.site_id,
-      label: item.site_id,
-    }
-  })
+  const onClick: MenuProps["onClick"] = ({ key }: any) => {};
+  const sitesValue: any = localStorage.getItem("sites")
+    ? localStorage.getItem("sites")
+    : "";
+  const sitesJson = sitesValue && JSON.parse(sitesValue);
+  const siteItems =
+    sitesJson &&
+    sitesJson?.map((item: any) => {
+      return {
+        key: item.site_id,
+        label: item.site_id,
+      };
+    });
 
-  const onselect = (e:any) => {
-    const  site =  sitesJson.filter((obj: any) => obj.site_id === e.key);
-    localStorage.setItem("site_details", JSON.stringify(site[0])) 
-  }
+  const onselect = (e: any) => {
+    const site = sitesJson?.filter((obj: any) => obj.site_id === e.key);
+    localStorage.setItem("site_details", JSON.stringify(site[0]));
+  };
   const items: any = [
     {
       key: "1",
@@ -69,10 +72,10 @@ export default function Navbar() {
         <Dropdown
           className={`menu-item`}
           menu={{
-            items:siteItems,
+            items: siteItems,
             selectable: true,
-            defaultSelectedKeys: ['3'],
-            onClick:onselect
+            defaultSelectedKeys: ["3"],
+            onClick: onselect,
           }}
         >
           <Typography.Link>
@@ -93,7 +96,7 @@ export default function Navbar() {
     "/pipeline/create",
   ];
   const explorePaths = ["/explore/[chatId]", "/explore"];
-  const articlesPaths = ["/article/[articleId]","/article"];
+  const articlesPaths = ["/article/[articleId]", "/article"];
   const authorsPath = ["/author/[authorId]", "/author"];
   const chatPaths = ["/chat"];
   const setupPaths = ["/destination", "/user-profile", "/organization-profile"];
@@ -117,8 +120,9 @@ export default function Navbar() {
               <li>
                 <Link href="/">
                   <span
-                    className={`${isActive("/") ? "tab active" : "tab"
-                      } transition`}
+                    className={`${
+                      isActive("/") ? "tab active" : "tab"
+                    } transition`}
                   >
                     Home
                   </span>
@@ -129,8 +133,9 @@ export default function Navbar() {
               <li>
                 <Link href="/">
                   <span
-                    className={`tab ${isActive("/") ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActive("/") ? "active" : ""
+                    } transition`}
                   >
                     Overview
                   </span>
@@ -154,8 +159,9 @@ export default function Navbar() {
               <li>
                 <Link href="/author">
                   <span
-                    className={`tab ${isActiveAuthor ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActiveAuthor ? "active" : ""
+                    } transition`}
                   >
                     Author
                   </span>
@@ -166,8 +172,9 @@ export default function Navbar() {
               <li>
                 <Link href="/audience">
                   <span
-                    className={`tab ${isActive("/audience") ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActive("/audience") ? "active" : ""
+                    } transition`}
                   >
                     Audience
                   </span>
@@ -178,8 +185,9 @@ export default function Navbar() {
               <li>
                 <Link href="/revenue">
                   <span
-                    className={`tab ${isActive("/revenue") ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActive("/revenue") ? "active" : ""
+                    } transition`}
                   >
                     Revenue
                   </span>
@@ -190,8 +198,9 @@ export default function Navbar() {
               <li>
                 <Link href="/pipeline">
                   <span
-                    className={`tab ${isActivePipeline ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActivePipeline ? "active" : ""
+                    } transition`}
                   >
                     Connection
                   </span>
@@ -202,8 +211,9 @@ export default function Navbar() {
               <li>
                 <Link href="/explore">
                   <span
-                    className={`tab ${isActiveExplore ? "active" : ""
-                      } transition`}
+                    className={`tab ${
+                      isActiveExplore ? "active" : ""
+                    } transition`}
                   >
                     Explore
                   </span>

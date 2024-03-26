@@ -3,21 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { Protect, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 import { Overview } from "@views/overview/overview";
 import OverviewPage from "@views/overview/overview_main";
 import Layout from "@components/layout";
-import axios from "axios";
+import ErrorResult from "@/components/error_result";
 
 export default function HomePage() {
   const { has } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const canManage = has && has({ permission: "org:feature:protected" });
 
   const getSites = async () => {
     try {
-      const sitesResult = await axios.post("/api/sites", {});
+      const sitesResult = await axios.get("/api/sites");
       const orgSettingsResult = await axios.post("/api/organization", {
         operation: "getOrgSettings",
       });
@@ -39,10 +41,12 @@ export default function HomePage() {
       
       setLoading(false);
   
+      setError(false);
       return sitesData;
     } catch (error) {
       console.error("Error fetching data:", error);
-      throw error;
+      setLoading(false);
+      setError(true);
     }
   };
   
@@ -52,6 +56,10 @@ export default function HomePage() {
 
   if (loading) {
     return null;
+  }
+
+  if (error) {
+    return <ErrorResult />
   }
 
   return (

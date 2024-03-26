@@ -2,12 +2,16 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import axios from "axios";
+import axios_graphql from "../app/api/axios_graphql";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 
 import QueryCard from "../components/chat/query_card";
 import TableCard from "../components/chat/table_card";
 import CollapseCard from "../components/chat/collapse_card";
 import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
+
+import { GET_ALL_DESTINATIONS } from "../app/api/pipeline/graphql";
+import { CHAT_TYPES } from "../app/api/explore/graphql";
 
 import { Alert } from "antd";
 
@@ -39,10 +43,26 @@ async function sendMessage(userInput: string) {
 
   let message = "Thinking";
   const aiState = getMutableAIState<typeof AI>();
+
+  const destinationResult = await axios_graphql.post("console/v1/graphql", {
+    query: GET_ALL_DESTINATIONS,
+    variables: {
+      org_id: decoded?.organization?.metadata?.fabriq_org_id,
+    },
+  });
+
+  const chatResult = await axios_graphql.post("console/v1/graphql", {
+    query: CHAT_TYPES,
+  });
+
+  const destination_id = destinationResult?.data?.data?.data_sources?.[0]?.id;
+  const chat_models = chatResult?.data?.data?.org_chat_models_mapping;
+  const chat_modal_id = chat_models?.[chat_models.length - 1]?.id;
+
   const params = {
     query: userInput,
-    data_source_id: 121,
-    id: 12,
+    data_source_id: destination_id,
+    id: chat_modal_id,
     is_sql: true,
   };
 
@@ -137,7 +157,7 @@ async function sendMessage(userInput: string) {
       );
 
       const result = {
-        data_source_id: 122,
+        data_source_id: destination_id,
         parameters: {},
         query: response?.data?.result,
         max_age: 0,

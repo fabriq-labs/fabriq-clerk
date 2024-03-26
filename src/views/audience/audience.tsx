@@ -1146,7 +1146,6 @@ export default function Audience() {
           </div>
         ) : (
           <>
-          {console.log("chartSeries", chartSeries)}
             <div className="article-page-chart">
               <div className="article-chart-content">
                 {segementValue === "monthly" || segementValue === "real-time" ? (

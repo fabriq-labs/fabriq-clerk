@@ -412,8 +412,6 @@ export default function Authors() {
         return month;
       });
 
-      console.log("labels", labels);
-
       let selectedItem = "";
       if (value) {
         selectedItem = value;

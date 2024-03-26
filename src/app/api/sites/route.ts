@@ -9,15 +9,10 @@ function decodeJwt(token: any) {
   return payload;
 }
 
-export async function POST(req: NextRequest) {
-  const request = await req.json();
-  const { data } = request;
-
+export async function GET(req: NextRequest) {
   // Get a cookie
   const token = cookies().get("__session")?.value;
   const decoded = decodeJwt(token);
-
-  console.log("decoded", decoded);
 
   const headers = {
     "META-KEY": `${token}`,
@@ -34,7 +29,6 @@ export async function POST(req: NextRequest) {
     
     return NextResponse.json(response.data, { status: 200 });
   } catch (err: any) {
-    console.log("err", err?.message);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

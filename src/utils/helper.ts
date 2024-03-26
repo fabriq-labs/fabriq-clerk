@@ -3,7 +3,7 @@ import "moment-timezone";
 
 export const generateTableData = (data: any) => {
   let columns: any = [];
-  columns = data?.columns.map((key: any) => {
+  columns = data?.columns?.map((key: any) => {
     return {
       title: key.name,
       dataIndex: key.name,
