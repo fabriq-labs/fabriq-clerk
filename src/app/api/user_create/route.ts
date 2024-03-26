@@ -1,7 +1,7 @@
 import axios from "axios";
 // import axiosGraphql  from "../axios_graphql";
 import { NextRequest, NextResponse } from "next/server";
-import { user_create_query } from "../graphql";
+import { create_user, user_create_query } from "../graphql";
 import { WebhookEvent } from "@clerk/nextjs/server";
 function generateToken(length: any) {
   const chars =
@@ -14,25 +14,21 @@ function generateToken(length: any) {
   return token;
 }
 const makeGraphQLCall = async (query: any, variables: any) => {
-  console.log(query);
-  console.log(variables);
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}/v1/graphql`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}console/v1/graphql`, {
+      query,
+      variables,
+    }, {
       headers: {
         "content-Type": "application/json",
         "x-hasura-admin-secret": process.env
           .NEXT_PUBLIC_X_HASURA_ADMIN_SECRET as string,
       },
-    }, {
-      data: {
-        query,
-        variables,
-      }
-    });
+    },);
     return response.data;
-  } catch (error:any) {
+  } catch (error: any) {
     console.log(error.message);
-    
+
     throw error;
   }
 };
@@ -42,7 +38,7 @@ export async function POST(req: NextRequest) {
     const evt = await req.json() as WebhookEvent;
 
     if (evt.type === "user.created") {
-      const userId = 'user_2eE5nRoP4dNwgNt8y3PySXaNbaS' //evt.data.id;
+      const userId = evt.data.id;
       const user = evt.data;
       const organization_memberships = await axios.get(
         `https://api.clerk.com/v1/users/${userId}/organization_memberships`,
@@ -71,7 +67,6 @@ export async function POST(req: NextRequest) {
 
 
       const fabriq_response = await makeGraphQLCall(user_create_query, reqData);
-      console.log("fabriq_response", fabriq_response);
       if (fabriq_response?.data?.insert_users?.returning?.[0]?.id) {
         return NextResponse.json({ message: "User created Successfully." }, { status: 200 });
       } else {
