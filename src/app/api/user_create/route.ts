@@ -1,8 +1,9 @@
 import axios from "axios";
-// import axiosGraphql  from "../axios_graphql";
 import { NextRequest, NextResponse } from "next/server";
-import { create_user, user_create_query } from "../graphql";
 import { WebhookEvent } from "@clerk/nextjs/server";
+
+import { user_create_query } from "../graphql";
+
 function generateToken(length: any) {
   const chars =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -13,6 +14,7 @@ function generateToken(length: any) {
   const token = rand.join("");
   return token;
 }
+
 const makeGraphQLCall = async (query: any, variables: any) => {
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_X_HASURA_ADMIN_URL}console/v1/graphql`, {
@@ -32,6 +34,7 @@ const makeGraphQLCall = async (query: any, variables: any) => {
     throw error;
   }
 };
+
 export async function POST(req: NextRequest) {
   try {
 

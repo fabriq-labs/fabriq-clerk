@@ -128,11 +128,14 @@ export const GET_ALL_SOURCE = `
 
 export const GET_ALL_DESTINATIONS = `
 	query data_source($org_id: Int) {
-		data_sources(where: {org_id: {_eq: $org_id}}, order_by: {id: desc_nulls_last}) {
+		data_sources(where: {org_id: {_eq: $org_id}, name: {
+		_neq: "GraphQL"
+		}}, order_by: {id: desc_nulls_last}) {
 			id
 			org_id
+			name
 		}
-	}
+	}  
 `;
 
 export const PIPELINE_INSERT = `
