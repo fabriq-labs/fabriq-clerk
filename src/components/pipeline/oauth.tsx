@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "antd";
 
-import AuthImage from "../../assets/auth_.png";
-
 // OauthServiceConnect component
 const OauthServiceConnect = (props: any) => {
   const { item, pipeline, onMenuItem, onClickReconnect, onClickItem, loader } =
@@ -33,7 +31,7 @@ const OauthServiceConnect = (props: any) => {
           className="flex"
           onClick={connection ? onClickReconnect : () => onClickMenuItem(false)}
         >
-          <Image src={AuthImage} alt="auth" width={28} height={28} />
+          <Image src={"/images/auth_.png"} alt="auth" width={28} height={28} />
           <span className="oauth-title">
             &nbsp;{connection ? "Re-authenticate" : "Authenticate"}
           </span>

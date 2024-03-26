@@ -12,8 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import Layout from "@components/layout";
 
-import StartIcon from "../../assets/start_icon.png";
-import StopIcon from "../../assets/stop_icon.png";
 
 export interface PipelineInfoProps {
   pipeline?: any;
@@ -79,7 +77,7 @@ export const PipelineInfo: React.FC<PipelineInfoProps> = ({ pipeline }) => {
             <div className="image-content">
               <div className="title-div">
                 <Image
-                  src={pipeline.status ? StartIcon : StopIcon}
+                  src={pipeline.status ? "/images/start_icon.png" : "/images/stop_icon.png"}
                   alt="stop"
                   width={22}
                   height={22}
