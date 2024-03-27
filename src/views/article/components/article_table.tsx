@@ -60,7 +60,7 @@ const ArticleTableCard = (props: any) => {
                 flexDirection: "column",
                 float: "right",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               <CaretUpOutlined
@@ -99,7 +99,7 @@ const ArticleTableCard = (props: any) => {
                 flexDirection: "column",
                 float: "right",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               <CaretUpOutlined
@@ -226,9 +226,7 @@ const ArticleTableCard = (props: any) => {
               </Col>
               <Col span={3}>
                 <div className="list-view-chart-wrapper">
-                  <div
-                    className="list-view-chart"
-                  >
+                  <div className="list-view-chart">
                     <LineChartTiny
                       data={generateData(record?.series, record?.labels)}
                       dataKey={"pageViews"}

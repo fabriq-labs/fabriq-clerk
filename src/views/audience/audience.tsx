@@ -325,6 +325,11 @@ export default function Audience() {
           : "",
       }));
 
+      data.sort((a, b) => {
+        const order = ["New User", "Casual User", "Loyal User", "Brand Lover"];
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
+
       return data;
     }
 

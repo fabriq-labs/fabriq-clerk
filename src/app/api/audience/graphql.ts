@@ -164,7 +164,7 @@ export const USER_ANALYTICS_QUATERLY = `
 `;
 
 export const USER_ANALYTICS_YEARLY = `
-  query user_analytics_yearly($site_id: String!, $period_year: Int, $period_month: [Int!], $monthly_year: Int) {
+  query user_analytics_yearly($site_id: String!, $period_year: String, $period_month: [Int!], $monthly_year: Int) {
     YearlyData: ${Reactenv.content_analytics_entity_prefix}user_analytics_yearly(where: {site_id: {_eq: $site_id}, period_year: {_eq: $period_year}}) {
         page_views
         readability

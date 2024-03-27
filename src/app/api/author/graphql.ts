@@ -186,7 +186,7 @@ export const AUTHOR_QUATERLY_DETAILS = `
 `;
 
 export const AUTHOR_YEARLY_DETAILS = `
-  query author_yearly($author_id: String!, $site_id: String!, $period_year: Int, $site_avg_period_year: Int) {
+  query author_yearly($author_id: String!, $site_id: String!, $period_year: Int, $site_avg_period_year: String) {
     AuthorsYearly:${Reactenv.content_analytics_entity_prefix}authors_yearly(where: {period_year: {_eq: $period_year}, author_id: {_eq: $author_id}, site_id: {_eq: $site_id}}) {
       author
       author_id

@@ -86,7 +86,12 @@ function SocialCard({ mediumDistribution, socialTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <Image src={"/images/network.png"} alt="social" width={24} height={24} />
+        <Image
+          src={"/images/network.png"}
+          alt="social"
+          width={24}
+          height={24}
+        />
         <div className="row-title">Social</div>
       </div>
       <div className="row2" style={{ color: "#172a95" }}>
@@ -127,7 +132,12 @@ function ReferralCard({ mediumDistribution, referalTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <Image src={"/images/referral_new.png"} alt="referral" width={24} height={24} />
+        <Image
+          src={"/images/referral_new.png"}
+          alt="referral"
+          width={24}
+          height={24}
+        />
         <div className="row-title">Referral</div>
       </div>
       <div className="row2" style={{ color: "#f8b633" }}>
@@ -224,7 +234,12 @@ function InternalCard({ mediumDistribution, internalTop }: any) {
   return (
     <div className="card">
       <div className="row1">
-        <Image src={"/images/minimize.png"} alt="internal" width={24} height={24} />
+        <Image
+          src={"/images/minimize.png"}
+          alt="internal"
+          width={24}
+          height={24}
+        />
         <div className="row-title">Internal</div>
       </div>
       <div className="row2" style={{ color: "#0add54" }}>
@@ -459,8 +474,8 @@ export default function ArticleDetails() {
   const queryParams = Object.fromEntries(searchParams);
   const article_id = decodeURIComponent(articleId);
   const { Option } = Select;
-  const org_settingsVal:any = localStorage.getItem("org_settings")
-  const org_settings = JSON.parse(org_settingsVal)
+  const org_settingsVal: any = localStorage.getItem("org_settings");
+  const org_settings = JSON.parse(org_settingsVal);
   const siteInfo: any = {
     id: 36,
     site_id: "wral.com",
@@ -897,7 +912,6 @@ export default function ArticleDetails() {
           site_avg_period_year: value,
         },
       })
-      // ArticleQuery.getYearlyData(siteDetails?.site_id, articleId, parseInt(value))
       .then((res) => {
         const data = res?.data?.data?.ArticleYearly;
         if (data) {
@@ -1966,7 +1980,7 @@ export default function ArticleDetails() {
                                 </div>
                                 <a
                                   className="exit-page-title"
-                                  href={`/content/article/${item?.next_page_article_id}`}
+                                  href={`/article/${item?.next_page_article_id}`}
                                 >
                                   {item?.article?.title}
                                 </a>

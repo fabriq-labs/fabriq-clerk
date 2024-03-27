@@ -689,7 +689,8 @@ const CollapsePannel = ({ cityRows, referrerSeries }: any) => {
     </div>
   );
 };
-const OverviewPage = () => {
+
+const OverviewPage = (props?: any) => {
   const [loader, setLoader] = useState(false);
   const [isError, setIsError] = useState(false);
   const [selectedChartValue, setSelectedChartValue] = useState("");
@@ -721,8 +722,10 @@ const OverviewPage = () => {
   const [categorySeries, setCategorySeries] = useState({});
   const [videoList, setVideoList] = useState([]);
   const org_settingsVal: any = localStorage.getItem("org_settings");
-  const org_settings = JSON.parse(org_settingsVal);
+  let org_settings = JSON.parse(org_settingsVal);
   const timeInterval = 30 * 60 * 1000;
+  const sites: any = localStorage.getItem("site_details");
+  let siteInfo: any = JSON.parse(sites);
 
   useEffect(() => {
     getOverallData();
@@ -733,7 +736,7 @@ const OverviewPage = () => {
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, []);
+  }, [props?.siteDetails, props?.organization]);
 
   useEffect(() => {
     if (overViewCurrentChartResponse && overViewAverageChartResponse) {
@@ -781,10 +784,12 @@ const OverviewPage = () => {
     });
   };
 
-  const getOverallData = () => {
+  const getOverallData = async () => {
     setIsError(false);
-    const sites: any = localStorage.getItem("site_details");
-    const siteInfo: any = JSON.parse(sites);
+    if (!siteInfo && !org_settings) {
+      siteInfo = props.siteDetails;
+      org_settings = props?.organization;
+    }
 
     setSiteLink(siteInfo?.host_name);
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Row, Col, Select, Radio } from "antd";
+import { Row, Col, Select, Radio, Empty } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@components/layout";
 import StackedBarChart from "@/components/chart/stackedBarChart";
@@ -77,7 +77,7 @@ export default function Authors() {
   const { authorId }: any = useParams();
   const author_id = decodeURIComponent(authorId);
 
-  const sites:any = localStorage.getItem("site_details")
+  const sites: any = localStorage.getItem("site_details");
   let siteDetails: any = JSON.parse(sites);
   const time_interval = localStorage.getItem("time_interval");
   const timeInterval = time_interval ? parseInt(time_interval) : 30 * 60 * 1000;
@@ -99,8 +99,7 @@ export default function Authors() {
   const getRealtimeData = (date?: any) => {
     setTableLoader(true);
     setIsError(false);
-    let period_date =
-       date || formationTimezone(moment(), "YYYY-MM-DD");
+    let period_date = date || formationTimezone(moment(), "YYYY-MM-DD");
 
     axios
       .post("/api/author", {
@@ -1138,7 +1137,7 @@ export default function Authors() {
                 <Radio.Button value="yearly">Year</Radio.Button>
               </Radio.Group>
             </div>
-            {/* {segementValue === "real-time" && (
+            {segementValue === "real-time" && (
               <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedDate}
@@ -1146,7 +1145,7 @@ export default function Authors() {
                   onChange={handleDayChange}
                 />
               </div>
-            )} */}
+            )}
             {segementValue === "monthly" && (
               <div className="article-datepicker">
                 <DatepickerComponent
@@ -1300,14 +1299,18 @@ export default function Authors() {
                           </div>
                         </div>
                         <div className="article-country-chart">
-                          <BarChart
-                            labels={countryListLabel}
-                            series={countryListValue}
-                            logarithmic
-                            colors={["#7F56D9"]}
-                            tickAmount={false}
-                            name="Readers"
-                          />
+                          {countryListValue?.length > 0 ? (
+                            <BarChart
+                              labels={countryListLabel}
+                              series={countryListValue}
+                              logarithmic
+                              colors={["#7F56D9"]}
+                              tickAmount={false}
+                              name="Readers"
+                            />
+                          ) : (
+                            <Empty description="We don’t have enough data generated to show meaningful insights here" />
+                          )}
                         </div>
                       </div>
                       <div className="article-id-details-card-warpper">

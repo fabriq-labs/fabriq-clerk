@@ -1206,7 +1206,7 @@ export default function AuthorList() {
                 <Radio.Button value="yearly">Year</Radio.Button>
               </Radio.Group>
             </div>
-            {/* {segementValue === "real-time" && (
+            {segementValue === "real-time" && (
               <div className="article-datepicker">
                 <DatepickerComponent
                   value={selectedDate}
@@ -1214,7 +1214,7 @@ export default function AuthorList() {
                   onChange={handleDayChange}
                 />
               </div>
-            )} */}
+            )}
             {segementValue === "monthly" && (
               <div className="article-datepicker">
                 <DatepickerComponent
