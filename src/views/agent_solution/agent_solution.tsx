@@ -17,7 +17,8 @@ export default function AgentSolution() {
                   {
                     label: "Caller Details",
                     key: "1",
-                    children: <RightSection />,
+                    // children: <RightSection />,
+                    children: "Caller",
                   },
                   {
                     label: "Dealer Details",
@@ -34,10 +35,10 @@ export default function AgentSolution() {
             </Col>
           </Row>
         </Col>
-        <Col span={15} className="section-2">
+        <Col span={14} className="section-2">
           2
         </Col>
-        <Col span={3} className="section-3">
+        <Col span={4} className="section-3">
           3
         </Col>
       </Row>
