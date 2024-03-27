@@ -134,19 +134,19 @@ export const Ticket = () => {
       dataIndex: "status",
       render: (status: string) => {
         let color =
-          status === "Open"
+          status === "OPEN"
             ? "default"
-            : status === "In-Progress"
-            ? "processing"
-            : status === "Hold"
+            : status === "DEFERRED"
+            ? "volcano"
+            : status === "HOLD"
             ? "magenta"
-            : status === "Waiting for Customer Doc/Confirmation"
+            : status === "WAITING FOR CUSOMER DOC/CONFIRMATION"
             ? "purple"
-            : status === "Completed"
+            : status === "COMPLETED"
             ? "green"
-            : status === "Cancelled"
+            : status === "CANCELLED"
             ? "red"
-            : "volcano";
+            : "processing";
 
         return (
           <Tag color={color} key={status}>

@@ -234,6 +234,16 @@ const CreateTrademark = () => {
                       placeholder="Please select a type"
                       options={companyList}
                       showSearch
+                      filterOption={(input, option: any) =>
+                        ((option?.label as string) ?? "").includes(input)
+                      }
+                      filterSort={(optionA, optionB) =>
+                        ((optionA?.label as string) ?? "")
+                          .toLowerCase()
+                          .localeCompare(
+                            ((optionB?.label as string) ?? "").toLowerCase()
+                          )
+                      }
                       onChange={(value) =>
                         handleCompanyChange(value, companyData)
                       }

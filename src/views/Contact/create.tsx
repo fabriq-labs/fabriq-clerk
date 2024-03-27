@@ -22,6 +22,8 @@ import dayjs from "dayjs";
 import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 
+import {associateOptions} from "../../helper";
+
 const InputContainer = (props: any) => {
   const { title, placeholder, handleChange, keyLabel, data, disabled } = props;
 
@@ -63,48 +65,48 @@ const DatepickerContainer = (props: any) => {
   );
 };
 
-const associateOptions: { value: string; label: React.ReactNode }[] = [
-  { value: "Director", label: "Director" },
-  { value: "Whole Time Director", label: "Whole Time Director" },
-  { value: "Independent Director", label: "Independent Director" },
-  { value: "Additional Director", label: "Additional Director" },
-  { value: "Managing Director", label: "Managing Director" },
-  { value: "Designated Partner", label: "Designated Partner" },
-  { value: "Statutory Auditor", label: "Statutory Auditor" },
-  {
-    value: "Full time - Company Secretary",
-    label: "Full time - Company Secretary",
-  },
-  {
-    value: "Full time - Company Accountant",
-    label: "Full time - Company Accountant",
-  },
-  {
-    value: "Full time - Cost Accountant",
-    label: "Full time - Cost Accountant",
-  },
-  {
-    value: "Practicing Company Secretary",
-    label: "Practicing Company Secretary",
-  },
-  {
-    value: "Practicing Chartered Accountant",
-    label: "Practicing Chartered Accountant",
-  },
-  { value: "Practicing Cost Accountant", label: "Practicing Cost Accountant" },
-  { value: "Proprietor", label: "Proprietor" },
-  { value: "Partner - Partnership firm", label: "Partner - Partnership firm" },
-  { value: "IT Practitioner", label: "IT Practitioner" },
-  { value: "Other Professional", label: "Other Professional" },
-  { value: "Company Finance Manager", label: "Company Finance Manager" },
-  { value: "Company Accounts Team", label: "Company Accounts Team" },
-  { value: "CA Firm", label: "CA Firm" },
-  { value: "CS Firm", label: "CS Firm" },
-  { value: "CWA Firm", label: "CWA Firm" },
-  { value: "CEO", label: "CEO" },
-  { value: "CFO", label: "CFO" },
-  { value: "COO", label: "COO" },
-];
+// const associateOptions: { value: string; label: React.ReactNode }[] = [
+//   { value: "Director", label: "Director" },
+//   { value: "Whole Time Director", label: "Whole Time Director" },
+//   { value: "Independent Director", label: "Independent Director" },
+//   { value: "Additional Director", label: "Additional Director" },
+//   { value: "Managing Director", label: "Managing Director" },
+//   { value: "Designated Partner", label: "Designated Partner" },
+//   { value: "Statutory Auditor", label: "Statutory Auditor" },
+//   {
+//     value: "Full time - Company Secretary",
+//     label: "Full time - Company Secretary",
+//   },
+//   {
+//     value: "Full time - Company Accountant",
+//     label: "Full time - Company Accountant",
+//   },
+//   {
+//     value: "Full time - Cost Accountant",
+//     label: "Full time - Cost Accountant",
+//   },
+//   {
+//     value: "Practicing Company Secretary",
+//     label: "Practicing Company Secretary",
+//   },
+//   {
+//     value: "Practicing Chartered Accountant",
+//     label: "Practicing Chartered Accountant",
+//   },
+//   { value: "Practicing Cost Accountant", label: "Practicing Cost Accountant" },
+//   { value: "Proprietor", label: "Proprietor" },
+//   { value: "Partner - Partnership firm", label: "Partner - Partnership firm" },
+//   { value: "IT Practitioner", label: "IT Practitioner" },
+//   { value: "Other Professional", label: "Other Professional" },
+//   { value: "Company Finance Manager", label: "Company Finance Manager" },
+//   { value: "Company Accounts Team", label: "Company Accounts Team" },
+//   { value: "CA Firm", label: "CA Firm" },
+//   { value: "CS Firm", label: "CS Firm" },
+//   { value: "CWA Firm", label: "CWA Firm" },
+//   { value: "CEO", label: "CEO" },
+//   { value: "CFO", label: "CFO" },
+//   { value: "COO", label: "COO" },
+// ];
 
 const salutationTypeOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Mr", label: "Mr" },

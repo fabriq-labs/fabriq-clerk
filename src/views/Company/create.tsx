@@ -23,6 +23,8 @@ import dayjs from "dayjs";
 import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 
+import { associateOptions } from "../../helper";
+
 const InputContainer = (props: any) => {
   const { title, placeholder, handleChange, keyLabel, data, disabled } = props;
 
@@ -116,8 +118,8 @@ const StatusOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Under Liquidation", label: "Under Liquidation" },
   { value: "Liquidated", label: "Liquidated" },
   {
-    value: "Under Process of Striking Off",
-    label: "Under Process of Striking Off",
+    value: "Strike-off Under Processing",
+    label: "Strike-off Under Processing",
   },
   { value: "Captured", label: "Captured" },
   {
@@ -140,7 +142,14 @@ const CreateCompany = () => {
   const [addAssociate, setAddAssociate]: any = useState({});
   const [contactList, setContactList] = useState([]);
   const [isModalEdited, setISModalEdited] = useState(null);
+  const [isCompanyModalEdited, setCompanyModalEdited] = useState(null);
   const [userList, setUserList]: any = useState(null);
+  const [companyList, setCompanyList]: any = useState(null);
+  const [companyShareData, setCompanyShareData]: any = useState(null);
+  const [addCompanyShare, setAddCompanyShare]: any = useState({});
+  const [isCompanyModalOpen, setCompanyModalOpen] = useState(false);
+  const [isCompanyModalConfrimLoading, setCompnayModalConfrimLoading] =
+    useState(false);
   const router = useRouter();
   const { id }: any = useParams();
   const [form] = Form.useForm();
@@ -199,6 +208,8 @@ const CreateCompany = () => {
           form.setFieldsValue(formattedInitialValues);
           setAssociateData(res?.data?.data?.associate);
           setContactList(res?.data?.data?.contact);
+          setCompanyShareData(res?.data?.data?.company_share);
+          setCompanyList(res?.data?.data?.companyList);
           setLoader(false);
         })
         .catch((err) => {
@@ -267,9 +278,21 @@ const CreateCompany = () => {
 
   function findIdByName(nameToFind: any, array: any) {
     const foundObject = array.find(({ name }: any) => name === nameToFind);
+    console.log("foundObject",nameToFind,array)
 
     if (foundObject) {
       return foundObject.id;
+    }
+
+    // Return a default value (you can customize this based on your needs)
+    return null;
+  }
+
+  function findIdByID(nameToFind: any, array: any) {
+    const foundObject = array.find(({ id }: any) => id === nameToFind);
+
+    if (foundObject) {
+      return foundObject.name;
     }
 
     // Return a default value (you can customize this based on your needs)
@@ -284,10 +307,27 @@ const CreateCompany = () => {
       appointment_date: record?.appointment_date,
       renewal_date: record?.renewal_date,
       share: record?.share,
+      face_value: record?.face_value,
+      amount: record?.amount
     };
     setAddAssociate(editAssociate);
     setISModalEdited(record.key);
     setIsOpen(true);
+  };
+
+  const companyedit = (record: any) => {
+    let editCompany = {
+      company_id: parseInt(id),
+      association: record?.association,
+      appointment_date: record?.appointment_date,
+      renewal_date: record?.renewal_date,
+      share: record?.share,
+      face_value: record?.face_value,
+      amount: record?.amount,
+    };
+    setAddCompanyShare(editCompany);
+    setCompanyModalEdited(record.key);
+    setCompanyModalOpen(true);
   };
 
   const handleDelete = (record: any) => {
@@ -312,11 +352,33 @@ const CreateCompany = () => {
       });
   };
 
+  const handleDeletecompany = (record: any) => {
+    let variables: any = {
+      org_id: 1,
+      id: record?.key,
+    };
+    setLoader(true);
+
+    axios({
+      method: "DELETE",
+      url: `/api/company_share`,
+      data: { variables },
+    })
+      .then((res) => {
+        setLoader(false);
+        getCompanyDataById();
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoader(false);
+      });
+  };
+
   const totalShares = addCompany?.total_share;
 
   const columns: any = [
     {
-      title: "Contact Name",
+      title: "Names",
       dataIndex: "name",
       key: "name",
     },
@@ -353,6 +415,16 @@ const CreateCompany = () => {
       },
     },
     {
+      title: "Face Value",
+      dataIndex: "face_value",
+      key: "face_value",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
       title: "Action",
       key: "operation",
       fixed: "right",
@@ -370,12 +442,87 @@ const CreateCompany = () => {
     },
   ];
 
+  const columnsCompany: any = [
+    {
+      title: "Names",
+      dataIndex: "name",
+      key: "name",
+      render: (_: any, record: any) => {
+        const nameValue = findIdByID(record.name, companyList);
+        return nameValue;
+      },
+    },
+    {
+      title: "Association",
+      dataIndex: "association",
+      key: "association",
+    },
+    {
+      title: "Appointemnt Data",
+      dataIndex: "appointment_date",
+      key: "appointment_date",
+    },
+    {
+      title: "Renewal Duration",
+      dataIndex: "renewal_date",
+      key: "renewal_date",
+    },
+    {
+      title: "Share Details",
+      dataIndex: "share",
+      key: "share",
+    },
+    {
+      title: "Share Percentage",
+      dataIndex: "share_percentage",
+      key: "share_percentage",
+      render: (_: any, record: any) => {
+        if (record.share !== null && totalShares !== null) {
+          const sharePercentage = (record.share / totalShares) * 100;
+          return `${sharePercentage.toFixed(0)}%`;
+        }
+        return ""; // You can customize this based on your needs
+      },
+    },
+    {
+      title: "Face Value",
+      dataIndex: "face_value",
+      key: "face_value",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
+      title: "Action",
+      key: "operation",
+      fixed: "right",
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          <Typography.Link onClick={() => companyedit(record)}>
+            Edit
+          </Typography.Link>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDeletecompany(record)}
+          >
+            <a style={{ color: "#1677ff" }}>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   const handleOk = () => {
     setModalConfirmLoading(true);
     Object.keys(addAssociate).forEach((key) => {
-      if (key === "incorporation_date") {
-        addAssociate[key] =
-          addAssociate[key] && addAssociate[key].format("DD-MM-YYYY");
+      if (key === "appointment_date" || key === "renewal_date") {
+        if (addAssociate[key]) {
+          addAssociate[key] = dayjs(addAssociate[key], "DD-MM-YYYY").format(
+            "YYYY-MM-DD"
+          );
+        }
       } else if (addAssociate[key] === "") {
         // Handle optional fields with default values
         addAssociate[key] = null;
@@ -418,15 +565,49 @@ const CreateCompany = () => {
     setAddAssociate(updatedState);
   };
 
+  const handleChangecompanyShare = (e: any, keyColumn: any) => {
+    const updatedState: any = { ...addCompanyShare };
+    updatedState[keyColumn] = e;
+
+    setAddCompanyShare(updatedState);
+  };
+
   const transformedData =
     associateData &&
     Object.keys(associateData).map((key) => ({
       key: associateData[key]?.id || "",
       name: associateData[key]?.contact?.[0]?.name || "",
       association: associateData[key]?.association || "",
-      appointment_date: associateData[key]?.appointment_date || "",
-      renewal_date: associateData[key]?.renewal_date || "",
+      appointment_date:
+        dayjs(associateData[key]?.appointment_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
+      renewal_date:
+        dayjs(associateData[key]?.renewal_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
       share: associateData[key]?.share || "",
+      face_value: associateData[key]?.face_value || "",
+      amount: associateData[key]?.amount || "",
+    }));
+
+  const transformedCompanyData =
+    companyShareData &&
+    Object.keys(companyShareData).map((key) => ({
+      key: companyShareData[key]?.id || "",
+      name: companyShareData[key]?.share_company_id || "",
+      association: companyShareData[key]?.association || "",
+      appointment_date:
+        dayjs(companyShareData[key]?.appointment_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
+      renewal_date:
+        dayjs(companyShareData[key]?.renewal_date, "YYYY-MM-DD").format(
+          "DD-MM-YYYY"
+        ) || null,
+      share: companyShareData[key]?.share || "",
+      face_value: companyShareData[key]?.face_value || "",
+      amount: companyShareData[key]?.amount || "",
     }));
 
   const contactListOptions =
@@ -436,9 +617,97 @@ const CreateCompany = () => {
       label: name || "Unknown",
     }));
 
-  console.log("associate", transformedData, associateData);
+  const companyListOptions =
+    companyList &&
+    companyList.map(({ id, name }: any) => ({
+      value: String(id),
+      label: name || "Unknown",
+    }));
+  const handleClickAdd = () => {
+    setCompanyModalOpen(true);
+  };
 
-  // console.log("contactListOptions", contactListOptions);
+  const handleModalCancel = () => {
+    setCompanyModalOpen(false);
+    setAddCompanyShare({});
+    setCompanyModalEdited(null);
+  };
+
+  const handleChangeSelectName = (value: any) => {
+    let nameObj = { ...addCompanyShare, share_company_id: parseInt(value) };
+    setAddCompanyShare(nameObj);
+  };
+
+  const handleChangeSelectAssociate = (value: any, option: any) => {
+    let associateObj = { ...addCompanyShare, association: option?.value };
+    setAddCompanyShare(associateObj);
+  };
+
+  const onChange = (date: any, dateString: any, keyLabel: any) => {
+    const updatedState: any = { ...addCompanyShare };
+
+    updatedState[keyLabel] = date.format("DD-MM-YYYY");
+
+    // Update the state
+    setAddCompanyShare(updatedState);
+  };
+
+  const handleCompanyShareOk = () => {
+    let formatCompanyShare = { ...addCompanyShare };
+    setCompnayModalConfrimLoading(true)
+    Object.keys(addCompanyShare).forEach((key) => {
+      if (key === "appointment_date" || key === "renewal_date") {
+        if (formatCompanyShare[key]) {
+          formatCompanyShare[key] = dayjs(
+            formatCompanyShare[key],
+            "DD-MM-YYYY"
+          ).format("YYYY-MM-DD");
+        }
+      }
+    });
+    if (isCompanyModalEdited !== null) {
+      let variables: any = {
+        id: isCompanyModalEdited,
+        set: { ...formatCompanyShare },
+      };
+      axios({
+        method: "PUT",
+        url: `/api/company_share`,
+        data: { variables },
+      })
+        .then((res) => {
+          setCompnayModalConfrimLoading(false);
+          setCompanyModalOpen(false);
+          setAddCompanyShare(null);
+          getCompanyDataById();
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          setCompnayModalConfrimLoading(false);
+        });
+    } else {
+      let variables = {
+        ...formatCompanyShare,
+        org_id: 1,
+        company_id: parseInt(id),
+      };
+      axios({
+        method: "POST",
+        url: "/api/company_share",
+        data: { variables },
+      })
+        .then((res) => {
+          setCompnayModalConfrimLoading(false);
+          setCompanyModalOpen(false);
+          setAddCompanyShare({});
+          getCompanyDataById();
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          setCompnayModalConfrimLoading(false);
+        });
+    }
+  };
 
   return (
     <Layout>
@@ -799,18 +1068,42 @@ const CreateCompany = () => {
             </Form>
             {id && (
               <>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ fontWeight: "500", fontSize: "20px" }}>
-                    Member(s)
+                <>
+                  {" "}
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{ fontWeight: "500", fontSize: "20px" }}>
+                      Member(s)
+                    </div>
                   </div>
-                </div>
-                <Table
-                  columns={columns}
-                  dataSource={transformedData}
-                  bordered={false}
-                  pagination={{ pageSize: 5 }}
-                  className="custom-table"
-                />
+                  <Table
+                    columns={columns}
+                    dataSource={transformedData}
+                    bordered={false}
+                    pagination={{ pageSize: 5 }}
+                    className="custom-table"
+                  />
+                </>
+                <>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+                    <div style={{ fontWeight: "500", fontSize: "20px" }}>
+                      Company Member(s)
+                    </div>
+                    <div
+                      className="associate-add-button"
+                      onClick={() => handleClickAdd()}
+                    >
+                      {" "}
+                      Add
+                    </div>
+                  </div>
+                  <Table
+                    columns={columnsCompany}
+                    dataSource={transformedCompanyData}
+                    bordered={false}
+                    pagination={{ pageSize: 5 }}
+                    className="custom-table"
+                  />
+                </>
               </>
             )}
           </div>
@@ -871,9 +1164,6 @@ const CreateCompany = () => {
           <div>
             <div>Appointment Date</div>
             <DatePicker
-              //   onChange={(date, dateString) =>
-              //     onChange(date, dateString, "appointment_date")
-              //   }
               style={{ width: 220 }}
               value={
                 addAssociate &&
@@ -888,9 +1178,6 @@ const CreateCompany = () => {
           <div>
             <div>Renewal Duration</div>
             <DatePicker
-              //   onChange={(date, dateString) =>
-              //     onChange(date, dateString, "renewal_duration")
-              //   }
               style={{ width: 220 }}
               value={
                 addAssociate &&
@@ -911,6 +1198,147 @@ const CreateCompany = () => {
               handleChange={handleChange}
               keyLabel="share"
               data={addAssociate}
+            />
+          </div>
+          <div style={{ width: "50%" }}>
+            <InputContainer
+              title="Face Value"
+              placeholder="Face Value"
+              handleChange={handleChange}
+              keyLabel="face_value"
+              data={addAssociate}
+            />
+          </div>
+        </div>
+        <div style={{ marginTop: "15px", display: "flex", gap: "15px" }}>
+          <div style={{ width: "50%" }}>
+            <InputContainer
+              title="Amount"
+              placeholder="Amount"
+              handleChange={handleChange}
+              keyLabel="amount"
+              data={addAssociate}
+            />
+          </div>
+          <div style={{ width: "50%" }}></div>
+        </div>
+      </Modal>
+      <Modal
+        title="Company Shares"
+        open={isCompanyModalOpen}
+        onOk={handleCompanyShareOk}
+        confirmLoading={isCompanyModalConfrimLoading}
+        onCancel={handleModalCancel}
+        centered
+      >
+        <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ marginBottom: "10px" }}>
+            <div>Company</div>
+            <Select
+              style={{ width: 220 }}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option: any) =>
+                ((option?.label as string) ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                ((optionA?.label as string) ?? "")
+                  .toLowerCase()
+                  .localeCompare(
+                    ((optionB?.label as string) ?? "").toLowerCase()
+                  )
+              }
+              options={companyListOptions}
+              onChange={handleChangeSelectName}
+              value={
+                addCompanyShare && JSON.stringify(addCompanyShare?.company_id)
+              }
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <div>Association</div>
+            <Select
+              style={{ width: 220 }}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                ((option?.label as string) ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                ((optionA?.label as string) ?? "")
+                  .toLowerCase()
+                  .localeCompare(
+                    ((optionB?.label as string) ?? "").toLowerCase()
+                  )
+              }
+              options={associateOptions}
+              onChange={handleChangeSelectAssociate}
+              value={addCompanyShare && addCompanyShare?.association}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "15px" }}>
+          <div>
+            <div>Appointment Date</div>
+            <DatePicker
+              style={{ width: 220 }}
+              onChange={(date, dateString) =>
+                onChange(date, dateString, "appointment_date")
+              }
+              value={
+                addCompanyShare &&
+                addCompanyShare?.appointment_date &&
+                Object.keys(addCompanyShare).length
+                  ? dayjs(addCompanyShare?.appointment_date, "DD-MM-YYYY")
+                  : null
+              }
+            />
+          </div>
+          <div>
+            <div>Renewal Duration</div>
+            <DatePicker
+              style={{ width: 220 }}
+              onChange={(date, dateString) =>
+                onChange(date, dateString, "renewal_date")
+              }
+              value={
+                addCompanyShare &&
+                addCompanyShare?.renewal_date &&
+                Object.keys(addCompanyShare).length
+                  ? dayjs(addCompanyShare?.renewal_date, "DD-MM-YYYY")
+                  : null
+              }
+            />
+          </div>
+        </div>
+        <div style={{ marginTop: "15px", display: "flex", gap: "15px" }}>
+          <div style={{ width: "50%" }}>
+            <InputContainer
+              title="Share Details"
+              placeholder="Share"
+              handleChange={handleChangecompanyShare}
+              keyLabel="share"
+              data={addCompanyShare}
+            />
+          </div>
+          <div style={{ width: "50%" }}>
+            <InputContainer
+              title="Face Value"
+              placeholder="Face Value"
+              handleChange={handleChangecompanyShare}
+              keyLabel="face_value"
+              data={addCompanyShare}
+            />
+          </div>
+        </div>
+        <div style={{ marginTop: "15px", display: "flex", gap: "15px" }}>
+          <div style={{ width: "50%" }}>
+            <InputContainer
+              title="Amount"
+              placeholder="Amount"
+              handleChange={handleChangecompanyShare}
+              keyLabel="amount"
+              data={addCompanyShare}
             />
           </div>
           <div style={{ width: "50%" }}></div>

@@ -56,6 +56,8 @@ query get_company_by_id($org_id: Int, $id: Int) {
     renewal_date
     appointment_date
     share
+    face_value
+    amount
     contact {
       name
     }
@@ -63,6 +65,47 @@ query get_company_by_id($org_id: Int, $id: Int) {
   contact: contact(where: {org_id: {_eq: $org_id}}, order_by: {id: asc}) {
     id
     name
+  }
+  companyList: company(where: {org_id: {_eq: $org_id}}) {
+    type
+    cin
+    city
+    country
+    created_at
+    incorporation_date
+    name
+    id
+    state
+    org_id
+    pincode
+    address_line_1
+    address_line_2
+    account_owner
+    authorized_capital
+    total_share
+    paid_up_capital
+    email
+    rd_office
+    roc
+    status
+    tag
+    agm_date
+    balancesheet_date
+  }
+  company_share: company_share(where: {company_id: {_eq: $id}}) {
+    renewal_date
+    share
+    share_company_id
+    id
+    company_id
+    association
+    appointment_date
+    face_value
+    amount
+    company {
+      id
+      name
+    }
   }
 }
 `;

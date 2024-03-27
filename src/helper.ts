@@ -78,19 +78,30 @@ export const userTypeOptions: { value: any; label: React.ReactNode }[] = [
 ];
 
 export const statusTypeOptions: { value: any; label: React.ReactNode }[] = [
-  { value: "Open", label: "Open" },
+  { value: "OPEN", label: "OPEN" },
   {
-    value: "In-Progress",
-    label: "In-Progress",
+    value: "IN PROGRESS",
+    label: "IN PROGRESS",
   },
-  { value: "Hold", label: "Hold" },
+  { value: "HOLD", label: "HOLD" },
   {
-    value: "Waiting for Customer Doc/Confirmation",
-    label: "Waiting for Customer Doc/Confirmation",
+    value: "WAITING FOR CUSOMER DOC/CONFIRMATION",
+    label: "WAITING FOR CUSOMER DOC/CONFIRMATION",
   },
-  { value: "Completed", label: "Completed" },
-  { value: "Cancelled", label: "Cancelled" },
-  { value: "Deferred ", label: "Deferred " },
+  { value: "COMPLETED", label: "COMPLETED" },
+  { value: "CANCELLED", label: "CANCELLED" },
+  { value: "DEFERRED ", label: "DEFERRED " },
+  { value: "INCORPORATION", label: "INCORPORATION" },
+  { value: "ANNUAL FILLING-2023", label: "ANNUAL FILLING-2023" },
+  { value: "CLOSURE", label: "CLOSURE" },
+  { value: "HIGH PRIORITY", label: "HIGH PRIORITY" },
+  { value: "PENDING FOR PAYMENT", label: "PENDING FOR PAYMENT" },
+  { value: "PENDING GOVERNMENT APPROVAL", label: "PENDING GOVERNMENT APPROVAL" },
+  { value: "PENDING WORK", label: "PENDING WORK" },
+  { value: "SIGNED COPY", label: "SIGNED COPY" },
+  { value: "TRADEMARK & LEI", label: "TRADEMARK & LEI" },
+  { value: "DONE", label: "DONE" },
+  { value: "MINUTES", label: "MINUTES" },
 ];
 
 export const priorityTypeOptions: { value: any; label: React.ReactNode }[] = [
@@ -132,3 +143,47 @@ export const getStartAndEndDate = (filterType: string): { startDate: string, end
     }
   }
 };
+
+export const associateOptions: { value: string; label: React.ReactNode }[] = [
+  { value: "Director", label: "Director" },
+  { value: "Whole Time Director", label: "Whole Time Director" },
+  { value: "Independent Director", label: "Independent Director" },
+  { value: "Additional Director", label: "Additional Director" },
+  { value: "Managing Director", label: "Managing Director" },
+  { value: "Designated Partner", label: "Designated Partner" },
+  { value: "Statutory Auditor", label: "Statutory Auditor" },
+  {
+    value: "Full time - Company Secretary",
+    label: "Full time - Company Secretary",
+  },
+  {
+    value: "Full time - Company Accountant",
+    label: "Full time - Company Accountant",
+  },
+  {
+    value: "Full time - Cost Accountant",
+    label: "Full time - Cost Accountant",
+  },
+  {
+    value: "Practicing Company Secretary",
+    label: "Practicing Company Secretary",
+  },
+  {
+    value: "Practicing Chartered Accountant",
+    label: "Practicing Chartered Accountant",
+  },
+  { value: "Practicing Cost Accountant", label: "Practicing Cost Accountant" },
+  { value: "Proprietor", label: "Proprietor" },
+  { value: "Partner - Partnership firm", label: "Partner - Partnership firm" },
+  { value: "IT Practitioner", label: "IT Practitioner" },
+  { value: "Other Professional", label: "Other Professional" },
+  { value: "Company Finance Manager", label: "Company Finance Manager" },
+  { value: "Company Accounts Team", label: "Company Accounts Team" },
+  { value: "CA Firm", label: "CA Firm" },
+  { value: "CS Firm", label: "CS Firm" },
+  { value: "CWA Firm", label: "CWA Firm" },
+  { value: "CEO", label: "CEO" },
+  { value: "CFO", label: "CFO" },
+  { value: "COO", label: "COO" },
+  { value: "Share Holder", label: "Share Holder" },
+];
