@@ -736,7 +736,7 @@ const OverviewPage = (props?: any) => {
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [props?.siteDetails, props?.organization]);
+  }, []);
 
   useEffect(() => {
     if (overViewCurrentChartResponse && overViewAverageChartResponse) {
@@ -786,11 +786,6 @@ const OverviewPage = (props?: any) => {
 
   const getOverallData = async () => {
     setIsError(false);
-    if (!siteInfo && !org_settings) {
-      siteInfo = props.siteDetails;
-      org_settings = props?.organization;
-    }
-
     setSiteLink(siteInfo?.host_name);
 
     if (siteInfo) {
