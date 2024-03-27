@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { WebhookEvent } from "@clerk/nextjs/server";
 
-import { user_create_query } from "../graphql";
+import { user_create_query, get_groups, get_sites } from "../graphql";
 
 function generateToken(length: any) {
   const chars =
@@ -58,6 +58,26 @@ export async function POST(req: NextRequest) {
       const currentDate = new Date();
       const currentTimestamp = currentDate.toISOString();
 
+      const groups_response = await makeGraphQLCall(get_groups, {
+        org_id: parseInt(
+          organization_memberships?.data?.data?.[0]?.organization
+            ?.public_metadata?.fabriq_org_id
+        ),
+      });
+
+      const sites_response = await makeGraphQLCall(get_sites, {
+        org_id: parseInt(
+          organization_memberships?.data?.data?.[0]?.organization
+            ?.public_metadata?.fabriq_org_id
+        ),
+      });
+
+      const groups = groups_response?.data?.groups?.map(
+        (item: any) => item?.id
+      );
+
+      const sites = sites_response?.data?.sites?.map((item: any) => item?.id);
+
       const token = generateToken(40);
       const reqData: any = {
         api_key: token,
@@ -69,6 +89,8 @@ export async function POST(req: NextRequest) {
         ),
         created_at: currentTimestamp,
         updated_at: currentTimestamp,
+        sites: sites,
+        groups: groups
       };
 
       const fabriq_response = await makeGraphQLCall(user_create_query, reqData);
