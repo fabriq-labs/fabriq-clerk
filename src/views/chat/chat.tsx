@@ -495,10 +495,21 @@ export default function Chat() {
                     {template?.error ? (
                       <div className="no-result">
                         <div className="chat-empty-result">
-                          <Result
-                            title="Unable to Generate Data"
-                            subTitle="We're sorry, but there seems to be an issue preventing us from generating the requested data at the moment."
-                          />
+                          <Row gutter={[16, 16]}>
+                            <Col span={14}>
+                              <div className="box-error">
+                                <Result
+                                  title="Unable to Generate Data"
+                                  subTitle="We're sorry, but there seems to be an issue preventing us from generating the requested data at the moment."
+                                />
+                              </div>
+                            </Col>
+                            <Col span={10}>
+                              <div className="box-error">
+                                <QueryCard result={template?.query} />
+                              </div>
+                            </Col>
+                          </Row>
                         </div>
                       </div>
                     ) : (

@@ -227,7 +227,7 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
-            {organization && organization?.publicMetadata?.is_explore && (
+            {/* {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/chat">
                   <span
@@ -237,7 +237,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            )}
+            )} */}
           </ul>
         </nav>
         <div className="flex items-center gap-4">
