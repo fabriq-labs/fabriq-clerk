@@ -72,11 +72,12 @@ export async function POST(req: NextRequest) {
         ),
       });
 
-      const groups = groups_response?.data?.groups?.map(
-        (item: any) => item?.id
-      );
-
-      const sites = sites_response?.data?.sites?.map((item: any) => item?.id);
+      const groups = `{${groups_response?.data?.groups
+        ?.map((item: any) => item.id)
+        .join(", ")}}`;
+      const sites = `{${sites_response?.data?.sites
+        ?.map((item: any) => item.id)
+        .join(", ")}}`;
 
       const token = generateToken(40);
       const reqData: any = {
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
         created_at: currentTimestamp,
         updated_at: currentTimestamp,
         sites: sites,
-        groups: groups
+        groups: groups,
       };
 
       const fabriq_response = await makeGraphQLCall(user_create_query, reqData);
