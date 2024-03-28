@@ -128,6 +128,25 @@ export const  user_create_query = `mutation insert_users($name: String, $email: 
     }
   }
 }`;
+
+export const get_groups = `
+  query groups($org_id: Int) {
+    groups(where: {org_id: {_eq: $org_id}}) {
+      id
+      org_id
+    }
+  }
+`;
+
+export const get_sites = `
+  query sites($org_id: Int) {
+    sites(where: {org_id: {_eq: $org_id}}) {
+      id
+      org_id
+    }
+  }
+`;
+
 async function delete_user(user_id: any) {
   const query = `mutation delete_users($id: Int) {
     delete_users(where: {id: $id}) {
