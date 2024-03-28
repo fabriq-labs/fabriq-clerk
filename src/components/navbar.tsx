@@ -11,7 +11,8 @@ export default function Navbar() {
   const { has } = useAuth();
   const { organization }: any = useOrganization();
 
-  const canManage = has && has({ permission: "org:feature:protected" });
+  const canUser = has && has({ permission: "org:users:all" });
+  const canMedia = has && has({permission: "org:media:all"})
 
   const isActive = (path: string) => {
     const basePath = path.split("/")[1];
@@ -51,19 +52,17 @@ export default function Navbar() {
     {
       key: "1",
       label: (
-        <Protect permission="org:users:all">
         <Link href={"/user-profile"}>
-          <span className={`menu-item`}>User Profile</span>
+          <span className={`menu-item`}>My Profile</span>
         </Link>
-        </Protect>
       ),
     },
-    canManage && {
+    canUser && {
       key: "2",
       label: (
-        <Protect permission="org:feature:protected">
+        <Protect permission="org:users:all">
           <Link href="/organization-profile">
-            <span className={`menu-item`}>Organization Profile</span>
+            <span className={`menu-item`}>Organization</span>
           </Link>
         </Protect>
       ),
@@ -71,12 +70,14 @@ export default function Navbar() {
     {
       key: "3",
       label: (
-        <Link href={"/destination"}>
-          <span className={`menu-item`}>Destination</span>
-        </Link>
+        <Protect permission="org:data:all">
+          <Link href={"/destination"}>
+            <span className={`menu-item`}>Destination</span>
+          </Link>
+        </Protect>
       ),
     },
-    {
+    canMedia && {
       key: "4",
       label: (
         <Protect permission="org:media:all">
@@ -228,7 +229,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-              </Protect>
+            </Protect>
             {/* {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/chat">
