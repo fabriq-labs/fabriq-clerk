@@ -18,6 +18,7 @@ const HomePage = () => {
   const canManage = has && has({ permission: "org:data:all" });
   const mediaOrg = has && has({ permission: "org:media:all" });
   const userOrg = has && has({ permission: "org:users:all" });
+  const dataOrg = has && has({ permission: "org:data:all" });
 
   useEffect(() => {
     const getSites = async () => {
@@ -52,7 +53,7 @@ const HomePage = () => {
             router.push("/pipeline");
           }
 
-          if(userOrg) {
+          if(userOrg && !dataOrg) {
             router.push("/user-profile");
           }
 
