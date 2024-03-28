@@ -13,6 +13,7 @@ import { Template } from "@components/chat/template";
 import { Label } from "@/components/ui/label";
 import ChatAI from "@components/chatai";
 import Layout from "@components/layout";
+import QueryCard from "../../components/chat/query_card";
 
 export default function Chat() {
   const [destinations, setDestinations]: any = useState([]);
@@ -466,8 +467,15 @@ export default function Chat() {
                 {loading ? (
                   <div className="status-container">
                     <Alert message={<>{status}&hellip;</>} type="info" />
+                    {template?.query && (
+                      <div className="widget-row-query">
+                        <div className="template-container">
+                          <QueryCard result={template?.query} />
+                        </div>
+                      </div>
+                    )}
                   </div>
-                ) : template === null ? (
+                ) : template === null && !chatId ? (
                   <div className="example-promt">
                     {!showPrompt && (
                       <>

@@ -103,7 +103,6 @@ export const PipelineEdit: React.FC<any> = React.memo(() => {
         }, 1000);
       })
       .catch((err: any) => {
-        console.log("err", err.message);
         api.error({
           message: "Pipeline Edit ",
           description: `Unable to initiate OAuth for pipeline with item ID ${pipelineItem.id}.`,

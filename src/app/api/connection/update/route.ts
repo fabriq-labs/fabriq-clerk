@@ -68,7 +68,6 @@ async function upsert_connection(pipeline: any, destination_id: any) {
     }
   } else {
     try {
-      // console.log(`connection exists in airbyte: pipeline ${pipeline["external_mapping"]["elt_connection_id"]}`) // Source does not exist in airbyte
       const config = connection_config.get_config(pipeline);
       config["connectionId"] =
         pipeline["external_mapping"]["elt_connection_id"];

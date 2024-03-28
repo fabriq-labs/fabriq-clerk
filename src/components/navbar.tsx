@@ -35,6 +35,13 @@ export default function Navbar() {
       };
     });
 
+  const site_details = localStorage.getItem("site_details");
+  let activeSite;
+  if (site_details) {
+    const parsed = JSON.parse(site_details);
+    activeSite = parsed?.site_id;
+  }
+
   const onselect = (e: any) => {
     const site = sitesJson?.filter((obj: any) => obj.site_id === e.key);
     localStorage.setItem("site_details", JSON.stringify(site[0]));
@@ -76,7 +83,7 @@ export default function Navbar() {
             menu={{
               items: siteItems,
               selectable: true,
-              // defaultSelectedKeys: ["3"],
+              defaultSelectedKeys: [activeSite],
               onClick: onselect,
             }}
           >
