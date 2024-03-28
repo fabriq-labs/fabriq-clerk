@@ -39,7 +39,10 @@ const Dahsboard = () => {
   const [associateData, setAssociateData]: any = useState(null);
   const [modalLoader, setModalLoader] = useState(true);
   const [showList, setShowList] = useState(false);
-  const [userList, setUserList]:any = useState(null);
+  const [userList, setUserList]: any = useState(null);
+  const [ticketPriorityData, setTicketPriorityData]: any = useState(null);
+  const [ticketServiceTypeData, setTicketServiceTypeData]: any = useState(null);
+  const [dataValue, setDataValue]: any = useState(null);
   const router = useRouter();
 
   const istDate = new Date().toLocaleString("en-US", {
@@ -61,13 +64,13 @@ const Dahsboard = () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-    
+
     const renewalDate = new Date(date);
     const renewalMonth = renewalDate.getMonth();
     const renewalYear = renewalDate.getFullYear();
-    
+
     return renewalMonth === currentMonth && renewalYear === currentYear;
-};
+  };
 
   // Function to check if a date is overdue with today
   const isOverdue = (date: any) => {
@@ -91,8 +94,14 @@ const Dahsboard = () => {
     })
       .then((res) => {
         let formatedData = calculateRenewalCounts(res?.data?.data);
+        setDataValue(res?.data?.data);
         let ticketData = getCountsByAssigneeIdAndStatus(res?.data?.data);
         let userData = res?.data?.data?.user;
+        const counts = getPriorityCounts(res?.data?.data?.ticket);
+        const serviceCount = getServiceTypeCounts(res?.data?.data?.ticket)
+        setTicketPriorityData(counts);
+        setTicketServiceTypeData(serviceCount);
+        console.log("serviceCount", serviceCount);
         const formattedData = userData.map((item: any) => {
           return {
             value: item.id,
@@ -253,18 +262,44 @@ const Dahsboard = () => {
 
         if (!counts[assigneeId]) {
           counts[assigneeId] = {
-            Open: 0,
-            Completed: 0,
-            "In-Progress": 0,
-            Hold: 0,
-            Cancelled: 0,
-            "Waiting for Customer Doc/Confirmation": 0,
+            OPEN: 0,
+            COMPLETED: 0,
+            "IN PROGRESS": 0,
+            HOLD: 0,
+            CANCELLED: 0,
+            "WAITING FOR CUSOMER DOC/CONFIRMATION": 0,
           };
         }
 
         // Increment the count based on the status
         counts[assigneeId][status]++;
       }
+    });
+    return counts;
+  };
+
+  const getPriorityCounts = (data: any) => {
+    const counts: any = {};
+    data.forEach((item: any) => {
+      const assigneeId = item.assignee_id;
+      const priority = item.priority;
+      if (!counts[priority]) {
+        counts[priority] = {};
+      }
+      counts[priority][assigneeId] = (counts[priority][assigneeId] || 0) + 1;
+    });
+    return counts;
+  };
+
+  const getServiceTypeCounts = (data: any) => {
+    const counts: any = {};
+    data.forEach((item: any) => {
+      const assigneeId = item.assignee_id;
+      const type = item.service_type;
+      if (!counts[type]) {
+        counts[type] = {};
+      }
+      counts[type][assigneeId] = (counts[type][assigneeId] || 0) + 1;
     });
     return counts;
   };
@@ -326,11 +361,11 @@ const Dahsboard = () => {
     for (const assigneeId in counts) {
       const rowData = {
         assigneeId: assigneeId,
-        open: counts[assigneeId].Open || 0,
-        progress: counts[assigneeId]["In-Progress"] || 0,
-        hold: counts[assigneeId].Hold || 0,
+        open: counts[assigneeId].OPEN || 0,
+        progress: counts[assigneeId]["IN PROGRESS"] || 0,
+        hold: counts[assigneeId].HOLD || 0,
         waiting:
-          counts[assigneeId]["Waiting for Customer Doc/Confirmation"] || 0,
+          counts[assigneeId]["WAITING FOR CUSOMER DOC/CONFIRMATION"] || 0,
       };
       formattedData.push(rowData);
     }
@@ -443,9 +478,9 @@ const Dahsboard = () => {
   ];
 
   const mapAssigneeIdToName = (assigneeId: any) => {
-    const user = userList && userList.find(
-      (user: any) => user?.value == parseInt(assigneeId)
-    );
+    const user =
+      userList &&
+      userList.find((user: any) => user?.value == parseInt(assigneeId));
     return user ? user.label : "Unknown";
   };
 
@@ -592,6 +627,65 @@ const Dahsboard = () => {
     },
   ];
 
+  const assigneeIds: any = [
+    ...new Set(dataValue?.ticket.map((item: any) => item.assignee_id)),
+  ];
+
+  const formatDataTableTicketPriority =
+  ticketPriorityData &&
+  ["High", "Medium", "Low"].map((priority) => { // Iterate over all priorities
+    const assigneeCounts = ticketPriorityData[priority] || {}; // Get counts for the current priority
+    const rowData: any = {
+      priority,
+    };
+    assigneeIds.forEach((assigneeId: any) => {
+      rowData[assigneeId] = assigneeCounts[assigneeId] || 0; // Set count to 0 if data doesn't exist
+    });
+    return rowData;
+  });
+
+  const formatDataTableTicketServiceType =
+  ticketServiceTypeData &&
+  Object.keys(ticketServiceTypeData)
+    .filter((type) => type !== "null") // Filter out entries where type is null
+    .map((type) => {
+      const assigneeCounts = ticketServiceTypeData[type] || {}; // Get counts for the current type
+      const rowData: any = {
+        type,
+      };
+      assigneeIds.forEach((assigneeId: any) => {
+        rowData[assigneeId] = assigneeCounts[assigneeId] || 0; // Set count to 0 if data doesn't exist
+      });
+      return rowData;
+    });
+
+  const columnsTicketPriority: any = [
+    {
+      title: "Team Vs Priority",
+      dataIndex: "priority",
+      key: "priority",
+    },
+    ...assigneeIds.map((assigneeId: any) => ({
+      title: mapAssigneeIdToName(assigneeId),
+      dataIndex: assigneeId,
+      key: assigneeId,
+      align: "center",
+    })),
+  ];
+
+  const columnsTicketServiceType: any = [
+    {
+      title: "Team Vs Service Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    ...assigneeIds.map((assigneeId: any) => ({
+      title: mapAssigneeIdToName(assigneeId),
+      dataIndex: assigneeId,
+      key: assigneeId,
+      align: "center",
+    })),
+  ];
   let formatedAssociateData =
     associateData &&
     Object.keys(associateData).map((key: any) => ({
@@ -678,6 +772,18 @@ const Dahsboard = () => {
                   <Table
                     dataSource={formattedDataTicketStatus}
                     columns={columnsTicketStatus}
+                  />
+                </div>
+                <div>
+                  <Table
+                    dataSource={formatDataTableTicketPriority}
+                    columns={columnsTicketPriority}
+                  />
+                </div>
+                <div>
+                  <Table
+                    dataSource={formatDataTableTicketServiceType}
+                    columns={columnsTicketServiceType}
                   />
                 </div>
               </div>

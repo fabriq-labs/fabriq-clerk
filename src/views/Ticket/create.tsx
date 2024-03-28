@@ -1,7 +1,7 @@
 // Create Ticket
 "use client";
 import React, { useEffect, useState } from "react";
-import { Input, Select, Button, Form, Space, DatePicker } from "antd";
+import { Input, Select, Button, Form, Space, DatePicker, Popconfirm } from "antd";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -11,9 +11,7 @@ import { CopyOutlined } from "@ant-design/icons";
 import { withRoles } from "@/app/role";
 import Layout from "../../components/layout";
 
-import {priorityTypeOptions} from "../../helper";
-
-import { userTypeOptions, statusTypeOptions } from "../../helper";
+import { priorityTypeOptions,serviceTypeOptions, statusTypeOptions } from "../../helper";
 const ticketTypeOptions: { value: any; label: React.ReactNode }[] = [
   { value: "Ticket", label: "Ticket" },
   {
@@ -266,6 +264,10 @@ const CreateTicket = () => {
           }}
         >
           Add Ticket
+          <Popconfirm
+              title="Do you want to duplicate this ticket?"
+              onConfirm={() => handleClickDuplicate()}
+            >
           <div
             style={{
               marginLeft: "10px",
@@ -273,10 +275,10 @@ const CreateTicket = () => {
               color: !disableIcon ? "#000" : "#dad9d9",
               cursor: "pointer",
             }}
-            onClick={handleClickDuplicate}
           >
             <CopyOutlined style={{ width: "20px", height: "20px" }} />
           </div>
+          </Popconfirm>
         </div>
         {loader ? (
           <div className="loader-cotainer">
@@ -311,7 +313,26 @@ const CreateTicket = () => {
                   </Form.Item>
                 </div>
                 <div style={{ width: "50%" }}>
-                  <Form.Item
+                <Form.Item
+                    label="Service Type"
+                    name="service_type"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a service type"
+                      options={serviceTypeOptions}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
+                <div style={{ width: "50%" }}>
+                <Form.Item
                     label="Assign To"
                     name="assignee_id"
                     rules={[{ required: false, message: "Please input!" }]}
@@ -322,10 +343,8 @@ const CreateTicket = () => {
                     />
                   </Form.Item>
                 </div>
-              </div>
-              <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "50%" }}>
-                  <Form.Item
+                <Form.Item
                     label="Status"
                     name="status"
                     rules={[
@@ -341,8 +360,10 @@ const CreateTicket = () => {
                     />
                   </Form.Item>
                 </div>
+              </div>
+              <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "50%" }}>
-                  <Form.Item
+                <Form.Item
                     label="Due Date"
                     name="due_date"
                     rules={[
@@ -355,28 +376,6 @@ const CreateTicket = () => {
                     <DatePicker
                       format={"DD-MM-YYYY"}
                       style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "50px" }}>
-                <div style={{ width: "50%" }}>
-                  <Form.Item
-                    label="Company"
-                    name="company_id"
-                    rules={[
-                      {
-                        required: false,
-                        message: "Please input!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Please select a company"
-                      options={companyList}
-                      onChange={(value) =>
-                        handleCompanyChange(value, companyData)
-                      }
                     />
                   </Form.Item>
                 </div>
@@ -400,7 +399,28 @@ const CreateTicket = () => {
               </div>
               <div style={{ display: "flex", gap: "50px" }}>
                 <div style={{ width: "50%" }}>
-                  <Form.Item
+                <Form.Item
+                    label="Company"
+                    name="company_id"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please input!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a company"
+                      options={companyList}
+                      onChange={(value) =>
+                        handleCompanyChange(value, companyData)
+                      }
+                    />
+                  </Form.Item>
+                  
+                </div>
+                <div style={{ width: "50%" }}>
+                <Form.Item
                     label="Priority"
                     name="priority"
                     rules={[
@@ -415,9 +435,6 @@ const CreateTicket = () => {
                       options={priorityTypeOptions}
                     />
                   </Form.Item>
-                </div>
-                <div style={{ width: "50%" }}>
-              
                 </div>
               </div>
               <div style={{ display: "flex", gap: "50px" }}>

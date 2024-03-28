@@ -21,6 +21,8 @@ query get_dashbaord_data {
     id
     assignee_id
     status
+    priority
+    service_type
   }
   user: user {
     email

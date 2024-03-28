@@ -142,7 +142,7 @@ export const Ticket = () => {
             ? "magenta"
             : status === "WAITING FOR CUSOMER DOC/CONFIRMATION"
             ? "purple"
-            : status === "COMPLETED"
+            : status === "DONE"
             ? "green"
             : status === "CANCELLED"
             ? "red"

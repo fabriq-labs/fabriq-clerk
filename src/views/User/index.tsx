@@ -116,7 +116,7 @@ export const User = () => {
             <div className="contact-wrapper">
               <div className="contact-content">
                 <div className="contact-header">
-                  <div className="contact-header-title">Trademark</div>
+                  <div className="contact-header-title">User</div>
                   <div className="search-container">
                     <Input
                       placeholder="search by user"
