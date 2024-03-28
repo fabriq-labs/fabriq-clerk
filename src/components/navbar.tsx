@@ -51,9 +51,11 @@ export default function Navbar() {
     {
       key: "1",
       label: (
+        <Protect permission="org:users:all">
         <Link href={"/user-profile"}>
           <span className={`menu-item`}>User Profile</span>
         </Link>
+        </Protect>
       ),
     },
     canManage && {
@@ -201,7 +203,7 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
-            <Protect permission="org:feature:protected">
+            <Protect permission="org:data:all">
               <li>
                 <Link href="/pipeline">
                   <span
@@ -214,7 +216,7 @@ export default function Navbar() {
                 </Link>
               </li>
             </Protect>
-            {organization && organization?.publicMetadata?.is_explore && (
+            <Protect permission="org:media:all">
               <li>
                 <Link href="/explore">
                   <span
@@ -226,7 +228,7 @@ export default function Navbar() {
                   </span>
                 </Link>
               </li>
-            )}
+              </Protect>
             {/* {organization && organization?.publicMetadata?.is_explore && (
               <li>
                 <Link href="/chat">

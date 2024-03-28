@@ -15,8 +15,9 @@ const HomePage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const canManage = has && has({ permission: "org:feature:protected" });
+  const canManage = has && has({ permission: "org:data:all" });
   const mediaOrg = has && has({ permission: "org:media:all" });
+  const userOrg = has && has({ permission: "org:users:all" });
 
   useEffect(() => {
     const getSites = async () => {
@@ -45,14 +46,14 @@ const HomePage = () => {
             orgSettingsData?.data?.organizations[0]?.settings
           );
 
-          if (canManage) {
-            router.push("/pipeline");
-          }
-
           setLoading(false);
         } else {
           if (canManage) {
             router.push("/pipeline");
+          }
+
+          if(userOrg) {
+            router.push("/user-profile");
           }
 
           setLoading(false);
